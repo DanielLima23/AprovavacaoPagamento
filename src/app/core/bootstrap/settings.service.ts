@@ -22,7 +22,7 @@ export class SettingsService {
 
   options: AppSettings;
 
-  themeColor: Exclude<AppTheme, 'auto'> = 'light';
+  themeColor: Exclude<AppTheme, 'auto'> = 'dark';
 
   constructor(
     private store: LocalStorageService,
