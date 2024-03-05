@@ -1,0 +1,81 @@
+{
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "dashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "centro-de-custo/consultar",
+      "name": "CentroDeCusto",
+      "type": "link",
+      "icon": "folder"
+    },
+    {
+      "route": "",
+      "name": "PedidoPagamento",
+      "type": "sub",
+      "icon": "shopping_cart",
+      "children": [
+        {
+          "route": "pedido/consultar",
+          "name": "MeuPedido",
+          "type": "link"
+        },
+        {
+          "route": "pedido/funcionario-consultar",
+          "name": "Funcionário",
+          "type": "link"
+        },
+        {
+          "route": "pedido/fornecedor-consultar",
+          "name": "Fornecedor",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "route": "fornecedor/consultar",
+      "name": "Fornecedor",
+      "type": "link",
+      "icon": "business"
+    },
+    {
+      "route": "",
+      "name": "Administracao",
+      "type": "sub",
+      "icon": "supervisor_account",
+      "children": [
+        {
+          "route": "administracao/aprovar-usuarios",
+          "name": "AprovarUsuarios",
+          "type": "link"
+        },
+        {
+          "route": "administracao/usuarios",
+          "name": "Usuarios",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "route": "",
+      "name": "Relatorios",
+      "type": "sub",
+      "icon": "description",
+      "children": [
+        {
+          "route": "",
+          "name": "Pedidos",
+          "type": "link"
+        },
+        {
+          "route": "",
+          "name": "Outros",
+          "type": "link"
+        }
+      ]
+    }
+  ]
+}

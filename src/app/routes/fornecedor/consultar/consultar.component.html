@@ -1,0 +1,70 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Consultar fornecedor
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-header>
+    <button (click)="adicionar()" mat-raised-button>ADICIONAR</button>
+  </mat-card-header>
+  <br />
+  <mat-card-content>
+    <table mat-table [dataSource]="listaFornecedores">
+      <!-- Coluna de descrição -->
+      <ng-container matColumnDef="fornecedor">
+        <th mat-header-cell *matHeaderCellDef> Fornecedor </th>
+        <td mat-cell *matCellDef="let fornecedor"> {{fornecedor.nome}} </td>
+      </ng-container>
+
+      <!-- Coluna de responsável -->
+      <ng-container matColumnDef="finalidade">
+        <th mat-header-cell *matHeaderCellDef> Finalidade </th>
+        <td mat-cell *matCellDef="let fornecedor"> {{fornecedor.finalidade}} </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="centroCusto">
+        <th mat-header-cell *matHeaderCellDef> Centro de custo </th>
+        <td mat-cell *matCellDef="let fornecedor"> {{fornecedor.centroCusto}} </td>
+      </ng-container> -->
+
+      <!-- Coluna de ações (editar, excluir, etc.) -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let fornecedor">
+          <button mat-icon-button (click)="editarFornecedor(fornecedor.id)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openDialogDelete(fornecedor)" matTooltip="Deletar">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <!-- <div class="modal" id="myModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title text-muted">Atenção!</h4>
+                  <button type="button" class="btn-close" (click)="CloseModel()"
+                          data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-muted">
+                  <p>Deseja realmente deletar o fornecedor <strong>{{nomeFornecedor}}</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" (click)="onNoClick()">Não</button>
+                  <button type="button" class="btn btn-primary" (click)="onYesClick()">Sim</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td> -->
+
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

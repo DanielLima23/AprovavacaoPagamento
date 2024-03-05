@@ -1,0 +1,51 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Adicionar centro de custo
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field  floatLabel="always"
+                            style="width: 100%;">
+              <mat-label>Descrição</mat-label>
+              <input matInput #input maxlength="50"
+                     placeholder="Nome do centro de custo" formControlName="descricao">
+              <mat-hint align="end">{{input.value.length}}/50</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Responsável</mat-label>
+              <mat-select name="responsavel"
+                          formControlName="responsavel">
+                <mat-option *ngFor="let usuario of listaResponsaveis" [value]="usuario.id">
+                  {{ usuario.nome }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <br />
+      <mat-card-footer align="end">
+        <button [disabled]="userForm.invalid" (click)="salvar()" mat-flat-button extended
+                color="primary" class="m-3" >
+          <mat-icon>save</mat-icon>
+          Salvar
+        </button>
+        <button mat-flat-button extended color="accent" class="m-3" (click)="voltar()">
+          <mat-icon>reply</mat-icon>
+          Voltar
+        </button>
+      </mat-card-footer>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,90 @@
+<mat-card>
+    <mat-card-content>
+        <mat-card-header>
+            <mat-card-title>
+                Cadastro
+            </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+            <div class="col-sm-6">
+                <mat-form-field floatLabel="always"
+                                style="width: 100%;">
+                    <mat-label>Nome</mat-label>
+                    <input  matInput #inputNome maxlength="50" type="text"
+                           placeholder="Insira seu nome" id="nome" formControlName="nome">
+                    <mat-hint align="end">{{inputNome.value.length}}/50</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6 ">
+                <mat-form-field floatLabel="always"
+                                style="width: 100%;">
+                    <mat-label>Data de nascimento</mat-label>
+                    <input matInput #input maxlength="50"
+                           placeholder="" id="dataNascimento" formControlName="dataNascimento"
+                           type="date">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field hintLabel="" floatLabel="always"
+                                style="width: 100%;">
+                    <mat-label>Email</mat-label>
+                    <input matInput #inputEmail maxlength="50"
+                           placeholder="Insira seu email" id="email" formControlName="email">
+                    <mat-hint align="end">{{inputEmail.value.length}}/50</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field hintLabel="" floatLabel="always"
+                                style="width: 100%;">
+                    <mat-label>Senha</mat-label>
+                    <input matInput #inputSenha maxlength="50"
+                           placeholder="Insira sua senha" id="senha" formControlName="senha"
+                           type="password">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+                <mat-slide-toggle formControlName="contaCnpj" (change)="toggleCpfCnpj($event)">
+                  CNPJ?
+                </mat-slide-toggle>
+              </div>
+        
+              <div class="col-sm-4 mt-2" *ngIf="!userForm.get('contaCnpj')?.value">
+                <mat-form-field floatLabel="always" style="width: 100%;">
+                  <mat-label>Cpf</mat-label>
+                  <input formControlName="cpf" matInput #input maxlength="11" placeholder="Insira seu Cpf"
+                         id="cpf">
+                  <mat-hint align="end">{{input.value.length}}/11</mat-hint>
+                </mat-form-field>
+              </div>
+        
+              <div class="col-sm-4 mt-2" *ngIf="userForm.get('contaCnpj')?.value">
+                <mat-form-field floatLabel="always" style="width: 100%;">
+                  <mat-label>Cnpj</mat-label>
+                  <input formControlName="cnpj" matInput #input maxlength="14" placeholder="Insira seu cnpj"
+                         id="cnpj">
+                  <mat-hint align="end">{{input.value.length}}/14</mat-hint>
+                </mat-form-field>
+              </div>
+            <div class="col-sm-6 mt-2">
+                <mat-form-field hintLabel="" floatLabel="always"
+                                style="width: 100%;">
+                    <mat-label>Celular</mat-label>
+                    <input matInput #inputCelular maxlength="20"
+                           placeholder="Insira um número para contato" id="celular"
+                           formControlName="celular">
+                    <mat-hint align="end">{{inputCelular.value.length}}/20</mat-hint>
+                </mat-form-field>
+            </div>
+
+
+            <mat-card-footer align="end">
+                <button class="w-full m-y-16 mt-4" (click)="salvar()" mat-raised-button
+                        color="primary"
+                        class="m-3" [loading]="isSubmitting" type="submit"
+                        [disabled]="userForm.invalid">Cadastrar</button>
+            </mat-card-footer>
+        </form>
+
+    </mat-card-content>
+</mat-card>

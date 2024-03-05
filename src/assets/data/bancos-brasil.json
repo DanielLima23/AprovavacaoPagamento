@@ -1,0 +1,581 @@
+[
+  {
+    "label": "Banco do Brasil S.A."
+  },
+  {
+    "label": "Banco da Amazônia S.A."
+  },
+  {
+    "label": "Banco do Nordeste do Brasil S.A."
+  },
+  {
+    "label": "Banco Nacional de Desenvolvimento Econômico e Social BNDES"
+  },
+  {
+    "label": "Credicoamo Crédito Rural Cooperativa"
+  },
+  {
+    "label": "Credit Suisse Hedging-Griffo Corretora de Valores S.A."
+  },
+  {
+    "label": "Banco Inbursa S.A."
+  },
+  {
+    "label": "Natixis Brasil S.A. Banco Múltiplo"
+  },
+  {
+    "label": "UBS Brasil Corretora de Câmbio, Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Coop de Créd. Mútuo dos Despachantes de Trânsito de SC e Rio Grande do Sul"
+  },
+  {
+    "label": "BNY Mellon Banco S.A."
+  },
+  {
+    "label": "Banco Tricury S.A."
+  },
+  {
+    "label": "Banestes S.A. Banco do Estado do Espírito Santo"
+  },
+  {
+    "label": "Banco Bandepe S.A."
+  },
+  {
+    "label": "Banco Alfa S.A."
+  },
+  {
+    "label": "Banco Itaú Consignado S.A."
+  },
+  {
+    "label": "Banco Santander (Brasil) S. A."
+  },
+  {
+    "label": "Banco Bradesco BBI S.A."
+  },
+  {
+    "label": "Banco do Estado do Pará S.A."
+  },
+  {
+    "label": "Banco Cargill S.A."
+  },
+  {
+    "label": "Banco do Estado do Rio Grande do Sul S.A."
+  },
+  {
+    "label": "Banco do Estado de Sergipe S.A."
+  },
+  {
+    "label": "Confidence Corretora de Câmbio S.A."
+  },
+  {
+    "label": "Hipercard Banco Múltiplo S.A."
+  },
+  {
+    "label": "Banco Bradescard S.A."
+  },
+  {
+    "label": "Goldman Sachs do Brasil  Banco Múltiplo S. A."
+  },
+  {
+    "label": "Banco AndBank (Brasil) S.A."
+  },
+  {
+    "label": "Banco Morgan Stanley S. A."
+  },
+  {
+    "label": "Banco Crefisa S.A."
+  },
+  {
+    "label": "Banco de Brasília S.A."
+  },
+  {
+    "label": "Banco J. Safra S.A."
+  },
+  {
+    "label": "Banco ABN Amro S.A."
+  },
+  {
+    "label": "Banco KDB do Brasil S.A."
+  },
+  {
+    "label": "Banco Inter S.A."
+  },
+  {
+    "label": "Haitong Banco de Investimento do Brasil S.A."
+  },
+  {
+    "label": "Banco Original do Agronegócio S.A."
+  },
+  {
+    "label": "BT Corretora de Câmbio Ltda."
+  },
+  {
+    "label": "BBN Banco Brasileiro de Negocios S.A."
+  },
+  {
+    "label": "Banco Topazio S.A."
+  },
+  {
+    "label": "Banco da China Brasil S.A."
+  },
+  {
+    "label": "Uniprime Norte do Paraná - Cooperativa de Crédito Ltda."
+  },
+  {
+    "label": "Cooperativa Central de Crédito Urbano - Cecred"
+  },
+  {
+    "label": "Cooperativa de Crédito Rural da Região da Mogiana"
+  },
+  {
+    "label": "Central de Cooperativas de Economia e Crédito Mútuo do Est RS - Unicred"
+  },
+  {
+    "label": "BRK S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "label": "Pólocred Sociedade de Crédito ao Microempreendedor e à Empresa de Pequeno Porte"
+  },
+  {
+    "label": "Banco Finaxis S.A."
+  },
+  {
+    "label": "Banco Confidence de Câmbio S.A."
+  },
+  {
+    "label": "Banco BMFBovespa de Serviços de Liquidação e Custódia S/A"
+  },
+  {
+    "label": "Cooperativa Central de Crédito Noroeste Brasileiro Ltda - CentralCredi"
+  },
+  {
+    "label": "Credialiança Cooperativa de Crédito Rural"
+  },
+  {
+    "label": "Uniprime Central – Central Interestadual de Cooperativas de Crédito Ltda."
+  },
+  {
+    "label": "Planner Corretora de Valores S.A."
+  },
+  {
+    "label": "Renascença Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "XP Investimentos Corretora de Câmbio Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Caixa Econômica Federal"
+  },
+  {
+    "label": "Lecca Crédito, Financiamento e Investimento S/A"
+  },
+  {
+    "label": "Banco Bocom BBM S.A."
+  },
+  {
+    "label": "PortoCred S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "label": "Oliveira Trust Distribuidora de Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Magliano S.A. Corretora de Cambio e Valores Mobiliarios"
+  },
+  {
+    "label": "Central Cooperativa de Crédito no Estado do Espírito Santo - CECOOP"
+  },
+  {
+    "label": "Advanced Corretora de Câmbio Ltda."
+  },
+  {
+    "label": "Standard Chartered Bank (Brasil) S.A. Banco de Investimento"
+  },
+  {
+    "label": "Banco Western Union do Brasil S.A."
+  },
+  {
+    "label": "Banco Rodobens SA"
+  },
+  {
+    "label": "Banco Agibank S.A."
+  },
+  {
+    "label": "Banco Bradesco BERJ S.A."
+  },
+  {
+    "label": "Banco Woori Bank do Brasil S.A."
+  },
+  {
+    "label": "Brasil Plural S.A. Banco Múltiplo"
+  },
+  {
+    "label": "BR Partners Banco de Investimento S.A."
+  },
+  {
+    "label": "Codepe Corretora de Valores e Câmbio S.A."
+  },
+  {
+    "label": "MS Bank S.A. Banco de Câmbio"
+  },
+  {
+    "label": "UBS Brasil Banco de Investimento S.A."
+  },
+  {
+    "label": "Caruana S.A. Sociedade de Crédito, Financiamento e Investimento"
+  },
+  {
+    "label": "Tullett Prebon Brasil Corretora de Valores e Câmbio Ltda."
+  },
+  {
+    "label": "ICBC do Brasil Banco Múltiplo S.A."
+  },
+  {
+    "label": "Confederação Nacional das Cooperativas Centrais de Crédito e Economia Familiar e"
+  },
+  {
+    "label": "BGC Liquidez Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Gradual Corretora de Câmbio, Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Confederação Nacional das Cooperativas Centrais Unicred Ltda – Unicred do Brasil"
+  },
+  {
+    "label": "Multimoney Corretora de Câmbio Ltda"
+  },
+  {
+    "label": "Get Money Corretora de Câmbio S.A."
+  },
+  {
+    "label": "Intesa Sanpaolo Brasil S.A. - Banco Múltiplo"
+  },
+  {
+    "label": "Easynvest - Título Corretora de Valores SA"
+  },
+  {
+    "label": "Broker Brasil Corretora de Câmbio Ltda."
+  },
+  {
+    "label": "Treviso Corretora de Câmbio S.A."
+  },
+  {
+    "label": "Bexs Banco de Câmbio S.A."
+  },
+  {
+    "label": "Levycam - Corretora de Câmbio e Valores Ltda."
+  },
+  {
+    "label": "Guitta Corretora de Câmbio Ltda."
+  },
+  {
+    "label": "Facta Financeira S.A. - Crédito Financiamento e Investimento"
+  },
+  {
+    "label": "ICAP do Brasil Corretora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Casa do Crédito S.A. Sociedade de Crédito ao Microempreendedor"
+  },
+  {
+    "label": "Commerzbank Brasil S.A. - Banco Múltiplo"
+  },
+  {
+    "label": "Banco Olé Bonsucesso Consignado S.A."
+  },
+  {
+    "label": "Albatross Corretora de Câmbio e Valores S.A"
+  },
+  {
+    "label": "BRL Trust Distribuidora de Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Pernambucanas Financiadora S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "label": "Guide Investimentos S.A. Corretora de Valores"
+  },
+  {
+    "label": "CM Capital Markets Corretora de Câmbio, Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Dacasa Financeira S/A - Sociedade de Crédito, Financiamento e Investimento"
+  },
+  {
+    "label": "Socred S.A. - Sociedade de Crédito ao Microempreendedor"
+  },
+  {
+    "label": "Banco Itaú BBA S.A."
+  },
+  {
+    "label": "Ativa Investimentos S.A. Corretora de Títulos Câmbio e Valores"
+  },
+  {
+    "label": "HS Financeira S/A Crédito, Financiamento e Investimentos"
+  },
+  {
+    "label": "Cooperativa de Economia e Crédito Mútuo dos Servidores Públicos Estaduais do Rio"
+  },
+  {
+    "label": "Nova Futura Corretora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Parmetal Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Fair Corretora de Câmbio S.A."
+  },
+  {
+    "label": "Stone Pagamentos S.A."
+  },
+  {
+    "label": "Banco Bradesco Cartões S.A."
+  },
+  {
+    "label": "Banco BTG Pactual S.A."
+  },
+  {
+    "label": "Banco Original S.A."
+  },
+  {
+    "label": "Banco Arbi S.A."
+  },
+  {
+    "label": "Banco John Deere S.A."
+  },
+  {
+    "label": "Banco BS2 S.A."
+  },
+  {
+    "label": "Banco Credit Agrícole Brasil S.A."
+  },
+  {
+    "label": "Banco Fibra S.A."
+  },
+  {
+    "label": "Banco Cifra S.A."
+  },
+  {
+    "label": "Banco Bradesco S.A."
+  },
+  {
+    "label": "Banco Clássico S.A."
+  },
+  {
+    "label": "Banco Máxima S.A."
+  },
+  {
+    "label": "Banco ABC Brasil S.A."
+  },
+  {
+    "label": "Banco Investcred Unibanco S.A."
+  },
+  {
+    "label": "BCV - Banco de Crédito e Varejo S/A"
+  },
+  {
+    "label": "Bexs Corretora de Câmbio S/A"
+  },
+  {
+    "label": "Parana Banco S. A."
+  },
+  {
+    "label": "Nu Pagamentos S.A."
+  },
+  {
+    "label": "Banco Fator S.A."
+  },
+  {
+    "label": "Banco Cédula S.A."
+  },
+  {
+    "label": "Barigui Companhia Hipotecária"
+  },
+  {
+    "label": "HSBC Brasil S.A. Banco de Investimento"
+  },
+  {
+    "label": "IB Corretora de Câmbio, Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "label": "Banco de la Nacion Argentina"
+  },
+  {
+    "label": "Banco BMG S.A."
+  },
+  {
+    "label": "China Construction Bank (Brasil) Banco Múltiplo S/A"
+  },
+  {
+    "label": "Itaú Unibanco  S.A."
+  },
+  {
+    "label": "Banco Société Générale Brasil S.A."
+  },
+  {
+    "label": "Banco Mizuho do Brasil S.A."
+  },
+  {
+    "label": "Banco J. P. Morgan S. A."
+  },
+  {
+    "label": "Banco Mercantil do Brasil S.A."
+  },
+  {
+    "label": "Banco Bradesco Financiamentos S.A."
+  },
+  {
+    "label": "Kirton Bank S.A. - Banco Múltiplo"
+  },
+  {
+    "label": "Banco Capital S. A."
+  },
+  {
+    "label": "Banco Safra S.A."
+  },
+  {
+    "label": "Banco MUFG Brasil S.A."
+  },
+  {
+    "label": "Banco Sumitomo Mitsui Brasileiro S.A."
+  },
+  {
+    "label": "Banco Caixa Geral - Brasil S.A."
+  },
+  {
+    "label": "Citibank N.A."
+  },
+  {
+    "label": "Banco ItauBank S.A."
+  },
+  {
+    "label": "Deutsche Bank S.A. - Banco Alemão"
+  },
+  {
+    "label": "JPMorgan Chase Bank, National Association"
+  },
+  {
+    "label": "ING Bank N.V."
+  },
+  {
+    "label": "Banco de La Republica Oriental del Uruguay"
+  },
+  {
+    "label": "Banco de La Provincia de Buenos Aires"
+  },
+  {
+    "label": "Banco Credit Suisse (Brasil) S.A."
+  },
+  {
+    "label": "Senso Corretora de Câmbio e Valores Mobiliários S.A."
+  },
+  {
+    "label": "Banco Luso Brasileiro S.A."
+  },
+  {
+    "label": "Banco Industrial do Brasil S.A."
+  },
+  {
+    "label": "Banco VR S.A."
+  },
+  {
+    "label": "Banco Paulista S.A."
+  },
+  {
+    "label": "Banco Guanabara S.A."
+  },
+  {
+    "label": "Omni Banco S.A."
+  },
+  {
+    "label": "Banco Pan S.A."
+  },
+  {
+    "label": "Banco Ficsa S. A."
+  },
+  {
+    "label": "Banco Intercap S.A."
+  },
+  {
+    "label": "Banco Rendimento S.A."
+  },
+  {
+    "label": "Banco Triângulo S.A."
+  },
+  {
+    "label": "Banco Sofisa S. A."
+  },
+  {
+    "label": "Banco Alvorada S.A."
+  },
+  {
+    "label": "Banco Pine S.A."
+  },
+  {
+    "label": "Itaú Unibanco Holding S.A."
+  },
+  {
+    "label": "Banco Indusval S. A."
+  },
+  {
+    "label": "Banco A. J. Renner S.A."
+  },
+  {
+    "label": "Banco Votorantim S.A."
+  },
+  {
+    "label": "Banco Daycoval S.A."
+  },
+  {
+    "label": "Banco Ourinvest S.A."
+  },
+  {
+    "label": "Banif - Bco Internacional do Funchal (Brasil) S.A."
+  },
+  {
+    "label": "Banco Neon S.A."
+  },
+  {
+    "label": "Banco Cetelem S.A."
+  },
+  {
+    "label": "Banco Ribeirão Preto S.A."
+  },
+  {
+    "label": "Banco Semear S.A."
+  },
+  {
+    "label": "Banco Citibank S.A."
+  },
+  {
+    "label": "Banco Modal S.A."
+  },
+  {
+    "label": "Banco Rabobank International Brasil S.A."
+  },
+  {
+    "label": "Banco Cooperativo Sicredi S. A."
+  },
+  {
+    "label": "Scotiabank Brasil S.A. Banco Múltiplo"
+  },
+  {
+    "label": "Banco BNP Paribas Brasil S.A."
+  },
+  {
+    "label": "Novo Banco Continental S.A. - Banco Múltiplo"
+  },
+  {
+    "label": "Banco Sistema S.A."
+  },
+  {
+    "label": "Bank of America Merrill Lynch Banco Múltiplo S.A."
+  },
+  {
+    "label": "Banco Cooperativo do Brasil S/A - Bancoob"
+  },
+  {
+    "label": "Banco Keb Hana do Brasil S. A."
+  }
+]

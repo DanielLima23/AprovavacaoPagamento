@@ -1,0 +1,190 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Editar perfil
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Nome</mat-label>
+          <input [(ngModel)]="usuario.nome" matInput #inputNome maxlength="50" type="text"
+                 placeholder="Insira seu nome" id="nome" formControlName="nome">
+          <mat-hint align="end">{{inputNome.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 ">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Data de nascimento</mat-label>
+          <input [(ngModel)]="usuario.dataNascimento" matInput #input maxlength="50"
+                 placeholder="" id="dataNascimento" formControlName="dataNascimento"
+                 type="date">
+          <!-- <mat-hint align="end">{{input.value.length}}/50</mat-hint> -->
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Email</mat-label>
+          <input [(ngModel)]="usuario.email" matInput #inputEmail maxlength="50"
+                 placeholder="Insira seu email" id="email" formControlName="email">
+          <mat-hint align="end">{{inputEmail.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Senha</mat-label>
+          <input [(ngModel)]="usuario.senha" matInput #inputSenha maxlength="50"
+                 placeholder="Insira sua senha" id="senha" formControlName="senha" type="password"
+                 [disabled]="senhaHabilitada">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-slide-toggle [(ngModel)]="contaCnpj" (change)="limparCpfCnpj()"
+                          [ngModelOptions]="{ standalone: true }">CNPJ?</mat-slide-toggle>
+      </div>
+      <div class="col-sm-6 mt-2" *ngIf="!contaCnpj">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CPF</mat-label>
+          <input type="text" [(ngModel)]="usuario.cpf" matInput #inputCpf maxlength="14"
+                 placeholder="Insirta seu cpf" id="cpf" formControlName="cpf" mask="000.000.000-00">
+          <mat-hint align="end">{{inputCpf.value.length}}/14</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 mt-2" *ngIf="contaCnpj">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CNPJ</mat-label>
+          <input type="text" [(ngModel)]="usuario.cnpj" matInput #inputCnpj maxlength="18"
+                 placeholder="Insira seu cnpj" id="cnpj" formControlName="cnpj"
+                 mask="00.000.000/0000-00">
+          <mat-hint align="end">{{inputCnpj.value.length}}/18</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 mt-2">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Celular</mat-label>
+          <input [(ngModel)]="usuario.celular" matInput #inputCelular maxlength="20"
+                 placeholder="Insira um número para contato" id="celular"
+                 formControlName="celular"
+                 [mask]="'(00) 00000-0000 '">
+          <mat-hint align="end">{{inputCelular.value.length}}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <!-- <mat-form-field class="col-sm-12">
+        <mat-label>Selecione os centros de custo</mat-label>
+        <mat-select placeholder="Opções" [formControl]="selectedOptions" multiple>
+          <mat-option *ngFor="let option of listaCentroCusto" [value]="option.id">
+            <mat-checkbox [checked]="selectedOptions.value?.includes(option.descricao)">
+              {{ option.descricao }}
+            </mat-checkbox>
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+      <!-- <mat-form-field>
+        <mat-label>Selecione os centros de custo</mat-label>
+        <mat-select [formControl]="selectedOptions" multiple (selectionChange)="onCentroCustoSelectionChange($event)">
+          <ng-container *ngFor="let topping of listaCentroCusto; trackBy: trackByFn">
+            <mat-option [value]="topping.id">{{ topping.descricao }}</mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field> -->
+
+      <div class="col-sm-12">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Selecione um centro de custo</mat-label>
+          <mat-select name="centroCusto"
+                      (selectionChange)="onCentroCustoSelectionChange($event)"
+                      formControlName="centroCusto"
+                      [(ngModel)]="usuario.idCentroCusto">
+            <mat-option *ngFor="let item of listaCentroCusto"
+                        [value]="item.id">
+              {{ item.descricao }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+
+      <mat-card-footer align="end">
+        <button class="w-full m-y-16 mt-4" (click)="salvar()" mat-raised-button color="primary"
+                class="m-3" [loading]="isSubmitting" type="submit"
+                [disabled]="userForm.invalid">Salvar</button>
+      </mat-card-footer>
+    </form>
+
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Lista de contas</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <button class="mt-4" (click)="adicionar()" mat-raised-button
+            matTooltip="Adicionar conta bancária">ADICIONAR</button>
+
+    <mat-card-content class="mt-2 table-responsive mt-4">
+      <table mat-table [dataSource]="listaContaUsuario">
+
+        <ng-container matColumnDef="banco">
+          <th mat-header-cell *matHeaderCellDef> Banco </th>
+          <td mat-cell *matCellDef="let conta"> {{conta.banco}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="agencia">
+          <th mat-header-cell *matHeaderCellDef> Agência </th>
+          <td mat-cell *matCellDef="let conta"> {{conta.agencia}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="conta">
+          <th mat-header-cell *matHeaderCellDef> Conta </th>
+          <td mat-cell *matCellDef="let conta"> {{conta.conta}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="chavePix">
+          <th mat-header-cell *matHeaderCellDef> Chave pix </th>
+          <td mat-cell *matCellDef="let conta"> {{conta.chavePix}} </td>
+        </ng-container>
+        <ng-container matColumnDef="contaPadrao">
+          <th mat-header-cell *matHeaderCellDef> Conta padrão </th>
+          <td mat-cell *matCellDef="let conta" >
+            <ng-container
+                          *ngTemplateOutlet="customCheckbox; context: { conta: conta }" ></ng-container>
+          </td>
+        </ng-container>
+        <ng-template #customCheckbox let-conta="conta">
+          <mat-checkbox (change)="onContaPadraoChange($event.checked, conta)" matTooltip="Definir como conta padrão"
+                        [checked]="conta.contaPadrao"></mat-checkbox>
+        </ng-template>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Ações </th>
+          <td mat-cell *matCellDef="let conta">
+            <button matTooltip="Editar" mat-icon-button (click)="editarContaBanco(conta.id)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button matTooltip="Deletar" mat-icon-button (click)="openDialogDelete(conta)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+
+  </mat-card-content>
+</mat-card>

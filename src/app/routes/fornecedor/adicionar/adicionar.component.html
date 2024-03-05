@@ -1,0 +1,178 @@
+
+
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Adicionar fornecedor
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Fornecedor</mat-label>
+          <input [(ngModel)]="fornecedor.nome" matInput #inputFornecedor maxlength="50"
+                 placeholder="Insira o nome do fornecedor" id="fornecedor"
+                 formControlName="fornecedor">
+          <mat-hint align="end">{{inputFornecedor.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Finalidade</mat-label>
+          <input [(ngModel)]="fornecedor.finalidade" matInput #inputFinalidade maxlength="50"
+                 placeholder="Insira a finalidade" id="finalidade"
+                 formControlName="finalidade">
+          <mat-hint align="end">{{inputFinalidade.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <!-- <div class="col-sm-12">
+        <mat-slide-toggle [(ngModel)]="contaCnpj" (change)="limparCpfCnpj()"
+                          [ngModelOptions]="{ standalone: true }">CNPJ?</mat-slide-toggle>
+      </div>
+      <div class="col-sm-4 mt-2" *ngIf="!contaCnpj">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CPF</mat-label>
+          <input type="number" [(ngModel)]="fornecedor.cpf" matInput #inputCpf maxlength="11"
+                 placeholder="Insirta seu cpf" id="cpf" formControlName="cpf">
+          <mat-hint align="end">{{inputCpf.value.length}}/11</mat-hint>
+        </mat-form-field>
+      </div>
+
+
+      <div class="col-sm-4 mt-2" *ngIf="contaCnpj">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CNPJ</mat-label>
+          <input type="number" [(ngModel)]="fornecedor.cnpj" matInput #inputCnpj maxlength="14"
+                 placeholder="Insira seu cnpj" id="cnpj" formControlName="cnpj">
+          <mat-hint align="end">{{inputCnpj.value.length}}/14</mat-hint>
+        </mat-form-field>
+      </div> -->
+
+      <div class="col-sm-12">
+        <mat-slide-toggle formControlName="contaCnpj" (change)="toggleCpfCnpj($event)">
+          CNPJ?
+        </mat-slide-toggle>
+      </div>
+
+      <div class="col-sm-6 mt-2" *ngIf="!userForm.get('contaCnpj')?.value">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Cpf</mat-label>
+          <input formControlName="cpf" matInput #input maxlength="14" placeholder="Insira seu Cpf"
+                 id="cpf" mask="000.000.000-00">
+          <mat-hint align="end">{{input.value.length}}/14</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6 mt-2" *ngIf="userForm.get('contaCnpj')?.value">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Cnpj</mat-label>
+          <input formControlName="cnpj" matInput #input maxlength="18" placeholder="Insira seu cnpj"
+                 id="cnpj" mask="00.000.000/0000-00">
+          <mat-hint align="end">{{input.value.length}}/18</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6 mt-2">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Forma de pagamento</mat-label>
+          <mat-select [(ngModel)]="fornecedor.tipoPagamentoDTO" formControlName="formaPagamento"
+                      name="formaPagamento" id="formaPagamento">
+            <mat-option *ngFor="let formaPagamento of listaFormaPagamento"
+                        [value]="formaPagamento">
+              {{ formaPagamento }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-12 mt-2">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Centro de custo</mat-label>
+          <mat-select [(ngModel)]="fornecedor.idCentroCusto" formControlName="idCentroCusto"
+                      name="idCentroCusto" id="idCentroCusto">
+            <mat-option *ngFor="let centro of listaCentroCusto"
+                        [value]="centro.id">
+              {{ centro.descricao }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-card-footer align="end" class="mt-2">
+        <button [disabled]="userForm.invalid" (click)="salvar()" mat-flat-button extended
+                color="primary" class="m-3">
+          <mat-icon>save</mat-icon>
+          Salvar
+        </button>
+        <button mat-flat-button extended color="accent" class="m-3" (click)="voltar()">
+          <mat-icon>reply</mat-icon>
+          Voltar
+        </button>
+      </mat-card-footer>
+
+    </form>
+
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="fornecedor.id > 0">
+  <mat-card-content class="mt-2 table-responsive table-hover">
+
+
+    <mat-card-header>
+      <mat-card-title> Lista de contas</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <button class="mt-4" (click)="adicionarConta()" mat-raised-button
+            matTooltip="Adicionar conta bancária">ADICIONAR</button>
+
+
+    <table mat-table [dataSource]="listaContasTerceiro" class="mt-4">
+
+      <ng-container matColumnDef="banco">
+        <th mat-header-cell *matHeaderCellDef> Banco </th>
+        <td mat-cell *matCellDef="let conta"> {{conta.banco}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="agencia">
+        <th mat-header-cell *matHeaderCellDef> Agência </th>
+        <td mat-cell *matCellDef="let conta"> {{conta.agencia}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="conta">
+        <th mat-header-cell *matHeaderCellDef> Conta </th>
+        <td mat-cell *matCellDef="let conta"> {{conta.conta}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="chavePix">
+        <th mat-header-cell *matHeaderCellDef> Chave pix </th>
+        <td mat-cell *matCellDef="let conta"> {{conta.chavePix}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let banco">
+          <button matTooltip="Editar" mat-icon-button (click)="editarContaBanco(banco.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button matTooltip="Deletar" mat-icon-button (click)="openDialogDelete(banco)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
