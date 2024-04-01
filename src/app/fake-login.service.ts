@@ -18,14 +18,13 @@ export class FakeLoginService extends LoginService {
   login(username: string, password: string): Observable<Token> {
 
     const headers = new HttpHeaders({
-      pTokenAPI: 'C1CL0P32@23',
       usuario: username,
       senha: password,
     });
 
     return this.http.get(this.url + 'api/usuario/login', { headers }).pipe(
       map((data: any) => {
-        this.token = { access_token: data.token, token_type: 'bearer', access_token_cliente: data.usuarioCliente[0].cliente.token } as Token;
+        this.token = { access_token: data.token, token_type: 'bearer', access_token_cliente: data.tokenCliente } as Token;
         return this.token;
       }),
       catchError((error: any) => {
