@@ -12,7 +12,7 @@
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
       <mat-card-content>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field  floatLabel="always"
                             style="width: 100%;">
               <mat-label>Descrição</mat-label>
@@ -21,12 +21,12 @@
               <mat-hint align="end">{{input.value.length}}/50</mat-hint>
             </mat-form-field>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <mat-form-field style="width: 100%;">
               <mat-label>Responsável</mat-label>
               <mat-select name="responsavel"
                           formControlName="responsavel">
-                <mat-option *ngFor="let usuario of listaResponsaveis" [value]="usuario.id">
+                <mat-option *ngFor="let usuario of listaResponsaveis" [value]="usuario.id" (onSelectionChange)="responsavelSelecionado(usuario)">
                   {{ usuario.nome }}
                 </mat-option>
               </mat-select>

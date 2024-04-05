@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SettingsService } from '@core';
 import { AuthService, User } from '@core/authentication';
+import { DialogLogoutComponent } from 'app/routes/dialog/logout/logout.component';
+import { SoundService } from 'app/services-outros/sound-service';
 import { debounceTime, tap } from 'rxjs/operators';
 
 @Component({
@@ -25,7 +28,7 @@ import { debounceTime, tap } from 'rxjs/operators';
         <mat-icon>restore</mat-icon>
         <span>{{ 'restore_defaults' | translate }}</span>
       </button> -->
-      <button mat-menu-item (click)="logout()">
+      <button mat-menu-item (click)="confirmarLogout()">
         <mat-icon>exit_to_app</mat-icon>
         <span>{{ 'Sair' | translate }}</span>
       </button>
@@ -47,7 +50,9 @@ export class UserComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private cdr: ChangeDetectorRef,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private dialog: MatDialog,
+    private soundService: SoundService
   ) {}
 
   ngOnInit(): void {
@@ -60,10 +65,35 @@ export class UserComponent implements OnInit {
       .subscribe(() => this.cdr.detectChanges());
   }
 
+
+  confirmarLogout(){
+    this.playSound()
+    this.openDialogDelete()
+  }
+
   logout() {
     this.auth.logout().subscribe(() => {
       this.router.navigateByUrl('/auth/login');
     });
+  }
+
+  openDialogDelete(): void {
+    const dialogRef = this.dialog.open(DialogLogoutComponent, {
+      width: '15%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.logout();
+      }else{
+        return;
+      }
+    });
+  }
+
+  playSound() {
+    const soundPath = 'assets/sound/somLogout.mp3'; // Caminho para o arquivo de som
+    this.soundService.playAudio(soundPath);
   }
 
   restore() {

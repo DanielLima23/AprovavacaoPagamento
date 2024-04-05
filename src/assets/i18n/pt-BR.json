@@ -1,7 +1,7 @@
 
 {
   "menu": {
-    "dashboard": "Painel",
+    "dashboard": "Home",
     "design": "Design",
     "design.colors": "Sistema de Cores",
     "design.icons": "Ícones de Material",
@@ -87,7 +87,9 @@
     "Fornecedor": "Fornecedor",
     "Administracao": "Administração",
     "Administracao.Usuarios": "Usuários",
-    "Administracao.AprovarUsuarios": "Aprovar usuários",
+    "Administracao.Usuarios.AprovarUsuarios": "Aprovar usuários",
+    "Administracao.Usuarios.Lista": "Lista",
+    "Administracao.Usuarios.Convidar": "Convidar",
     "Relatorios": "Relatórios",
     "Relatorios.Pedidos": "Pedidos",
     "Relatorios.Outros": "Outros"

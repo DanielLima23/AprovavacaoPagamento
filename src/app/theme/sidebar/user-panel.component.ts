@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService, User } from '@core/authentication';
 import { Usuario } from 'app/models/usuario';
+import { DialogLogoutComponent } from 'app/routes/dialog/logout/logout.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
+import { SoundService } from 'app/services-outros/sound-service';
 
 @Component({
   selector: 'app-user-panel',
@@ -26,7 +29,7 @@ import { UsuarioService } from 'app/routes/usuario/usuario.service';
         >
           <mat-icon class="icon-18">edit</mat-icon>
         </button>
-        <button mat-icon-button (click)="logout()" matTooltip="{{ 'Sair' | translate }}">
+        <button mat-icon-button (click)="confirmarLogout()" matTooltip="{{ 'Sair' | translate }}">
           <mat-icon class="icon-18">exit_to_app</mat-icon>
         </button>
       </div>
@@ -41,7 +44,9 @@ export class UserPanelComponent implements OnInit {
   constructor(
     private router: Router,
     private auth: AuthService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private dialog: MatDialog,
+    private soundService: SoundService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +69,29 @@ export class UserPanelComponent implements OnInit {
       (error: any) => {
       }
     )
+  }
+  confirmarLogout(){
+    this.playSound()
+    this.openDialogDelete()
+  }
+
+  openDialogDelete(): void {
+    const dialogRef = this.dialog.open(DialogLogoutComponent, {
+      width: '15%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.logout();
+      }else{
+        return;
+      }
+    });
+  }
+
+  playSound() {
+    const soundPath = 'assets/sound/somLogout.mp3'; // Caminho para o arquivo de som
+    this.soundService.playAudio(soundPath);
   }
 
 

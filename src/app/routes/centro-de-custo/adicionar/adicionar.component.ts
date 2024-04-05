@@ -4,7 +4,7 @@ import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { CentroDeCustoService } from '../centro-de-custo.service';
 import { Usuario } from 'app/models/usuario';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -19,7 +19,7 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
   userForm: FormGroup;
   isSubmitting: boolean = false
   clienteId: number = 0
-
+  responsavel: Usuario = new Usuario()
 
   constructor(
     private usuarioService: UsuarioService,
@@ -29,26 +29,41 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
     private toastrService: ToastrService,
     private activatedRoute: ActivatedRoute
   ) {
+
     this.userForm = this.formBuilder.group({
       descricao: ['', Validators.required],
       responsavel: ['', Validators.required]
 
     });
+
   }
+
+
+  public centroCustoForm: UntypedFormGroup = new UntypedFormGroup({
+    codigo: new UntypedFormControl(undefined),
+    descricao: new UntypedFormControl(undefined,Validators.compose([Validators.required])),
+    responsavel =
+  })
+
 
   ngOnInit() {
     this.preencherListaResponsaveis()
     this.clienteId = this.activatedRoute.snapshot.params['id'];
     if (this.clienteId) {
-      this.findCategoriaById(this.clienteId);
+      this.findCentroById(this.clienteId);
     }
-
   }
 
-  findCategoriaById(clienteId: number) {
+  responsavelSelecionado(usuario: Usuario){
+    this.responsavel = usuario;
+  }
+
+  findCentroById(clienteId: number) {
     this.centroService.getById(clienteId).subscribe(
       (data: CentroDeCusto) => {
         this.centroCusto = data;
+        this.userForm.value.descricao = this.centroCusto.descricao;
+        this.userForm.value.responsavel = this.centroCusto.reponsavel.id;
       },
       (error: any) => {
         console.log(error);
@@ -69,6 +84,11 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
   }
   salvar() {
     if (this.centroCusto.id <= 0) {
+
+      this.centroCusto.id = this.userForm.value.id;
+      this.centroCusto.descricao = this.userForm.value.descricao;
+      this.centroCusto.reponsavel = this.responsavel;
+
       this.centroService.registerCentroCusto(this.centroCusto).subscribe(
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');

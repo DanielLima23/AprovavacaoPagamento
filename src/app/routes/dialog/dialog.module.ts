@@ -8,8 +8,9 @@ import { DialogEditFornecedorDialogComponent } from './edit-fornecedor-dialog/ed
 import { DialogEditContaUsuarioDialogComponent } from './edit-conta-usuario-dialog/edit-conta-usuario-dialog.component';
 import { DialogEditContaTerceiroDialogComponent } from './edit-conta-terceiro-dialog/edit-conta-terceiro-dialog.component';
 import { DialogEditUsuarioRegisterContaComponent } from './edit-usuario-register-conta/edit-usuario-register-conta.component';
+import { DialogLogoutComponent } from './logout/logout.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({

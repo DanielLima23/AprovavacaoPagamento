@@ -48,14 +48,27 @@
       "icon": "supervisor_account",
       "children": [
         {
-          "route": "administracao/aprovar-usuarios",
-          "name": "AprovarUsuarios",
-          "type": "link"
-        },
-        {
-          "route": "administracao/usuarios",
+          "route": "",
           "name": "Usuarios",
-          "type": "link"
+          "type": "sub",
+          "icon": "dashboard",
+          "children": [
+            {
+              "route": "administracao/aprovar-usuarios",
+              "name": "AprovarUsuarios",
+              "type": "link"
+            },
+            {
+              "route": "administracao/convidar",
+              "name": "Convidar",
+              "type": "link"
+            },
+            {
+              "route": "administracao/usuarios",
+              "name": "Lista",
+              "type": "link"
+            }
+          ]
         }
       ]
     },

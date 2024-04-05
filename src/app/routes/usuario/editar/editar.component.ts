@@ -163,7 +163,7 @@ export class UsuarioEditarComponent implements OnInit {
     this.isSubmitting = true;
     this.usuarioService.update(this.usuario).subscribe(
       (data: Usuario) => {
-        this.toastrService.success("Usuário atualizado com sucesso");
+        this.toastrService.success("Usuário atualizado com sucesso","Sucesso");
       }
     )
     this.isSubmitting = false;

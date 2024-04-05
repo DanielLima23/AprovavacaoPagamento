@@ -1,7 +1,8 @@
 <mat-toolbar class="matero-toolbar">
-  <button mat-icon-button *ngIf="showToggle" (click)="toggleSidenav.emit()">
+  <button mat-icon-button *ngIf="showToggle" (click)="onToggleSidenav()" [matTooltip]="msgToolTipMenu">
     <mat-icon>menu</mat-icon>
   </button>
+
 
   <app-branding *ngIf="showBranding"></app-branding>
 
@@ -11,15 +12,15 @@
     <mat-icon>search</mat-icon>
   </button> -->
 
-  <button mat-icon-button (click)="toggleFullscreen()">
+  <button mat-icon-button (click)="toggleFullscreen()" matTooltip="Tela cheia">
     <mat-icon>fullscreen</mat-icon>
   </button>
-  <app-translate></app-translate> 
-  <app-user></app-user>
+  <!-- <app-translate></app-translate>  -->
+  <app-user matTooltip="Perfil"></app-user>
   <!-- <app-notification></app-notification>
 
 
- 
+
 
   <!-- <button mat-icon-button (click)="toggleSidenavNotice.emit()">
     <mat-icon>list</mat-icon>

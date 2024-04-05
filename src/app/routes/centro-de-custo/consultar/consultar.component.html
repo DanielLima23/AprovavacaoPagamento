@@ -26,6 +26,8 @@
       <td mat-cell *matCellDef="let centro"> {{centro.reponsavel?.nome}} </td>
       </ng-container>
 
+      <tr *ngFor='let item of sualista'> </tr>
+
       <!-- Coluna de ações (editar, excluir, etc.) -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Ações </th>

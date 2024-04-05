@@ -60,7 +60,7 @@ export class CentroDeCustoService {
       tokenCliente: pTokenCliente ?? ''
     });
 
-    const path = `${this.url}api/centroDeCustos/${id}`;  
+    const path = `${this.url}api/centroDeCustos/${id}`;
 
 
     return this.http.put(path,centro, { headers })
@@ -81,11 +81,10 @@ export class CentroDeCustoService {
     return this.http.delete( path, { headers });
   }
 
-  
+
   getById(pCodigoCentro: number): Observable<any>{
     const pToken = this.tokenService.getToken()
     const pTokenCliente = this.tokenService.getTokenCliente();
-
 
     const headers = new HttpHeaders({
       tokenUsuario: pToken ??'',

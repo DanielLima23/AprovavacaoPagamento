@@ -7,6 +7,7 @@ import { DialogEditFornecedorDialogComponent } from './edit-fornecedor-dialog/ed
 import { DialogEditContaUsuarioDialogComponent } from './edit-conta-usuario-dialog/edit-conta-usuario-dialog.component';
 import { DialogEditContaTerceiroDialogComponent } from './edit-conta-terceiro-dialog/edit-conta-terceiro-dialog.component';
 import { DialogEditUsuarioRegisterContaComponent } from './edit-usuario-register-conta/edit-usuario-register-conta.component';
+import { DialogLogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -14,7 +15,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'edit-fornecedor-dialog', component: DialogEditFornecedorDialogComponent },
 { path: 'edit-conta-usuario-dialog', component: DialogEditContaUsuarioDialogComponent },
 { path: 'edit-conta-terceiro-dialog', component: DialogEditContaTerceiroDialogComponent },
-{ path: 'edit-usuario-register-conta', component: DialogEditUsuarioRegisterContaComponent }
+{ path: 'edit-usuario-register-conta', component: DialogEditUsuarioRegisterContaComponent },
+{ path: 'logout', component: DialogLogoutComponent }
 ];
 
 @NgModule({

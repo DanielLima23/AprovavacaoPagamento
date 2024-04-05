@@ -5,6 +5,28 @@
         Lista de usuários
       </mat-card-title>
     </mat-card-header>
+    <table mat-table [dataSource]="listaUsuarios">
+      <ng-container matColumnDef="usuario">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let item"> {{item.nome}} </td>
+      </ng-container>
+      <ng-container matColumnDef="centroDeCusto">
+        <th mat-header-cell *matHeaderCellDef> Centro de custo </th>
+        <!-- <td mat-cell *matCellDef="let item"> {{retornaCentroDeCustoPorId(item)}} </td> -->
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button (click)="editarUsuario(item.id)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openDialogDelete(item.id)" matTooltip="Deletar">
+            <mat-icon>delete</mat-icon>
+          </button>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </mat-card-content>
 </mat-card>
 
