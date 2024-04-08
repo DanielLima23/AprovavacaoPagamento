@@ -39,11 +39,11 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
   }
 
 
-  public centroCustoForm: UntypedFormGroup = new UntypedFormGroup({
-    codigo: new UntypedFormControl(undefined),
-    descricao: new UntypedFormControl(undefined,Validators.compose([Validators.required])),
-    responsavel =
-  })
+  // public centroCustoForm: UntypedFormGroup = new UntypedFormGroup({
+  //   codigo: new UntypedFormControl(undefined),
+  //   descricao: new UntypedFormControl(undefined,Validators.compose([Validators.required])),
+  //   responsavel =
+  // })
 
 
   ngOnInit() {
