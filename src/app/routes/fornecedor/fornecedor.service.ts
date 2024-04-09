@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { TokenService } from '@core';
 import { Data } from 'app/data/data';
 import { Terceiro } from 'app/models/terceiro';
@@ -17,28 +18,28 @@ export class FornecedorService {
 
   }
 
-  
-  registerFornecedor(terceiro: Terceiro) : Observable<any>{
+
+  registerFornecedor(terceiro: UntypedFormGroup) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
-  
+
     const headers = new HttpHeaders({
      tokenUsuario: pTokenUsuario ??'',
      tokenCliente: pTokenCliente ?? ''
    });
-  
+
     return this.http.post(this.url + 'api/terceiros',terceiro, { headers })
   }
 
   updateFornecedor(id: number,terceiro: Terceiro) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
-  
+
     const headers = new HttpHeaders({
      tokenUsuario: pTokenUsuario ??'',
      tokenCliente: pTokenCliente ?? ''
    });
-    const path = `${this.url}api/terceiros/${id}`;  
+    const path = `${this.url}api/terceiros/${id}`;
     return this.http.put(path,terceiro, { headers })
   }
 
@@ -83,6 +84,6 @@ export class FornecedorService {
 
     return this.http.delete( path, { headers });
   }
-  
+
 
 }

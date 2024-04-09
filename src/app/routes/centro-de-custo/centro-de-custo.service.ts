@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { TokenService } from '@core';
 import { Data } from 'app/data/data';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
@@ -39,7 +40,7 @@ export class CentroDeCustoService {
     return this.http.get(this.url + 'api/usuario/resposaveis', { headers })
   }
 
-  registerCentroCusto(centro: CentroDeCusto) : Observable<any>{
+  registerCentroCusto(centro: UntypedFormGroup) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
