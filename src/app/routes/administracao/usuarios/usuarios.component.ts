@@ -8,6 +8,7 @@ import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { Usuario } from 'app/models/usuario';
 import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -25,16 +26,35 @@ export class AdministracaoUsuariosComponent implements OnInit {
 
   listaUsuarios: Usuario[] = []
   displayedColumns: string[] = ['usuario', 'centroDeCusto', 'actions'];
+  listaCentroDeCusto: CentroDeCusto[] = []
 
   ngOnInit() {
-    this.preencherListaUsuarios()
+    this.carregarDados()
+  }
+
+  carregarDados() {
+    forkJoin([
+      this.usuarioService.getListaUsuarios(),
+      this.centroCustoService.getListaCentroDeCusto()
+    ]).subscribe(([usuarios, centrosDeCusto]) => {
+      this.listaUsuarios = usuarios;
+      this.listaCentroDeCusto = centrosDeCusto;
+      this.populaNomeCentroNoUsuario();
+    });
   }
 
   constructor(private _snackBar: MatSnackBar,
-    private formBuilder: FormBuilder,
     private tokenService: TokenService,
     private usuarioService: UsuarioService,
     private centroCustoService: CentroDeCustoService) {
+  }
+
+
+  populaNomeCentroNoUsuario() {
+    this.listaUsuarios.map(usuario => {
+      usuario.nomeCentroDeCusto = this.retornaCentroDeCustoPorId(usuario).descricao;
+      usuario.reponsavelAprovacao = this.retornaCentroDeCustoPorId(usuario).reponsavelAprovacao
+    })
   }
 
   public preencherListaUsuarios() {
@@ -45,12 +65,45 @@ export class AdministracaoUsuariosComponent implements OnInit {
     )
   }
 
-  public retornaCentroDeCustoPorId(id: any) {
-    this.centroCustoService.getById(id).subscribe(
-      (data: CentroDeCusto) => {
-        return data.descricao;
+  public retornaCentroDeCustoPorId(usuario: Usuario): any {
+    return this.listaCentroDeCusto.find(x => x.id === usuario.idCentroCusto);
+  }
+
+  public retornaListaCentroDeCusto() {
+    this.centroCustoService.getListaCentroDeCusto().subscribe(
+      (data: CentroDeCusto[]) => {
+        this.listaCentroDeCusto = data;
       }
     )
   }
 
+  // formatarPalavraCentroGerencia(usuario: Usuario): boolean {
+  //   const centro = this.listaCentroDeCusto.find(centro => centro.id === usuario.idCentroCusto);
+  //   if (centro) {
+  //     return centro.responsavelAprovacao;
+  //   }
+  //   return false;
+  // }
+
 }
+
+
+// removerAcentos(texto: string): string {
+//   if (texto) {
+//     return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+//   }
+//   return '';
+// }
+
+// formatarPalavra(palavra: string): string {
+//   let palavraFormatada = "";
+//   if (palavra) {
+//     palavraFormatada = palavra.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+//     return palavraFormatada.toLowerCase()
+//   } else {
+//     return ""
+//   }
+
+// }
+
+

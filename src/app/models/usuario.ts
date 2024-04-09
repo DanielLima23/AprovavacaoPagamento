@@ -14,5 +14,7 @@ export class Usuario extends FormatadorData{
     token!: string
     idCentroCusto: number= 0
     contas: ContaUsuario[]=[]
+    nomeCentroDeCusto: string = ""
+    reponsavelAprovacao: boolean = false;
 
 }

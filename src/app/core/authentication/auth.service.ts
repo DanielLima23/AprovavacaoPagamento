@@ -5,6 +5,8 @@ import { filterObject, isEmptyObject } from './helpers';
 import { User } from './interface';
 import { LoginService } from './login.service';
 import { TokenService } from './token.service';
+import { RegistroRequest } from 'app/models/registro-request';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +43,10 @@ export class AuthService {
       tap(token => this.tokenService.set(token)),
       map(() => this.check())
     );
+  }
+
+  register(registroRequest: UntypedFormGroup){
+
   }
 
   refresh() {

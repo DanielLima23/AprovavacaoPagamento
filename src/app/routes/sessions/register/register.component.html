@@ -6,7 +6,7 @@
       </mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="row mt-2">
 
       <div class="row mt-2">
         <div class="col-sm-6">
@@ -51,7 +51,7 @@
           </mat-slide-toggle>
         </div>
 
-        <div class="col-sm-6 mt-2" *ngIf="!userForm.get('contaCnpj')?.value">
+        <div class="col-sm-6 mt-2" *ngIf="!registerForm.get('contaCnpj')?.value">
           <mat-form-field floatLabel="always" style="width: 100%;">
             <mat-label>Cpf</mat-label>
             <input formControlName="cpf" matInput #input maxlength="14" placeholder="Insira seu cpf"
@@ -60,7 +60,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-sm-6 mt-2" *ngIf="userForm.get('contaCnpj')?.value">
+        <div class="col-sm-6 mt-2" *ngIf="registerForm.get('contaCnpj')?.value">
           <mat-form-field floatLabel="always" style="width: 100%;">
             <mat-label>Cnpj</mat-label>
             <input formControlName="cnpj" matInput #input maxlength="18"
@@ -81,7 +81,7 @@
         </div>
       </div>
       <mat-card-footer align="end" class="mt-2">
-        <button [disabled]="userForm.invalid " (click)="salvar()" mat-flat-button
+        <button [disabled]="registerForm.invalid " (click)="salvar()" mat-flat-button
               extended
               color="primary" class="m-3">
         <mat-icon>save</mat-icon>

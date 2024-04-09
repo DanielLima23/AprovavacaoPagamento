@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService, User } from '@core/authentication';
 import { Usuario } from 'app/models/usuario';
@@ -76,9 +76,10 @@ export class UserPanelComponent implements OnInit {
   }
 
   openDialogDelete(): void {
-    const dialogRef = this.dialog.open(DialogLogoutComponent, {
-      width: '15%'
-    });
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.width = window.innerWidth <= 600 ? '90%' : '20%';
+
+    const dialogRef = this.dialog.open(DialogLogoutComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

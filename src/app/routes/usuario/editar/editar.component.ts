@@ -169,32 +169,6 @@ export class UsuarioEditarComponent implements OnInit {
     this.isSubmitting = false;
   }
 
-  // onNoClick(): void {
-  //   this.CloseModel()
-  // }
-
-  // onYesClick(): void {
-  //   const modelDiv = document.getElementById('myModal');
-  //   const id = modelDiv?.getAttribute('data-id');
-  //   this.excluirContaBanco(id)
-  //   this.CloseModel()
-  // }
-
-  // CloseModel() {
-  //   const modelDiv = document.getElementById('myModal');
-  //   if (modelDiv != null) {
-  //     modelDiv.style.display = 'none';
-  //   }
-  // }
-
-  // openModal(id: number) {
-  //   const modelDiv = document.getElementById('myModal');
-  //   if (modelDiv != null) {
-  //     modelDiv.style.display = 'block';
-  //     modelDiv.setAttribute('data-id', id.toString());
-  //   }
-  // }
-
   selectedOptions = new FormControl<CentroDeCusto[]>([]);
 
   listaCentroCusto: CentroDeCusto[] = []

@@ -78,9 +78,7 @@ export class UserComponent implements OnInit {
   }
 
   openDialogDelete(): void {
-    const dialogRef = this.dialog.open(DialogLogoutComponent, {
-      width: '15%'
-    });
+    const dialogRef = this.dialog.open(DialogLogoutComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

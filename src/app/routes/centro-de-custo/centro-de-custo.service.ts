@@ -52,7 +52,7 @@ export class CentroDeCustoService {
     return this.http.post(this.url + 'api/centroDeCustos',centro, { headers })
   }
 
-  updateCentroCusto(id:number,centro: CentroDeCusto) : Observable<any>{
+  updateCentroCusto(id:number,centro: UntypedFormGroup) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -83,7 +83,7 @@ export class CentroDeCustoService {
   }
 
 
-  getById(pCodigoCentro: number): Observable<any>{
+  getById(id: number): Observable<any>{
     const pToken = this.tokenService.getToken()
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -92,7 +92,7 @@ export class CentroDeCustoService {
       tokenCliente: pTokenCliente??''
     });
 
-    const path = `${this.url}api/centroDeCustos/${pCodigoCentro}`;
+    const path = `${this.url}api/centroDeCustos/${id}`;
 
     return this.http.get( path, { headers });
   }

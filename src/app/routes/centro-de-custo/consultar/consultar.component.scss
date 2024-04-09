@@ -1,0 +1,12 @@
+.centro-destacado {
+  border: 2px solid rgba(245,67,54);
+  padding: 2px;
+  color: rgba(245,67,54);
+  // border-radius: 20%;
+  font-weight: bold;
+}
+.table_custom { --bs-table-bg: transparent !important; }
+
+.color-table {
+  color: var(--primary-bg);
+}

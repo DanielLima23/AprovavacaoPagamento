@@ -21,14 +21,17 @@
               <mat-hint align="end">{{input.value.length}}/50</mat-hint>
             </mat-form-field>
           </div>
-            <mat-form-field class="col-md-6" formGroupName="reponsavel">
-              <mat-label>Responsável</mat-label>
-                <mat-select formControlName="id" name="id" id="id">
-                  <mat-option *ngFor="let usuario of listaResponsaveis" [value]="usuario.id">
-                    {{ usuario.nome }}
-                  </mat-option>
-                </mat-select>
-            </mat-form-field>
+          <mat-form-field class="col-md-6" formGroupName="reponsavel">
+            <mat-label>Responsável</mat-label>
+            <mat-select formControlName="id" name="id" id="id">
+              <mat-option [value]="null">Nenhum</mat-option>
+              <mat-option *ngFor="let usuario of listaResponsaveis" [value]="usuario.id">
+                {{ usuario.nome }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-slide-toggle formControlName="reponsavelAprovacao" class="col-md-12" (change)="toogleChange($event)">Exige aprovação do responsável?</mat-slide-toggle>
+
         </div>
       </mat-card-content>
       <br />

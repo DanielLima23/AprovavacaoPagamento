@@ -6,6 +6,7 @@ import { CentroDeCustoService } from '../centro-de-custo.service';
 import { Usuario } from 'app/models/usuario';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-centro-de-custo-adicionar',
@@ -13,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./adicionar.component.scss'],
 })
 export class CentroDeCustoAdicionarComponent implements OnInit {
+
 
   centroCusto: CentroDeCusto = new CentroDeCusto();
   listaResponsaveis: Usuario[] = []
@@ -28,23 +30,38 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
 
     this.centroCustoForm.markAsUntouched();
 
-    // this.centroCustoForm.valueChanges.subscribe(s => {
-    //   console.log(s);
-    // });
+    this.centroCustoForm.valueChanges.subscribe(s => {
+      console.log(s);
+    });
 
   }
 
   customValidation: ValidatorFn = (control: AbstractControl): { [key: string]: any } | null => {
     const descricao = control.get('descricao');
     const responsavelId = control.get('reponsavel.id');
+    const responsavelAprovacao = control.get('reponsavelAprovacao');
 
     if (descricao && responsavelId) {
-      if (!descricao.value || !responsavelId.value) {
+      if ((!descricao.value || !responsavelId.value) && responsavelAprovacao?.value) {
         return { 'requiredFields': true };
       }
     }
     return null;
   };
+
+  toogleChange(event: MatSlideToggleChange) {
+
+    if (event.checked) {
+      this.centroCustoForm.get('reponsavel.id')?.invalid
+      this.centroCustoForm.get('reponsavel')?.enable()
+    } else {
+      this.centroCustoForm.get('reponsavel.id')?.valid
+      this.centroCustoForm.get('reponsavel')?.disable()
+      this.centroCustoForm.get('reponsavel.id')?.setValue(0)
+    }
+
+
+  }
 
   public centroCustoForm: UntypedFormGroup = new UntypedFormGroup({
     id: new UntypedFormControl(0),
@@ -52,6 +69,7 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
     reponsavel: new UntypedFormGroup({
       id: new UntypedFormControl(0)
     }),
+    reponsavelAprovacao: new UntypedFormControl(true)
   }, { validators: this.customValidation });
 
 
@@ -68,12 +86,17 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
     this.centroService.getById(clienteId).subscribe(
       (data: CentroDeCusto) => {
         this.centroCustoForm.patchValue(data)
+        if (!this.centroCustoForm.get('reponsavelAprovacao')?.value){
+          this.centroCustoForm.get('reponsavel')?.disable()
+        }
       },
       (error: any) => {
         console.log(error);
       }
     );
   }
+
+
 
   salvar() {
     if (this.centroCustoForm.value.id <= 0) {
@@ -106,4 +129,6 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
       }
     )
   }
+
+
 }

@@ -34,7 +34,6 @@ export class CentroDeCustoConsultarComponent implements OnInit {
     this.centroCustoService.getListaCentroDeCusto().subscribe(
       (data: CentroDeCusto[]) => {
         this.listaCentros = data;
-        console.log(this.listaCentros)
       }
     )
   }
