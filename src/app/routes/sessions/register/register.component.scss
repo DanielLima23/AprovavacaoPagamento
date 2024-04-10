@@ -1,4 +1,10 @@
 .dialog-responsive {
-  max-height: 90vh; /* Define a altura máxima do diálogo como 90% da altura da tela */
+  max-height: 90vh;
   overflow-y: auto; /* Adiciona uma barra de rolagem vertical se o conteúdo exceder a altura máxima */
+}
+
+.table_custom { --bs-table-bg: transparent !important; }
+
+.color-table {
+  color: var(--primary-bg);
 }

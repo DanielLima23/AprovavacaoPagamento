@@ -55,6 +55,10 @@ export class RegisterComponent {
     // }, {
     //   validators: this.cpfCnpjRequiredValidator
     // });
+
+    this.registerForm.valueChanges.subscribe(s => {
+      console.log(s);
+    });
   }
 
   public registerForm: UntypedFormGroup = new UntypedFormGroup({
@@ -66,7 +70,6 @@ export class RegisterComponent {
     celular: new UntypedFormControl(undefined, Validators.required),
     senha: new UntypedFormControl(undefined, Validators.required),
     dataNascimento: new UntypedFormControl(undefined, Validators.required),
-    tokenCliente: new UntypedFormControl(undefined),
     contaCnpj: new UntypedFormControl(false),
     contas: new UntypedFormArray([]),
   }, { validators: this.cpfCnpjRequiredValidator });
@@ -138,11 +141,11 @@ export class RegisterComponent {
     }
 
 
-    this.auth.register(this.registerForm.getRawValue())
-
-    this.toastr.success('Cadastro realizado com sucesso.', 'Sucesso')
-    console.log('formulario: ', this.registerForm.value)
-    console.log('lista: ', this.contaUsuario)
+    this.auth.register(this.registerForm.getRawValue(),this.tokenCliente).subscribe(
+      (data: any) => {
+        this.toastr.success('Cadastro realizado com sucesso.', 'Sucesso')
+      }
+    )
 
   }
 
@@ -184,7 +187,7 @@ export class RegisterComponent {
     const dialogRef = this.dialog.open(DialogEditUsuarioRegisterContaComponent, {
       width: 'auto',
       panelClass: 'dialog-responsive',
-      data: { conta: conta, exclusao: false } // Aqui você indica que não é uma operação de exclusão
+      data: { conta: conta, exclusao: false }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -203,7 +206,7 @@ export class RegisterComponent {
       const contaFormGroup = this.formBuilder.group(conta);
       contasArray.setControl(index, contaFormGroup);
       this.contaUsuario[index] = { ...conta };
-      this.dataSource.data = [...this.contaUsuario];
+      //this.dataSource.data = [...this.contaUsuario];
       console.log(this.registerForm.value)
     }
   }
@@ -229,8 +232,7 @@ export class RegisterComponent {
       const contasArray = this.registerForm.get('contas') as FormArray;
       contasArray.removeAt(index);
       this.contaUsuario.splice(index, 1);
-      this.dataSource.data = [...this.contaUsuario];
-      console.log(this.registerForm.value)
+      //this.dataSource.data = [...this.contaUsuario];
     }
   }
 
@@ -239,7 +241,7 @@ export class RegisterComponent {
     const contasArray = this.registerForm.get('contas') as FormArray;
     contasArray.push(this.formBuilder.group(conta));
     this.contaUsuario.push(conta);
-    this.dataSource.data = [...this.contaUsuario]
+    //this.dataSource.data = [...this.contaUsuario]
   }
 
 

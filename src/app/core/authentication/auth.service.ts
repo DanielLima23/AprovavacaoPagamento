@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, iif, merge, of } from 'rxjs';
+import { BehaviorSubject, iif, merge, Observable, of } from 'rxjs';
 import { catchError, map, share, switchMap, tap } from 'rxjs/operators';
 import { filterObject, isEmptyObject } from './helpers';
 import { User } from './interface';
@@ -7,6 +7,8 @@ import { LoginService } from './login.service';
 import { TokenService } from './token.service';
 import { RegistroRequest } from 'app/models/registro-request';
 import { UntypedFormGroup } from '@angular/forms';
+import { Data } from 'app/data/data';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -20,11 +22,25 @@ export class AuthService {
     switchMap(() => this.assignUser()),
     share()
   );
+  private url = Data.url
+
+
+  get tokenUsuario(): string {
+    const pToken = this.tokenService.getToken();
+    return pToken;
+  }
+
+  get tokenCliente(): string {
+    const pToken = this.tokenService.getTokenCliente();
+    return pToken;
+  }
+
 
   constructor(
     private loginService: LoginService,
-    private tokenService: TokenService
-  ) {}
+    private tokenService: TokenService,
+    private http: HttpClient
+  ) { }
 
   init() {
     return new Promise<void>(resolve => this.change$.subscribe(() => resolve()));
@@ -45,8 +61,13 @@ export class AuthService {
     );
   }
 
-  register(registroRequest: UntypedFormGroup){
+  register(registroRequest: UntypedFormGroup, tokenCliente: string): Observable<any> {
 
+    // const headers = new HttpHeaders({
+    //   tokenCliente: this.tokenCliente ?? '',
+    // });
+
+    return this.http.post(this.url + 'api/usuario/registerLink/'+ tokenCliente, registroRequest,)
   }
 
   refresh() {

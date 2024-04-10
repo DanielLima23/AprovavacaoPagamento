@@ -1,26 +1,76 @@
+// .matero-auth-container {
+//   position: relative;
+//   display: flex;
+//   justify-content: center;
+//   min-height: 100%;
+//   padding: 16px;
+//   background-color: #212121;
+//   background-image: linear-gradient(
+//       45deg,
+//       rgba(255, 255, 255, 0.05) 25%,
+//       transparent 25%,
+//       transparent 75%,
+//       rgba(255, 255, 255, 0.05) 75%,
+//       rgba(255, 255, 255, 0.05)
+//     ),
+//     linear-gradient(
+//       -45deg,
+//       rgba(255, 255, 255, 0.05) 25%,
+//       transparent 25%,
+//       transparent 75%,
+//       rgba(255, 255, 255, 0.05) 75%,
+//       rgba(255, 255, 255, 0.05)
+//     );
+//   background-size: 60px 60px;
+//   overflow: hidden;
+// }
+
+// .efeito-zoom {
+//   animation: card-background-animation 15s alternate infinite;
+// }
+
+// @keyframes card-background-animation {
+//   0%,
+//   100% {
+//     transform: scale(1);
+//   }
+
+//   40%,
+//   60% {
+//     transform: scale(1.1);
+//   }
+// }
+
 .matero-auth-container {
   position: relative;
   display: flex;
   justify-content: center;
-  min-height: 100%;
+  align-items: center;
+  min-height: 100vh; /* Usando altura total da viewport */
   padding: 16px;
-  background-color: #212121;
-  background-image:
-    linear-gradient(
-      45deg,
-      rgba(255, 255, 255, .05) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(255, 255, 255, .05) 75%,
-      rgba(255, 255, 255, .05)
-    ),
-    linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, .05) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(255, 255, 255, .05) 75%,
-      rgba(255, 255, 255, .05)
-    );
-  background-size: 60px 60px;
+  overflow: hidden; /* Oculta a barra de rolagem quando a imagem é ampliada */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../../assets/images/img-fundo-auth.png');
+  background-size: cover;
+  background-position: center;
+  animation: card-background-animation 15s alternate infinite;
+}
+
+@keyframes card-background-animation {
+  0%,
+  100% {
+    transform: scale(1.0);
+  }
+
+  40%,
+  60% {
+    transform: scale(1.2);
+  }
 }
