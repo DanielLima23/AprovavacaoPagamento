@@ -34,7 +34,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return `${error.status} ${error.statusText}`;
   };
 
-  constructor(private router: Router, private toast: ToastrService) {}
+  constructor(private router: Router, private toast: ToastrService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next
@@ -48,12 +48,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         skipLocationChange: true,
       });
     } else {
-      console.error('ERROR', error);
-      this.toast.error(this.getMessage(error));
-      if (error.status === STATUS.UNAUTHORIZED) {
+      if (error.status) {
         this.router.navigateByUrl('/auth/login');
-        this.toast.error('Não autorizado');
-
+        this.toast.error(error.error.mensagem, 'Erro');
       }
     }
 

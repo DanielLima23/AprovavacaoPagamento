@@ -1,0 +1,13 @@
+.table_custom { --bs-table-bg: transparent !important; }
+
+.color-table {
+  color: var(--primary-bg);
+}
+
+.centro-destacado {
+  border: 2px solid rgb(40,167,69);
+  padding: 2px;
+  color: rgb(40,167,69);
+  // border-radius: 20%;
+  font-weight: bold;
+}

@@ -17,6 +17,9 @@ export class CentroDeCustoConsultarComponent implements OnInit {
   centroCusto = new CentroDeCusto();
 
   listaCentros: CentroDeCusto[] = []
+  filteredListaCentros: CentroDeCusto[] = []
+
+  _filter:string=""
 
   constructor(
     private centroCustoService: CentroDeCustoService,
@@ -34,6 +37,7 @@ export class CentroDeCustoConsultarComponent implements OnInit {
     this.centroCustoService.getListaCentroDeCusto().subscribe(
       (data: CentroDeCusto[]) => {
         this.listaCentros = data;
+        this.filteredListaCentros = data;
       }
     )
   }
@@ -73,6 +77,15 @@ export class CentroDeCustoConsultarComponent implements OnInit {
   atualizarCentroCusto(id: any, parcela: CentroDeCusto) {
 
     this.excluirCentroCusto(parcela.id)
+  }
+
+  set filter(value: string){
+    this._filter = value;
+    this.filteredListaCentros = this.listaCentros.filter((centro: CentroDeCusto)=> centro.descricao.toLocaleLowerCase().indexOf(this._filter.toLocaleLowerCase()) > -1)
+  }
+
+  get filter(): string{
+    return this._filter
   }
 
   // deletarCentro(id: any) {

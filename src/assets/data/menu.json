@@ -54,13 +54,8 @@
           "icon": "dashboard",
           "children": [
             {
-              "route": "administracao/usuarios/pendentes-aprovacao",
+              "route": "administracao/pendentes-aprovacao",
               "name": "AprovarUsuarios",
-              "type": "link"
-            },
-            {
-              "route": "administracao/convidar",
-              "name": "Convidar",
               "type": "link"
             },
             {

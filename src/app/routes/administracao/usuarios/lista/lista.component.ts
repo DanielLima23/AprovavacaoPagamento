@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '@core';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
@@ -25,8 +26,22 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
   displayedColumns: string[] = ['usuario', 'centroDeCusto', 'actions'];
   listaCentroDeCusto: CentroDeCusto[] = []
 
+  userForm: FormGroup;
+  urlRegister: string = "auth/register/" + this.tokenService.getTokenCliente();
+  textoParaCopiar: string = '';
+
+  enderecoBase!: string;
+
   ngOnInit() {
     this.carregarDados()
+    this.userForm = this.formBuilder.group({ // Crie um FormGroup aqui
+      linkRegister: ['']
+    });
+    this.enderecoBase = `${window.location.protocol}//${window.location.host}/`;
+
+    this.userForm.get('linkRegister')?.disable();
+    this.textoParaCopiar = this.enderecoBase + this.urlRegister;
+    this.userForm.get('linkRegister')?.setValue(this.textoParaCopiar)
   }
 
   carregarDados() {
@@ -35,6 +50,7 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
       this.centroCustoService.getListaCentroDeCusto()
     ]).subscribe(([usuarios, centrosDeCusto]) => {
       this.listaUsuarios = usuarios;
+      this.filteredListaUsuarios = usuarios
       this.listaCentroDeCusto = centrosDeCusto;
       this.populaNomeCentroNoUsuario();
     });
@@ -43,12 +59,30 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
   constructor(private _snackBar: MatSnackBar,
     private tokenService: TokenService,
     private usuarioService: UsuarioService,
-    private centroCustoService: CentroDeCustoService) {
+    private centroCustoService: CentroDeCustoService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.userForm = this.formBuilder.group({
+      linkRegister: ['']
+    })
+  }
+
+  copiarTexto() {
+    navigator.clipboard.writeText(this.textoParaCopiar).then(() => {
+      this._snackBar.open('Texto copiado para a área de transferência', 'Fechar', {
+        duration: 2000,
+      });
+    }, (err) => {
+      console.error('Erro ao copiar texto: ', err);
+      this._snackBar.open('Erro ao copiar texto', 'Fechar', {
+        duration: 2000,
+      });
+    });
   }
 
 
   populaNomeCentroNoUsuario() {
-    this.listaUsuarios.map(usuario => {
+    this.filteredListaUsuarios.map(usuario => {
       usuario.nomeCentroDeCusto = this.retornaCentroDeCustoPorId(usuario).descricao ? this.retornaCentroDeCustoPorId(usuario).descricao : "Não contém"
       usuario.reponsavelAprovacao = this.retornaCentroDeCustoPorId(usuario).reponsavelAprovacao ? this.retornaCentroDeCustoPorId(usuario).reponsavelAprovacao : false
 
@@ -73,6 +107,18 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
         this.listaCentroDeCusto = data;
       }
     )
+  }
+  filteredListaUsuarios: Usuario[] = []
+
+  _filter:string=""
+
+  set filter(value: string){
+    this._filter = value;
+    this.filteredListaUsuarios = this.listaUsuarios.filter((usuario: Usuario)=> usuario.nome.toLocaleLowerCase().indexOf(this._filter.toLocaleLowerCase()) > -1)
+  }
+
+  get filter(): string{
+    return this._filter
   }
 
 }
