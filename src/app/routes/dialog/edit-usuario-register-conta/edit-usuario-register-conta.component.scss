@@ -1,0 +1,17 @@
+.transparent-card {
+  background-color: transparent !important; /* Define a cor de fundo como transparente */
+  position: relative; /* Torna o posicionamento relativo */
+  backdrop-filter: blur(16px);
+}
+
+.transparent-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7); /* Define a cor de fundo com transparência */
+  opacity: 0.9; /* Define a opacidade */
+
+}
+

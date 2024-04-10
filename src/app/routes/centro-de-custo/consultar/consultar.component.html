@@ -56,7 +56,7 @@
             <td style="width: 33.33%;" class="color-table align-middle">{{ centro.descricao }}</td>
             <td style="width: 33.33%; white-space: nowrap;" class="color-table align-middle">
               <span [ngClass]="{'centro-destacado': centro.reponsavel === null}">
-                {{ centro.reponsavel.nome ? centro.reponsavel.nome : 'Não contém' }}
+                {{ centro.reponsavel?.nome ? centro.reponsavel.nome : 'Não contém' }}
               </span>
             </td>
             <td style="width: 33.33%;" class="color-table align-middle">

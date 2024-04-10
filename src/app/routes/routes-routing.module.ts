@@ -39,7 +39,7 @@ const routes: Routes = [
       },
       { path: 'fornecedor', loadChildren: () => import('./fornecedor/fornecedor.module').then(m => m.FornecedorModule) },
       { path: 'dialog', loadChildren: () => import('./dialog/dialog.module').then(m => m.DialogModule) },
-  { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule) },
+      { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule) },
 
     ],
   },

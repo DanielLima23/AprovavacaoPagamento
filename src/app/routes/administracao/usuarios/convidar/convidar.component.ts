@@ -4,11 +4,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TokenService } from '@core';
 
 @Component({
-  selector: 'app-administracao-convidar',
+  selector: 'app-administracao-usuarios-convidar',
   templateUrl: './convidar.component.html',
   styleUrls: ['./convidar.component.scss']
 })
-export class AdministracaoConvidarComponent implements OnInit {
+export class AdministracaoUsuariosConvidarComponent implements OnInit {
+
   userForm: FormGroup;
   urlRegister: string = "auth/register/" + this.tokenService.getTokenCliente();
 

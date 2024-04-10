@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AdministracaoUsuariosComponent } from './usuarios/usuarios.component';
-import { AdministracaoAprovarUsuariosComponent } from './aprovar-usuarios/aprovar-usuarios.component';
-import { AdministracaoConvidarComponent } from './convidar/convidar.component';
+import { AdministracaoUsuariosListaComponent } from './usuarios/lista/lista.component';
+import { AdministracaoUsuariosConvidarComponent } from './usuarios/convidar/convidar.component';
+import { AdministracaoUsuariosPendentesAprovacaoComponent } from './usuarios/pendentes-aprovacao/pendentes-aprovacao.component';
+import { AdministracaoUsuariosAprovarComponent } from './usuarios/aprovar/aprovar.component';
 
-const routes: Routes = [{ path: 'usuarios', component: AdministracaoUsuariosComponent },
-{ path: 'aprovar-usuarios', component: AdministracaoAprovarUsuariosComponent },
-{ path: 'convidar', component: AdministracaoConvidarComponent }
+const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent },
+{ path: 'convidar', component: AdministracaoUsuariosConvidarComponent },
+{ path: 'pendentes-aprovacao', component: AdministracaoUsuariosPendentesAprovacaoComponent },
+{ path: 'aprovar', component: AdministracaoUsuariosAprovarComponent }
 ];
 
 @NgModule({

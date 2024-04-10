@@ -54,7 +54,7 @@
           "icon": "dashboard",
           "children": [
             {
-              "route": "administracao/aprovar-usuarios",
+              "route": "administracao/usuarios/pendentes-aprovacao",
               "name": "AprovarUsuarios",
               "type": "link"
             },
@@ -64,7 +64,7 @@
               "type": "link"
             },
             {
-              "route": "administracao/usuarios",
+              "route": "administracao/lista",
               "name": "Lista",
               "type": "link"
             }

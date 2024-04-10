@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '@core/authentication';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private toastr: ToastrService
   ) {}
 
   get username() {
@@ -56,6 +58,9 @@ export class LoginComponent {
                 remote: errors[key][0],
               });
             });
+          }
+          if(errorRes.status === 500){
+            this.toastr.error('Erro interno do servidor.', 'Erro')
           }
           this.isSubmitting = false;
         },

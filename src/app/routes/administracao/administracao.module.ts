@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { AdministracaoRoutingModule } from './administracao-routing.module';
-import { AdministracaoUsuariosComponent } from './usuarios/usuarios.component';
-import { AdministracaoAprovarUsuariosComponent } from './aprovar-usuarios/aprovar-usuarios.component';
-import { AdministracaoConvidarComponent } from './convidar/convidar.component';
+import { AdministracaoUsuariosListaComponent } from './usuarios/lista/lista.component';
+import { AdministracaoUsuariosConvidarComponent } from './usuarios/convidar/convidar.component';
+import { AdministracaoUsuariosPendentesAprovacaoComponent } from './usuarios/pendentes-aprovacao/pendentes-aprovacao.component';
+import { AdministracaoUsuariosAprovarComponent } from './usuarios/aprovar/aprovar.component';
 
-const COMPONENTS: any[] = [AdministracaoUsuariosComponent, AdministracaoAprovarUsuariosComponent, AdministracaoConvidarComponent];
+const COMPONENTS: any[] = [AdministracaoUsuariosListaComponent, AdministracaoUsuariosConvidarComponent, AdministracaoUsuariosPendentesAprovacaoComponent, AdministracaoUsuariosAprovarComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({

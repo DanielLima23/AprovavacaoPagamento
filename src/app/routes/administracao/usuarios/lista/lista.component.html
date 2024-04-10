@@ -46,7 +46,7 @@
           <tr class="text-center">
             <td style="width: 33.33%;" class="color-table align-middle">{{ usuario.nome }}</td>
             <td style="width: 33.33%;" class="color-table align-middle">
-              <span [ngClass]="{'centro-destacado': usuario.reponsavelAprovacao === false}">{{ usuario.nomeCentroDeCusto}}</span>
+              <span [ngClass]="{'centro-destacado': usuario.reponsavelAprovacao === false}">{{ usuario.nomeCentroDeCusto ? usuario.nomeCentroDeCusto : "Não contém"}}</span>
             </td>
             <td style="width: 33.33%;" class="color-table align-middle">
               <button mat-icon-button (click)="editarUsuario(usuario.id)" matTooltip="Editar" color="accent">
@@ -65,4 +65,3 @@
 
   </mat-card-content>
 </mat-card>
-
