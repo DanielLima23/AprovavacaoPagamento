@@ -3,6 +3,8 @@ import { FormasPagamentoSelect } from './classes/select-formas-pagamento';
 import { TipoContaSelect } from './classes/select-tipo-conta';
 import { TipoTerceiro } from 'app/models/enum/tipo-terceiro.enum';
 import { TipoTerceiroSelect } from './classes/select-tipo-terceiro';
+import { TipoStatusUsuarioSelect } from './classes/select-tipo-status-usuario';
+import { TipoUsuarioSelect } from './classes/select-tipo-usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +73,88 @@ export class MapeamentoEnumService {
         return '';
     }
   }
+
+  mapearTipoStatusUsuarioPorId(valorNumerico: number): string {
+    switch (valorNumerico) {
+      case 0:
+        return TipoStatusUsuarioSelect.tiposStatus[0].descricao;
+      case 1:
+        return TipoStatusUsuarioSelect.tiposStatus[1].descricao;
+      case 2:
+        return TipoStatusUsuarioSelect.tiposStatus[2].descricao;
+      default:
+        return 'descricao nao encontrada';
+    }
+  }
+
+  mapearTipoStatusUsuarioPorDescricao(descricao: string): number {
+    switch (descricao) {
+      case TipoStatusUsuarioSelect.tiposStatus[0].descricao:
+        return 0;
+      case TipoStatusUsuarioSelect.tiposStatus[1].descricao:
+        return 1;
+      case TipoStatusUsuarioSelect.tiposStatus[2].descricao:
+        return 2;
+      default:
+        return 9999;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  mapearTipoUsuarioPorId(valorNumerico: number): string {
+    switch (valorNumerico) {
+      case 0:
+        return TipoUsuarioSelect.tiposUsuario[0].descricao;
+      case 1:
+        return TipoUsuarioSelect.tiposUsuario[1].descricao;
+      case 2:
+        return TipoUsuarioSelect.tiposUsuario[2].descricao;
+      case 3:
+        return TipoUsuarioSelect.tiposUsuario[3].descricao;
+      case 4:
+        return TipoUsuarioSelect.tiposUsuario[4].descricao;
+      default:
+        return 'descricao nao encontrada';
+    }
+  }
+
+  mapearTipoUsuarioPorDescricao(descricao: string): number {
+    switch (descricao) {
+      case TipoUsuarioSelect.tiposUsuario[0].descricao:
+        return 0;
+      case TipoUsuarioSelect.tiposUsuario[1].descricao:
+        return 1;
+      case TipoUsuarioSelect.tiposUsuario[2].descricao:
+        return 2;
+      case TipoUsuarioSelect.tiposUsuario[3].descricao:
+        return 3;
+      case TipoUsuarioSelect.tiposUsuario[4].descricao:
+        return 4;
+      default:
+        return 9999;
+    }
+  }
+
+
 
 }

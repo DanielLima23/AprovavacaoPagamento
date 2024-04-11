@@ -87,7 +87,7 @@ export class ContaBancariaService {
     return this.http.delete( path, { headers });
   }
 
-  registerContaUsuario(value: Conta): Observable<any> {
+  registerContaUsuario(value: ContaUsuario): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 

@@ -82,12 +82,28 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
 
 
   populaNomeCentroNoUsuario() {
-    this.filteredListaUsuarios.map(usuario => {
-      usuario.nomeCentroDeCusto = this.retornaCentroDeCustoPorId(usuario).descricao ? this.retornaCentroDeCustoPorId(usuario).descricao : "Não contém"
-      usuario.reponsavelAprovacao = this.retornaCentroDeCustoPorId(usuario).reponsavelAprovacao ? this.retornaCentroDeCustoPorId(usuario).reponsavelAprovacao : false
+    const centrosDeCustoMap = new Map<number, CentroDeCusto>();
 
-    })
+    // Mapear os centros de custo por ID para evitar repetidas chamadas desnecessárias
+    this.listaCentroDeCusto.forEach(centro => {
+      centrosDeCustoMap.set(centro.id, centro);
+    });
+
+    // Iterar sobre a lista de usuários filtrados e mapear os nomes dos centros de custo
+    this.filteredListaUsuarios.forEach(usuario => {
+      const centroDeCusto = centrosDeCustoMap.get(usuario.idCentroCusto);
+      if (centroDeCusto) {
+        usuario.nomeCentroDeCusto = centroDeCusto.descricao || "Não contém";
+        usuario.reponsavelAprovacao = centroDeCusto.reponsavelAprovacao || false ;
+      } else {
+        usuario.nomeCentroDeCusto = "Não contém";
+        usuario.reponsavelAprovacao = false;
+      }
+    });
+
+    console.log(this.filteredListaUsuarios);
   }
+
 
   public preencherListaUsuarios() {
     this.usuarioService.getListaUsuarios().subscribe(

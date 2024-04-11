@@ -26,7 +26,7 @@
                             style="width: 100%;">
               <mat-label>Data de nascimento</mat-label>
               <input matInput #input maxlength="50"
-                     placeholder="" id="dataNascimento" formControlName="dataNascimento"
+                     placeholder="" id="dataNasc" formControlName="dataNasc"
                      type="date">
             </mat-form-field>
           </div>
@@ -108,7 +108,7 @@
   </mat-card>
 </div>
 
-<mat-card class="transparent-card mt-2">
+<!-- <mat-card class="transparent-card mt-2">
   <mat-card-content>
     <mat-card-header>
       <mat-card-title style="color: white;">Lista de contas</mat-card-title>
@@ -120,43 +120,6 @@
             matTooltip="Adicionar conta bancária">ADICIONAR</button>
 
     <mat-card-content class="table-responsive mt-4">
-      <!-- <table mat-table [dataSource]="dataSource">
-
-        <ng-container matColumnDef="banco">
-          <th mat-header-cell *matHeaderCellDef> Banco </th>
-          <td mat-cell *matCellDef="let conta"> {{conta.banco}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="agencia">
-          <th mat-header-cell *matHeaderCellDef> Agência </th>
-          <td mat-cell *matCellDef="let conta"> {{conta.agencia}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="conta">
-          <th mat-header-cell *matHeaderCellDef> Conta </th>
-          <td mat-cell *matCellDef="let conta"> {{conta.conta}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="chavePix">
-          <th mat-header-cell *matHeaderCellDef> Chave pix </th>
-          <td mat-cell *matCellDef="let conta"> {{conta.chavePix}} </td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Ações </th>
-          <td mat-cell *matCellDef="let conta">
-            <button matTooltip="Editar" mat-icon-button (click)="openDialogEditar(conta)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button matTooltip="Deletar" mat-icon-button (click)="openDialogDeletar(conta)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table> -->
-
 
       <table #tabela
              class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
@@ -196,4 +159,4 @@
     </mat-card-content>
 
   </mat-card-content>
-</mat-card>
+</mat-card> -->

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Usuario } from 'app/models/usuario';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 
@@ -8,15 +9,12 @@ import { UsuarioService } from 'app/routes/usuario/usuario.service';
   styleUrls: ['./pendentes-aprovacao.component.scss']
 })
 export class AdministracaoUsuariosPendentesAprovacaoComponent implements OnInit {
-recusarUsuario(arg0: number) {
-throw new Error('Method not implemented.');
-}
-aprovarUsuario(arg0: number) {
-throw new Error('Method not implemented.');
-}
 
-  listaUsuariosPendentes: Usuario[]=[]
-  constructor(private usuarioService: UsuarioService) { }
+
+  listaUsuariosPendentes: Usuario[] = []
+  constructor(private usuarioService: UsuarioService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.preencherListaUsuariosPendentes()
@@ -28,6 +26,12 @@ throw new Error('Method not implemented.');
         this.listaUsuariosPendentes = data;
       }
     )
+  }
+
+  recusarUsuario(id: number) {
+  }
+  aprovarUsuario(id: number) {
+    this.router.navigate(['/administracao/aprovar', id]);
   }
 
 }

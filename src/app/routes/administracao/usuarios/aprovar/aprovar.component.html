@@ -1,3 +1,197 @@
-<page-header></page-header>
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Aprovar usuário
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <form [formGroup]="aprovarUsuarioForm" class="row mt-2">
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Nome</mat-label>
+          <input matInput #inputNome maxlength="50" type="text"
+                 placeholder="Insira seu nome" id="nome" formControlName="nome">
+          <mat-hint align="end">{{inputNome.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 ">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Data de nascimento</mat-label>
+          <input matInput #input maxlength="50"
+                 placeholder="" id="dataNascimento" formControlName="dataNascimento"
+                 type="date">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Email</mat-label>
+          <input matInput #inputEmail maxlength="50"
+                 placeholder="Insira seu email" id="email" formControlName="email">
+          <mat-hint align="end">{{inputEmail.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Senha</mat-label>
+          <input matInput #inputSenha maxlength="50"
+                 placeholder="Insira sua senha" id="senha" formControlName="senha" type="password"
+                 [disabled]="false">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-slide-toggle formControlName ="tipoCnpj" (change)="toggleCpfCnpj($event)" >CNPJ?</mat-slide-toggle>
+      </div>
+      <div class="col-sm-6 mt-2" *ngIf="!this.aprovarUsuarioForm.value.tipoCnpj">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CPF</mat-label>
+          <input type="text" matInput #inputCpf maxlength="14"
+                 placeholder="Insirta seu cpf" id="cpf" formControlName="cpf" mask="000.000.000-00">
+          <mat-hint align="end">{{inputCpf.value.length}}/14</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 mt-2" *ngIf="this.aprovarUsuarioForm.value.tipoCnpj">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>CNPJ</mat-label>
+          <input type="text" matInput #inputCnpj maxlength="18"
+                 placeholder="Insira seu cnpj" id="cnpj" formControlName="cnpj"
+                 mask="00.000.000/0000-00">
+          <mat-hint align="end">{{inputCnpj.value.length}}/18</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 mt-2">
+        <mat-form-field hintLabel="" floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Celular</mat-label>
+          <input matInput #inputCelular maxlength="20"
+                 placeholder="Insira um número para contato" id="celular"
+                 formControlName="celular"
+                 [mask]="'(00) 00000-0000 '">
+          <mat-hint align="end">{{inputCelular.value.length}}/20</mat-hint>
+        </mat-form-field>
+      </div>
+      <!-- <mat-form-field class="col-sm-12">
+        <mat-label>Selecione os centros de custo</mat-label>
+        <mat-select placeholder="Opções" [formControl]="selectedOptions" multiple>
+          <mat-option *ngFor="let option of listaCentroCusto" [value]="option.id">
+            <mat-checkbox [checked]="selectedOptions.value?.includes(option.descricao)">
+              {{ option.descricao }}
+            </mat-checkbox>
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
 
-<p>aprovar works!</p>
+
+      <div class="col-sm-6">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Selecione um centro de custo</mat-label>
+          <mat-select name="idCentroCusto"
+                      formControlName="idCentroCusto">
+            <mat-option *ngFor="let item of listaCentroCusto"
+                        [value]="item.id">
+              {{ item.descricao }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="tipoStatusDTO"
+                      name="tipoStatusDTO" id="tipoStatusDTO" (selectionChange)="setTipoStatus()">
+            <mat-option *ngFor="let status of listaStatusUsuario"
+                        [value]="status" >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Permissão</mat-label>
+          <mat-select formControlName="tipoUsuarioDTO"
+                      name="tipoUsuarioDTO" id="tipoUsuarioDTO" (selectionChange)="setTipoUsuario()">
+            <mat-option *ngFor="let tipo of listaTipoUsuario"
+                        [value]="tipo" >
+              {{ tipo }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+
+      <mat-card-footer align="end">
+        <button class="w-full m-y-16 mt-4" (click)="aprovar()" mat-raised-button color="primary"
+                class="m-3" [loading]="isSubmitting" type="submit"
+                [disabled]="aprovarUsuarioForm.invalid">Aprovar</button>
+                <button mat-flat-button extended color="accent" class="m-3" (click)="voltar()">
+                  <mat-icon>reply</mat-icon>
+                  Voltar
+                </button>
+      </mat-card-footer>
+    </form>
+
+  </mat-card-content>
+</mat-card>
+
+
+<!-- <mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Lista de contas</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <button class="mt-4" (click)="adicionar()" mat-raised-button
+            matTooltip="Adicionar conta bancária">ADICIONAR</button>
+
+    <mat-card-content class="mt-2 table-responsive mt-4">
+      <table #tabela
+             class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
+        <thead>
+          <tr>
+            <th class="text-center color-table align-middle">Banco</th>
+            <th class="text-center color-table align-middle">Agência</th>
+            <th class="text-center color-table align-middle">Conta</th>
+            <th class="text-center color-table align-middle">Chave pix</th>
+            <th class="text-center color-table align-middle">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let conta of listaContaUsuario">
+            <tr class="text-center ">
+              <td style="width: 20%;" class="color-table align-middle">{{ conta.banco }}</td>
+              <td style="width: 20%; white-space: nowrap;" class="color-table align-middle">
+                {{conta.agencia}}</td>
+              <td style="width: 20%; white-space: nowrap;" class="color-table align-middle">
+                {{conta.conta}}</td>
+              <td style="width: 20%; white-space: nowrap;" class="color-table align-middle">
+                {{conta.chavePix}}</td>
+              <td style="width: 20%;" class="color-table align-middle">
+                <button mat-icon-button (click)="openDialogEditar(conta)" matTooltip="Editar"
+                        color="accent">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDialogEditar(conta)" matTooltip="Deletar"
+                        color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </mat-card-content>
+
+  </mat-card-content>
+</mat-card> -->

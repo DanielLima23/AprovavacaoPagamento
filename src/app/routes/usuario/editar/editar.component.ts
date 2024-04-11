@@ -1,4 +1,4 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TrackByFunction } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Banco } from 'app/models/banco';
@@ -47,7 +47,8 @@ export class UsuarioEditarComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private contaUsuarioService: ContaBancariaService,
     private centroCustoService: CentroDeCustoService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
   ) {
     this.userForm = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -114,7 +115,7 @@ export class UsuarioEditarComponent implements OnInit {
   limparCpfCnpj() {
     this.usuario.cpf = "";
     this.usuario.cnpj = "";
-  }
+    this.userForm.markAllAsTouched()  }
 
   cpfCnpjRequiredValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
     const cpfControl = formGroup.get('cpf');

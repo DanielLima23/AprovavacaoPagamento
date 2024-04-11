@@ -8,7 +8,9 @@ import { AdministracaoUsuariosAprovarComponent } from './usuarios/aprovar/aprova
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent },
 { path: 'pendentes-aprovacao', component: AdministracaoUsuariosPendentesAprovacaoComponent },
-{ path: 'aprovar', component: AdministracaoUsuariosAprovarComponent }
+{ path: 'aprovar', component: AdministracaoUsuariosAprovarComponent },
+{ path: 'aprovar/:id', component: AdministracaoUsuariosAprovarComponent }
+
 ];
 
 @NgModule({

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card >
   <mat-card-header>
     <mat-card-title>Usuários pendentes de aprovação</mat-card-title>
   </mat-card-header>
@@ -6,7 +6,7 @@
     <mat-divider></mat-divider>
 
 
-    <table #tabela
+    <table #tabela *ngIf="this.listaUsuariosPendentes.length > 0"
            class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
       <thead>
         <tr>
@@ -22,9 +22,9 @@
             <td style="width: 33.33%;" class="color-table align-middle">{{ usuario.nome }}</td>
             <td style="width: 33.33%;" class="color-table align-middle">{{usuario.email}}</td>
             <td style="width: 33.33%;" class="color-table align-middle">
-              <button mat-icon-button (click)="aprovarUsuario(usuario.id)" matTooltip="Aprovar"
+              <button mat-icon-button (click)="aprovarUsuario(usuario.id)" matTooltip="Visualizar solicitação"
                       color="accent">
-                <mat-icon>edit</mat-icon>
+                <mat-icon>visibility</mat-icon>
               </button>
               <button mat-icon-button (click)="recusarUsuario(usuario.id)" matTooltip="Deletar"
                       color="warn">

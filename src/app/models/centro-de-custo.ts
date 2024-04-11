@@ -6,7 +6,7 @@ export class CentroDeCusto {
   descricao!: string;
   dataCadastro: Date = new Date()
   reponsavel: Usuario = new Usuario()
-  responsavelAprovacao!: boolean
+  reponsavelAprovacao!: boolean
   financeiroAprovacao!: boolean
   ceoAprovacao!: boolean
   diretorAprovacao!: boolean

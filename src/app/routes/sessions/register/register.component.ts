@@ -9,6 +9,7 @@ import { AuthService } from '@core';
 import { Conta } from 'app/models/conta';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { DialogEditUsuarioRegisterContaComponent } from 'app/routes/dialog/edit-usuario-register-conta/edit-usuario-register-conta.component';
+import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { TipoContaSelect } from 'app/util/classes/select-tipo-conta';
 import { ToastrService } from 'ngx-toastr';
 
@@ -39,7 +40,8 @@ export class RegisterComponent {
     private dialog: MatDialog,
     private toastr: ToastrService,
     private datePipe: DatePipe,
-    private auth: AuthService) {
+    private auth: AuthService,
+    private contaBancariaService: ContaBancariaService) {
     // this.userForm = this.formBuilder.group({
     //   nome: ['', Validators.required],
     //   email: ['', [Validators.required, Validators.email]],
@@ -69,7 +71,7 @@ export class RegisterComponent {
     cnpj: new UntypedFormControl(""),
     celular: new UntypedFormControl(undefined, Validators.required),
     senha: new UntypedFormControl(undefined, Validators.required),
-    dataNascimento: new UntypedFormControl(undefined, Validators.required),
+    dataNasc: new UntypedFormControl(undefined, Validators.required),
     contaCnpj: new UntypedFormControl(false),
     contas: new UntypedFormArray([]),
   }, { validators: this.cpfCnpjRequiredValidator });
@@ -133,17 +135,27 @@ export class RegisterComponent {
   }
 
   salvar() {
-    const contasArray = this.registerForm.get('contas') as FormArray;
+    // const contasArray = this.registerForm.get('contas') as FormArray;
 
-    if (contasArray.length <= 0) {
-      this.toastr.warning('Adicione uma conta para concluir o cadastro.', 'Atenção')
-      return;
-    }
+    // if (contasArray.length <= 0) {
+    //   this.toastr.warning('Adicione uma conta para concluir o cadastro.', 'Atenção')
+    //   return;
+    // }
 
 
-    this.auth.register(this.registerForm.getRawValue(),this.tokenCliente).subscribe(
+    this.auth.register(this.registerForm.getRawValue(), this.tokenCliente).subscribe(
       (data: any) => {
+        // this.contaUsuario.map(conta => {
+        //   conta.usuario = data
+        //   this.contaBancariaService.registerContaUsuario(conta).subscribe(
+        //     (data: any) => {
+
+        //     }
+        //   )
+        // })
         this.toastr.success('Cadastro realizado com sucesso.', 'Sucesso')
+        this.registerForm.reset()
+        this.contaUsuario = []
       }
     )
 
@@ -252,7 +264,7 @@ export class RegisterComponent {
   getCurrentDate(): void {
     const formattedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     if (formattedDate) {
-      this.registerForm.get('dataNascimento')?.setValue(formattedDate);
+      this.registerForm.get('dataNasc')?.setValue(formattedDate);
     } else {
       console.error('Erro ao formatar a data.');
     }
