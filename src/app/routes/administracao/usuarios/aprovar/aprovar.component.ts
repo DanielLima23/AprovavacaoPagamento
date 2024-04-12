@@ -52,6 +52,17 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     this.retornaUsuario()
     this.preencheListaCentros()
     this.preencheListaCentros()
+    this.desabilitarCampos()
+  }
+
+  desabilitarCampos(){
+    this.aprovarUsuarioForm.get('nome')?.disable();
+    this.aprovarUsuarioForm.get('email')?.disable();
+    this.aprovarUsuarioForm.get('cpf')?.disable();
+    this.aprovarUsuarioForm.get('cnpj')?.disable();
+    this.aprovarUsuarioForm.get('celular')?.disable();
+    this.aprovarUsuarioForm.get('dataNascimento')?.disable();
+    this.aprovarUsuarioForm.get('celular')?.disable();
   }
 
   public aprovarUsuarioForm: UntypedFormGroup = new UntypedFormGroup({
@@ -63,7 +74,7 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     celular: new UntypedFormControl(undefined, Validators.required),
     senha: new UntypedFormControl(undefined, Validators.required),
     dataNascimento: new UntypedFormControl(undefined, Validators.required),
-    idCentroCusto: new UntypedFormControl(undefined, Validators.compose([Validators.required,this.idCentroCustoValidator()])),
+    idCentroCusto: new UntypedFormControl(undefined, Validators.compose([Validators.required, this.idCentroCustoValidator()])),
     contaPadrao: new UntypedFormControl(false),
     tipoStatus: new UntypedFormControl(undefined),
     tipoStatusDTO: new UntypedFormControl(undefined, Validators.required),
@@ -72,13 +83,13 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     tipoUsuarioDTO: new UntypedFormControl(undefined, Validators.required),
   })
 
-   idCentroCustoValidator(): ValidatorFn {
+  idCentroCustoValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const idCentroCusto = control.value;
       if (idCentroCusto !== null && idCentroCusto <= 0) {
-        return { 'idCentroCustoInvalido': true }; // Retorna um objeto com o erro
+        return { 'idCentroCustoInvalido': true };
       }
-      return null; // Retorna null se não houver erro
+      return null;
     };
   }
 
@@ -138,8 +149,8 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
       })
     ).subscribe(
       (data: any) => {
-        this.aprovarUsuarioForm.get('tipoStatus')?.setValue(data.status);
-        this.aprovarUsuarioForm.get('tipoStatusDTO')?.setValue(this.mapeamentoEnumService.mapearTipoStatusUsuarioPorId(data.status));
+        this.aprovarUsuarioForm.get('tipoStatus')?.setValue(1);
+        this.aprovarUsuarioForm.get('tipoStatusDTO')?.setValue(this.mapeamentoEnumService.mapearTipoStatusUsuarioPorId(1));
 
         this.aprovarUsuarioForm.get('tipoUsuario')?.setValue(data.tipo);
         this.aprovarUsuarioForm.get('tipoUsuarioDTO')?.setValue(this.mapeamentoEnumService.mapearTipoUsuarioPorId(data.tipo));
@@ -174,8 +185,9 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
   }
   voltar() {
     this.router.navigate(['/administracao/pendentes-aprovacao']);
-
   }
+
+
 
 
 }

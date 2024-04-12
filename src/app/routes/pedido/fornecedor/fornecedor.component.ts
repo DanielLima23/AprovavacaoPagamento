@@ -371,6 +371,7 @@ export class PedidoFornecedorComponent implements OnInit {
       id: this.numFilesAttached + 1,
       name: file.name,
       arquivo: file,
+      base64:''
     };
 
     this.dataSourceFile.data = [...this.dataSourceFile.data, novoArquivo];

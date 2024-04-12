@@ -49,7 +49,7 @@ export class UsuarioService {
     return this.http.get(path, { headers });
   }
 
-  update(usuario: Usuario): Observable<any> {
+  update(usuario: any): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -125,6 +125,21 @@ export class UsuarioService {
     const path = `${this.url}api/usuario/retornaUsuarioCliente/`;
 
     return this.http.get(path, { headers });
+  }
+
+  deleteUsuarioById(id: any): Observable<any> {
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      id: id
+    });
+
+    const path = `${this.url}api/usuario/delete`;
+
+    return this.http.delete(path, { headers })
   }
 
 

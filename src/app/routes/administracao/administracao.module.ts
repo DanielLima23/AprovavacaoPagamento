@@ -5,8 +5,9 @@ import { AdministracaoUsuariosListaComponent } from './usuarios/lista/lista.comp
 import { AdministracaoUsuariosConvidarComponent } from './usuarios/convidar/convidar.component';
 import { AdministracaoUsuariosPendentesAprovacaoComponent } from './usuarios/pendentes-aprovacao/pendentes-aprovacao.component';
 import { AdministracaoUsuariosAprovarComponent } from './usuarios/aprovar/aprovar.component';
+import { AdministracaoUsuariosEditarComponent } from './usuarios/editar/editar.component';
 
-const COMPONENTS: any[] = [AdministracaoUsuariosListaComponent, AdministracaoUsuariosConvidarComponent, AdministracaoUsuariosPendentesAprovacaoComponent, AdministracaoUsuariosAprovarComponent];
+const COMPONENTS: any[] = [AdministracaoUsuariosListaComponent, AdministracaoUsuariosConvidarComponent, AdministracaoUsuariosPendentesAprovacaoComponent, AdministracaoUsuariosAprovarComponent, AdministracaoUsuariosEditarComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({

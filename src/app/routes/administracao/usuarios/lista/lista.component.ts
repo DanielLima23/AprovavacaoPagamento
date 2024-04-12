@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { TokenService } from '@core';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { Usuario } from 'app/models/usuario';
@@ -14,13 +15,6 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./lista.component.scss']
 })
 export class AdministracaoUsuariosListaComponent implements OnInit {
-
-  openDialogDelete(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
-  editarUsuario(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
 
   listaUsuarios: Usuario[] = []
   displayedColumns: string[] = ['usuario', 'centroDeCusto', 'actions'];
@@ -61,6 +55,7 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
     private usuarioService: UsuarioService,
     private centroCustoService: CentroDeCustoService,
     private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.userForm = this.formBuilder.group({
       linkRegister: ['']
@@ -94,7 +89,7 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
       const centroDeCusto = centrosDeCustoMap.get(usuario.idCentroCusto);
       if (centroDeCusto) {
         usuario.nomeCentroDeCusto = centroDeCusto.descricao || "Não contém";
-        usuario.reponsavelAprovacao = centroDeCusto.reponsavelAprovacao || false ;
+        usuario.reponsavelAprovacao = centroDeCusto.reponsavelAprovacao || false;
       } else {
         usuario.nomeCentroDeCusto = "Não contém";
         usuario.reponsavelAprovacao = false;
@@ -126,15 +121,23 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
   }
   filteredListaUsuarios: Usuario[] = []
 
-  _filter:string=""
+  _filter: string = ""
 
-  set filter(value: string){
+  set filter(value: string) {
     this._filter = value;
-    this.filteredListaUsuarios = this.listaUsuarios.filter((usuario: Usuario)=> usuario.nome.toLocaleLowerCase().indexOf(this._filter.toLocaleLowerCase()) > -1)
+    this.filteredListaUsuarios = this.listaUsuarios.filter((usuario: Usuario) => usuario.nome.toLocaleLowerCase().indexOf(this._filter.toLocaleLowerCase()) > -1)
   }
 
-  get filter(): string{
+  get filter(): string {
     return this._filter
   }
+
+
+  openDialogDelete(arg0: any) {
+  }
+  editarUsuario(id: any) {
+    this.router.navigate(['/administracao/editar', id]);
+  }
+
 
 }

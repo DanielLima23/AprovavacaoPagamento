@@ -64,6 +64,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   listaCentroCusto: CentroDeCusto[] = []
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
+  arquivosBase64: Arquivo[] = [];
 
 
   constructor(private formBuilder: FormBuilder,
@@ -195,7 +196,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
       if (valorTotal !== parcelas) {
-        this.toastr.error('O valor total das parcelas deve ser igual ao valor total do pedido', 'Erro');
+        this.toastr.warning('O valor total das parcelas deve ser igual ao valor total do pedido', 'Erro');
         return;
       }
     }
@@ -268,7 +269,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           this.userForm.get('contaCnpj')?.setValue(true);
         }
         this.preencheDadosBancariosUsuario()
-        if(data.idCentroCusto > 0){
+        if (data.idCentroCusto > 0) {
           this.userForm.get('centroCusto')?.setValue(data.idCentroCusto)
         }
       }
@@ -307,17 +308,17 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const file = event.target.files[0];
 
     if (!this.isFileTypeAllowed(file)) {
-      this.toastr.error('Tipo de arquivo não permitido.', 'Erro');
+      this.toastr.warning('Tipo de arquivo não permitido.', 'Erro');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      this.toastr.error('O arquivo é muito grande. O tamanho máximo permitido é 5MB.', 'Erro');
+      this.toastr.warning('O arquivo é muito grande. O tamanho máximo permitido é 5MB.', 'Erro');
       return;
     }
 
     if (this.numFilesAttached >= this.limiteArquivos) {
-      this.toastr.error(`Limite de ${this.limiteArquivos} arquivos atingido.`, 'Erro');
+      this.toastr.warning(`Limite de ${this.limiteArquivos} arquivos atingido.`, 'Erro');
       return;
     }
 
@@ -325,20 +326,35 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       id: this.numFilesAttached + 1,
       name: file.name,
       arquivo: file,
+      base64: ""
     };
+    this.converterParaBase64(novoArquivo);
 
+    console.log(this.arquivosBase64)
     this.dataSourceFile.data = [...this.dataSourceFile.data, novoArquivo];
 
     this.numFilesAttached++;
     this.updateFilesDisplay();
     this.listaArquivo = this.dataSourceFile.data;
-    console.log(this.listaArquivo)
   }
+
+  converterParaBase64(arquivo: Arquivo) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result as string;
+      arquivo.base64 = base64String;
+    };
+    this.arquivosBase64.push(arquivo)
+    reader.readAsDataURL(arquivo.arquivo);
+  }
+
   removeFile(arquivo: Arquivo): void {
     this.dataSourceFile.data = this.dataSourceFile.data.filter(a => a !== arquivo);
+    this.arquivosBase64 = this.arquivosBase64.filter(a => a !== arquivo)
     this.numFilesAttached--;
     this.updateFilesDisplay();
     this.toastr.success('Arquivo deletado com sucesso.', 'Sucesso');
+    console.log(this.arquivosBase64)
   }
 
   updateFilesDisplay(): void {
@@ -360,7 +376,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const dataPagamentoStr = this.userForm.get('dataPagamento')?.value;
 
     if (valorTotal == 0 || qtdParcelas == 0 || dataPagamentoStr == "") {
-      this.toastr.error('Informações de pagamento incompletas', 'Erro');
+      this.toastr.warning('Informações de pagamento incompletas', 'Erro');
       return;
     }
 
@@ -574,8 +590,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   addPessoaListaRateio() {
-    if(this.userForm.get('valorTotalPagamento')?.value <= 0){
-      this.toastr.error('Preencha o valor total do pagamento primeiro', 'Atenção');
+    if (this.userForm.get('valorTotalPagamento')?.value <= 0) {
+      this.toastr.warning('Preencha o valor total do pagamento primeiro', 'Atenção');
       this.userForm.get('usuarioRateio')?.setValue('')
       return;
     }
@@ -586,9 +602,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       const isAlreadyInRateio = this.dataSourceRateio.data.some(item => item.id === usuario.id);
 
       if (isAlreadyInRateio) {
-        this.toastr.error('Pessoa já está na lista de rateio.','Atenção');
+        this.toastr.warning('Pessoa já está na lista de rateio.', 'Atenção');
       } else {
-        const valorUsuarioRateio = this.userForm.get('valorTotalPagamento')?.value/2
+        const valorUsuarioRateio = this.userForm.get('valorTotalPagamento')?.value / 2
         this.userForm.get('valorTotalPagamento')?.setValue(valorUsuarioRateio)
         const rateio: Rateio = {
           id: usuario.id,
@@ -602,7 +618,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.rateio = updatedData;
       }
     } else {
-      this.toastr.error('Usuário não encontrado','Atenção');
+      this.toastr.warning('Usuário não encontrado', 'Atenção');
 
     }
     this.userForm.get('usuarioRateio')?.setValue('')
@@ -611,4 +627,5 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
   }
+
 }

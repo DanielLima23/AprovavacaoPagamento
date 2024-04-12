@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TrackByFunction } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl, UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Banco } from 'app/models/banco';
 import { Usuario } from 'app/models/usuario';
@@ -28,7 +28,7 @@ export class UsuarioEditarComponent implements OnInit {
   usuario: Usuario = new Usuario();
   listaBancos: string[] = ["Banco do Brasil", "Bradesco", "Itau"];
   isSubmitting = false;
-  userForm: FormGroup;
+  // userForm: FormGroup;
   contaCnpj: boolean = false;
   token: any = "";
   senhaHabilitada: boolean = true;
@@ -39,8 +39,7 @@ export class UsuarioEditarComponent implements OnInit {
   selectedCentroCustoIds: number[] = [];
 
 
-  constructor(private formBuilder: FormBuilder,
-    private router: Router,
+  constructor(private router: Router,
     private usuarioService: UsuarioService,
     private toastrService: ToastrService,
     private contaService: ContaBancariaService,
@@ -50,20 +49,59 @@ export class UsuarioEditarComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {
-    this.userForm = this.formBuilder.group({
-      nome: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      cpf: [''],
-      cnpj: [''],
-      celular: ['', Validators.required],
-      senha: ['', Validators.required],
-      dataNascimento: ['', Validators.required],
-      centroCusto: ['', Validators.required],
-      contaPadrao: [false],
+    // this.userForm = this.formBuilder.group({
+    //   nome: ['', Validators.required],
+    //   email: ['', [Validators.required, Validators.email]],
+    //   cpf: [''],
+    //   cnpj: [''],
+    //   celular: ['', Validators.required],
+    //   senha: [''],
+    //   dataNascimento: ['', Validators.required, this.idCentroCustoValidator()],
+    //   centroCusto: ['', Validators.required],
+    //   contaPadrao: [false],
 
-    }, {
-      validators: this.cpfCnpjRequiredValidator
-    });
+    // }, {
+    //   validators: this.cpfCnpjRequiredValidator
+    // });
+  }
+
+  public userForm: UntypedFormGroup = new UntypedFormGroup({
+    nome: new UntypedFormControl(0),
+    email: new UntypedFormControl(undefined, Validators.compose([Validators.required, Validators.email])),
+    cpf: new UntypedFormControl(undefined),
+    cnpj: new UntypedFormControl(undefined),
+    celular: new UntypedFormControl(undefined),
+    dataNascimento: new UntypedFormControl(undefined, Validators.required),
+    centroCusto: new UntypedFormControl(undefined, Validators.required),
+    contaPadrao: new UntypedFormControl(false),
+  }, { validators: this.cpfCnpjRequiredValidator });
+
+  cpfCnpjRequiredValidator(): ValidatorFn {
+    return () => {
+      const cpfControl = this.userForm.get('cpf');
+      const cnpjControl = this.userForm.get('cnpj');
+
+      if (!cpfControl || !cnpjControl) {
+        return null;
+      }
+      const cpf = cpfControl.value;
+      const cnpj = cnpjControl.value;
+
+      if (cpf || cnpj) {
+        return null;
+      }
+      return { 'cpfCnpjRequired': true };
+    };
+  }
+
+  idCentroCustoValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const idCentroCusto = control.value;
+      if (idCentroCusto !== null && idCentroCusto <= 0) {
+        return { 'centroCusto': true };
+      }
+      return null;
+    };
   }
 
 
@@ -115,23 +153,10 @@ export class UsuarioEditarComponent implements OnInit {
   limparCpfCnpj() {
     this.usuario.cpf = "";
     this.usuario.cnpj = "";
-    this.userForm.markAllAsTouched()  }
-
-  cpfCnpjRequiredValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
-    const cpfControl = formGroup.get('cpf');
-    const cnpjControl = formGroup.get('cnpj');
-
-    if (!cpfControl || !cnpjControl) {
-      return null;
-    }
-    const cpf = cpfControl.value;
-    const cnpj = cnpjControl.value;
-
-    if (cpf || cnpj) {
-      return null;
-    }
-    return { 'cpfCnpjRequired': true };
+    this.userForm.markAllAsTouched()
   }
+
+
 
   retornaUsuario() {
     this.usuarioService.getByToken().subscribe(
@@ -164,7 +189,7 @@ export class UsuarioEditarComponent implements OnInit {
     this.isSubmitting = true;
     this.usuarioService.update(this.usuario).subscribe(
       (data: Usuario) => {
-        this.toastrService.success("Usuário atualizado com sucesso","Sucesso");
+        this.toastrService.success("Usuário atualizado com sucesso", "Sucesso");
       }
     )
     this.isSubmitting = false;
@@ -190,7 +215,7 @@ export class UsuarioEditarComponent implements OnInit {
     conta.contaPadrao = event;
     this.contaService.updateContaUsuario(conta.id, conta).subscribe(
       (data: any) => {
-        this.toastrService.success("Conta padrão atualizada com sucesso",'Sucesso');
+        this.toastrService.success("Conta padrão atualizada com sucesso", 'Sucesso');
         this.preencheListaContasUsuario()
       }
     )

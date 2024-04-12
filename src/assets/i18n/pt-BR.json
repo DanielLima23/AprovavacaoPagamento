@@ -133,7 +133,10 @@
     "delete": "Excluir",
     "confirm_delete": "Confirmar exclusão?",
     "ok": "Ok",
-    "close": "Fechar"
+    "close": "Fechar",
+    "back": "Voltar",
+    "delete": "Excluir"
+
   },
   "profile": "Perfil",
   "edit_profile": "Editar perfil",

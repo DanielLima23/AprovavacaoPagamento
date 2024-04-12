@@ -46,6 +46,10 @@
       "name": "Administracao",
       "type": "sub",
       "icon": "supervisor_account",
+      "badge": {
+        "color": "red-500",
+        "value": 4
+      },
       "children": [
         {
           "route": "",
@@ -56,7 +60,11 @@
             {
               "route": "administracao/pendentes-aprovacao",
               "name": "AprovarUsuarios",
-              "type": "link"
+              "type": "link",
+              "badge": {
+                "color": "red-500",
+                "value": 4
+              }
             },
             {
               "route": "administracao/lista",

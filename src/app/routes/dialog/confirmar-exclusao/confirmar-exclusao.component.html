@@ -1,0 +1,28 @@
+
+<mat-card >
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title style="color: white;">
+        {{'table_kitchen_sink.confirm_delete' | translate}}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <div class="col-sm-12 mt-4">
+      <mat-label style="color: white;">{{ mensagemConfirmacao }}</mat-label>
+    </div>
+
+    <mat-card-footer class="mt-2" align="center">
+      <button (click)="salvar()" mat-flat-button
+              extended
+              color="warn" class="m-3">
+        <mat-icon>delete</mat-icon>
+        {{'table_kitchen_sink.delete' | translate}}
+      </button>
+      <button mat-flat-button extended color="accent" class="m-3"
+              (click)="cancel()">
+        <mat-icon>reply</mat-icon>
+        {{'table_kitchen_sink.back' | translate}}
+      </button>
+    </mat-card-footer>
+  </mat-card-content>
+</mat-card>

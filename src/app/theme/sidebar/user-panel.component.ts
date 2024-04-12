@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -40,18 +41,20 @@ import { SoundService } from 'app/services-outros/sound-service';
 })
 export class UserPanelComponent implements OnInit {
   user!: User;
-
+  listaUsuariosPendentes: Usuario[] = []
   constructor(
     private router: Router,
     private auth: AuthService,
     private usuarioService: UsuarioService,
     private dialog: MatDialog,
-    private soundService: SoundService
-  ) {}
+    private soundService: SoundService,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.auth.user().subscribe(user => (this.user = user));
     this.retornaUsuario()
+    this.preencherListaUsuariosPendentes()
   }
 
   logout() {
@@ -60,9 +63,19 @@ export class UserPanelComponent implements OnInit {
     });
   }
 
-  retornaUsuario(){
+  preencherListaUsuariosPendentes() {
+    this.usuarioService.getListaUsuariosPendentes().subscribe(
+      (data: any) => {
+        this.listaUsuariosPendentes = data;
+        this.carregarMenu();
+      }
+    );
+  }
+
+
+  retornaUsuario() {
     this.usuarioService.getByToken().subscribe(
-      (data : Usuario) => {
+      (data: Usuario) => {
         this.user.name = data.nome;
         this.user.email = data.email;
       },
@@ -70,7 +83,44 @@ export class UserPanelComponent implements OnInit {
       }
     )
   }
-  confirmarLogout(){
+  menuData: any;
+  carregarMenu() {
+    this.http.get('assets/data/menu.json').subscribe((data: any) => {
+      this.menuData = data;
+      this.manipularMenu(this.menuData);
+    });
+  }
+
+  manipularMenu(menu: any): void {
+    if (menu.menu) {
+      const administracaoItem = menu.menu.find((item: any) => item.name === 'Administracao');
+      if (administracaoItem && administracaoItem.badge) {
+        administracaoItem.badge.value = this.listaUsuariosPendentes.length;
+      }
+      if (administracaoItem && administracaoItem.children) {
+        administracaoItem.children.forEach((child: any) => {
+          if (child) {
+            child.children[0].badge.value = this.listaUsuariosPendentes.length;
+          }
+        });
+      }
+    }
+    this.menuData = menu;
+    this.salvarJSON(this.menuData)
+
+    console.log(this.menuData);
+  }
+
+  salvarJSON(data: any) {
+    this.http.put('assets/data/menu.json', data).subscribe(response => {
+      console.log('JSON atualizado com sucesso:', response);
+    }, error => {
+      console.error('Erro ao atualizar JSON:', error);
+    });
+  }
+
+
+  confirmarLogout() {
     this.playSound()
     this.openDialogDelete()
   }
@@ -84,7 +134,7 @@ export class UserPanelComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.logout();
-      }else{
+      } else {
         return;
       }
     });

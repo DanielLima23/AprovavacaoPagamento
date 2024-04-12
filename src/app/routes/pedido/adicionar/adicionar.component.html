@@ -184,7 +184,20 @@
                    #inputValorTotalPagamento maxlength="50"
                    placeholder="R$ 0,00" id="valorTotalPagamento"
                    formControlName="valorTotalPagamento"
-                   type="text" >
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Descrição do pagamento</mat-label>
+            <input matInput
+                   #inputDescricaoPagamento maxlength="250"
+                   placeholder="Insira uma descrição para o pagamento"
+                   id="descricaoPagamento"
+                   formControlName="descricaoPagamento">
+            <mat-hint
+                      align="end">{{inputDescricaoPagamento.value.length}}/250</mat-hint>
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -199,6 +212,7 @@
             </mat-select>
           </mat-form-field>
         </div>
+
         <div class="col-sm-2">
           <mat-slide-toggle formControlName="pedidoParcelado"
                             (change)="tooglePedidoParcelado($event)">
@@ -344,6 +358,13 @@
           Anexos
         </mat-card-title>
       </mat-card-header>
+      <button mat-flat-button extended color="warn" class="m-3"
+              (click)="openFileInput.click()">
+        <mat-icon>attach_file</mat-icon>
+        Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
+        <input #openFileInput type="file" style="display: none"
+               (change)="onFileSelected($event)" />
+      </button>
       <mat-divider></mat-divider>
       <table mat-table [dataSource]="dataSourceFile" *ngIf="filesDisplay" class="mt-2">
         <ng-container matColumnDef="file">
@@ -367,33 +388,15 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsFiles"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsFiles;"></tr>
       </table>
-      <button mat-flat-button extended color="warn" class="m-3"
-              (click)="openFileInput.click()">
-        <mat-icon>attach_file</mat-icon>
-        Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
-        <input #openFileInput type="file" style="display: none"
-               (change)="onFileSelected($event)" />
-      </button>
+
     </mat-card-content>
   </mat-card>
   <mat-card>
     <mat-card-content>
-      <div class="row">
-        <div class="col-sm-12">
-          <mat-form-field floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Descrição do pagamento</mat-label>
-            <input matInput
-                   #inputDescricaoPagamento maxlength="250"
-                   placeholder="Insira uma descrição para o pagamento"
-                   id="descricaoPagamento"
-                   formControlName="descricaoPagamento">
-            <mat-hint
-                      align="end">{{inputDescricaoPagamento.value.length}}/250</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-      <mat-card-footer align="end" class="mt-2">
+      <!-- <div class="row">
+
+      </div> -->
+      <mat-card-actions align="end" class="mt-2">
         <button [disabled]="userForm.invalid" (click)="validationSave()" mat-flat-button
                 extended
                 color="primary" class="m-3">
@@ -405,7 +408,7 @@
           <mat-icon>reply</mat-icon>
           Voltar
         </button>
-      </mat-card-footer>
+      </mat-card-actions>
     </mat-card-content>
   </mat-card>
 </form>

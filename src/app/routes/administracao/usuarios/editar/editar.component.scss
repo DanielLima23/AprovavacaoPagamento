@@ -1,10 +1,9 @@
-.example-additional-selection {
-  opacity: 0.75;
-  font-size: 0.75em;
-}
-
 .table_custom { --bs-table-bg: transparent !important; }
 
 .color-table {
   color: var(--primary-bg);
+}
+
+.centro-destacado {
+  text-decoration:underline ;
 }
