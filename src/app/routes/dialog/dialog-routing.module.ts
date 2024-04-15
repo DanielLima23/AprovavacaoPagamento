@@ -9,6 +9,8 @@ import { DialogEditContaTerceiroDialogComponent } from './edit-conta-terceiro-di
 import { DialogEditUsuarioRegisterContaComponent } from './edit-usuario-register-conta/edit-usuario-register-conta.component';
 import { DialogLogoutComponent } from './logout/logout.component';
 import { DialogConfirmarExclusaoComponent } from './confirmar-exclusao/confirmar-exclusao.component';
+import { DialogTrocaSenhaPrimeiroAcessoComponent } from './troca-senha-primeiro-acesso/troca-senha-primeiro-acesso.component';
+import { DialogTermosSegurancaComponent } from './termos-seguranca/termos-seguranca.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -18,7 +20,9 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'edit-conta-terceiro-dialog', component: DialogEditContaTerceiroDialogComponent },
 { path: 'edit-usuario-register-conta', component: DialogEditUsuarioRegisterContaComponent },
 { path: 'logout', component: DialogLogoutComponent },
-{ path: 'confirmar-exclusao', component: DialogConfirmarExclusaoComponent }
+{ path: 'confirmar-exclusao', component: DialogConfirmarExclusaoComponent },
+{ path: 'troca-senha-primeiro-acesso', component: DialogTrocaSenhaPrimeiroAcessoComponent },
+{ path: 'termos-seguranca', component: DialogTermosSegurancaComponent }
 ];
 
 @NgModule({

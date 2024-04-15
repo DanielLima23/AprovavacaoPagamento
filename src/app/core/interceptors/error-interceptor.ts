@@ -50,7 +50,12 @@ export class ErrorInterceptor implements HttpInterceptor {
     } else {
       if (error.status) {
         this.router.navigateByUrl('/auth/login');
-        this.toast.error(error.error.mensagem, 'Erro');
+        if(error.error.mensagem){
+          this.toast.error(error.error.mensagem, 'Erro');
+        }else{
+          this.toast.error(error.error, 'Erro');
+
+        }
       }
     }
 

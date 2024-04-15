@@ -34,7 +34,7 @@
           <mat-hint align="end">{{inputEmail.value.length}}/50</mat-hint>
         </mat-form-field>
       </div>
-      <div class="col-sm-6">
+      <!-- <div class="col-sm-6">
         <mat-form-field hintLabel="" floatLabel="always"
                         style="width: 100%;">
           <mat-label>Senha</mat-label>
@@ -42,11 +42,11 @@
                  placeholder="Insira sua senha" id="senha" formControlName="senha" type="password"
                  [disabled]="false">
         </mat-form-field>
-      </div>
-      <div class="col-sm-12">
+      </div> -->
+      <!-- <div class="col-sm-12">
         <mat-slide-toggle *ngIf="false" formControlName ="tipoCnpj" (change)="toggleCpfCnpj($event)" >CNPJ?</mat-slide-toggle>
-      </div>
-      <div class="col-sm-6 mt-2" *ngIf="!this.aprovarUsuarioForm.value.tipoCnpj">
+      </div> -->
+      <div class="col-sm-6 " *ngIf="!this.aprovarUsuarioForm.value.tipoCnpj">
         <mat-form-field hintLabel="" floatLabel="always"
                         style="width: 100%;">
           <mat-label>CPF</mat-label>
@@ -55,7 +55,7 @@
           <mat-hint align="end">{{inputCpf.value.length}}/14</mat-hint>
         </mat-form-field>
       </div>
-      <div class="col-sm-6 mt-2" *ngIf="this.aprovarUsuarioForm.value.tipoCnpj">
+      <div class="col-sm-6 " *ngIf="this.aprovarUsuarioForm.value.tipoCnpj">
         <mat-form-field hintLabel="" floatLabel="always"
                         style="width: 100%;">
           <mat-label>CNPJ</mat-label>
@@ -65,7 +65,7 @@
           <mat-hint align="end">{{inputCnpj.value.length}}/18</mat-hint>
         </mat-form-field>
       </div>
-      <div class="col-sm-6 mt-2">
+      <div class="col-sm-6 ">
         <mat-form-field hintLabel="" floatLabel="always"
                         style="width: 100%;">
           <mat-label>Celular</mat-label>

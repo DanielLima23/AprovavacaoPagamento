@@ -1,0 +1,67 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title style="color: white;">
+        ALTERAÇÃO DE SENHA
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+
+    <form [formGroup]="trocarSenhaForm" class="row mt-2" (ngSubmit)="aceitar()">
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Senha</mat-label>
+          <input matInput #inputNovaSenha maxlength="50" placeholder="Insira sua senha"
+                 id="novaSenha"
+                 formControlName="novaSenha" type="password"
+                 (input)="checkPasswords(trocarSenhaForm)"
+                 [type]="senhaVisivel">
+                 <button mat-icon-button tabindex="-1" (click)="togglePasswordVisibility()"
+                    class="position-absolute end-0 mt-1"
+                    style="top: 50%; transform: translateY(-50%);">
+              <mat-icon>{{ senhaVisivel === 'password' ? 'visibility' : 'visibility_off'
+                }}</mat-icon>
+            </button>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Confirmar senha</mat-label>
+          <input matInput #inputConfirmarNovaSenha maxlength="50" placeholder="Confirmar senha"
+                 id="confirmaNovaSenha"
+                 formControlName="confirmaNovaSenha" type="password"
+                 (input)="checkPasswords(trocarSenhaForm)"
+                 [type]="confirmarSenhaVisivel">
+                 <button mat-icon-button tabindex="-1" (click)="toggleConfirmPasswordVisibility()"
+                 class="position-absolute end-0 mt-1"
+                 style="top: 50%; transform: translateY(-50%);">
+           <mat-icon>{{ confirmarSenhaVisivel === 'password' ? 'visibility' : 'visibility_off'
+             }}</mat-icon>
+         </button>
+          <mat-error *ngIf="trocarSenhaForm.get('confirmaNovaSenha')?.hasError('notSame')">
+            As senhas não coincidem.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+    </form>
+
+
+    <mat-card-actions class="mt-2" align="end">
+      <button [disabled]="this.trocarSenhaForm.invalid" (click)="aceitar()" mat-flat-button
+              extended
+              color="accent" class="m-3">
+        <mat-icon>check</mat-icon>
+        Trocar senha
+      </button>
+      <button mat-flat-button extended color="warn" class="m-3"
+              (click)="fechar()">
+        <mat-icon>close</mat-icon>
+        Cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>

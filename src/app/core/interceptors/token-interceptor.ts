@@ -33,6 +33,7 @@ export class TokenInterceptor implements HttpInterceptor {
       }
     };
 
+
     if (this.tokenService.valid() && this.shouldAppendToken(request.url)) {
       return next
         .handle(

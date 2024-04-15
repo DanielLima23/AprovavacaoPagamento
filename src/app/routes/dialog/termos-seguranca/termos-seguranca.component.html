@@ -1,0 +1,28 @@
+
+<mat-card >
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title style="color: white;">
+        TERMOS DE SEGURANÇA
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <div class="col-sm-12 mt-4">
+      <mat-label style="color: white;">No primeiro acesso é necessário alterar a senha fornecida. Mantenha sua conta segura e personalize sua senha agora.</mat-label>
+    </div>
+
+    <mat-card-actions class="mt-2" align="end">
+      <button (click)="aceitar()" mat-flat-button
+              extended
+              color="warn" class="m-3">
+        <mat-icon>check</mat-icon>
+        Aceitar
+      </button>
+      <button mat-flat-button extended color="accent" class="m-3"
+              (click)="fechar()">
+        <mat-icon>close</mat-icon>
+        Fechar
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>

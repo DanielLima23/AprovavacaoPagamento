@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService, User } from '@core/authentication';
 import { Usuario } from 'app/models/usuario';
 import { DialogLogoutComponent } from 'app/routes/dialog/logout/logout.component';
+import { DialogTermosSegurancaComponent } from 'app/routes/dialog/termos-seguranca/termos-seguranca.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { SoundService } from 'app/services-outros/sound-service';
 
@@ -54,7 +55,7 @@ export class UserPanelComponent implements OnInit {
   ngOnInit(): void {
     this.auth.user().subscribe(user => (this.user = user));
     this.retornaUsuario()
-    this.preencherListaUsuariosPendentes()
+    //this.preencherListaUsuariosPendentes()
   }
 
   logout() {
@@ -71,6 +72,8 @@ export class UserPanelComponent implements OnInit {
       }
     );
   }
+
+
 
 
   retornaUsuario() {
@@ -126,8 +129,6 @@ export class UserPanelComponent implements OnInit {
   }
 
   openDialogDelete(): void {
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.width = window.innerWidth <= 600 ? '90%' : '20%';
 
     const dialogRef = this.dialog.open(DialogLogoutComponent);
 
@@ -141,7 +142,7 @@ export class UserPanelComponent implements OnInit {
   }
 
   playSound() {
-    const soundPath = 'assets/sound/somLogout.mp3'; // Caminho para o arquivo de som
+    const soundPath = 'assets/sound/somLogout.mp3';
     this.soundService.playAudio(soundPath);
   }
 

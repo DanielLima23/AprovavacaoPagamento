@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { TokenService } from '@core';
 import { Data } from 'app/data/data';
+import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 import { Terceiro } from 'app/models/terceiro';
 import { Observable } from 'rxjs';
 
@@ -17,7 +19,7 @@ export class PedidoService {
 
   }
 
-  registerFornecedor(centro: Terceiro) : Observable<any>{
+  criarPedido(pReqPedido: UntypedFormGroup) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -26,8 +28,8 @@ export class PedidoService {
       tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.post(this.url + 'api/centroDeCustos',centro, { headers })
+    return this.http.post(this.url + 'api/pedido/NovoPedido',pReqPedido, { headers })
   }
-  
-  
+
+
 }

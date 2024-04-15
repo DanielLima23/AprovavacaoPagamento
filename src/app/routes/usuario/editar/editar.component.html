@@ -64,7 +64,7 @@
                         style="width: 100%;">
           <mat-label>CPF</mat-label>
           <input type="text" [(ngModel)]="usuario.cpf" matInput #inputCpf maxlength="14"
-                 placeholder="Insirta seu cpf" id="cpf" formControlName="cpf" mask="000.000.000-00">
+                 placeholder="Insirta seu cpf" id="cpf" formControlName="cpf" mask="000.000.000-00" (change)="cpfCnpjRequiredValidator()">
           <mat-hint align="end">{{inputCpf.value.length}}/14</mat-hint>
         </mat-form-field>
       </div>
@@ -114,7 +114,10 @@
       </div>
 
 
+<!-- <mat-card-actions align="start">
+  <a>Alterar senha</a>
 
+</mat-card-actions> -->
       <mat-card-footer align="end">
         <button class="w-full m-y-16 mt-4" (click)="salvar()" mat-raised-button color="primary"
                 class="m-3" [loading]="isSubmitting" type="submit"

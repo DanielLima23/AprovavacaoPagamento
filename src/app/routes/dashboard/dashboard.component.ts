@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { UsuarioService } from '../usuario/usuario.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,7 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  constructor() {
+  constructor(private usuarioService: UsuarioService) {
   }
 
 }

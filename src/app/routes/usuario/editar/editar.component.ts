@@ -49,6 +49,8 @@ export class UsuarioEditarComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {
+    this.userForm.setValidators(this.cpfCnpjRequiredValidator());
+
     // this.userForm = this.formBuilder.group({
     //   nome: ['', Validators.required],
     //   email: ['', [Validators.required, Validators.email]],
@@ -74,25 +76,28 @@ export class UsuarioEditarComponent implements OnInit {
     dataNascimento: new UntypedFormControl(undefined, Validators.required),
     centroCusto: new UntypedFormControl(undefined, Validators.required),
     contaPadrao: new UntypedFormControl(false),
-  }, { validators: this.cpfCnpjRequiredValidator });
+  });
 
   cpfCnpjRequiredValidator(): ValidatorFn {
-    return () => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       const cpfControl = this.userForm.get('cpf');
       const cnpjControl = this.userForm.get('cnpj');
 
       if (!cpfControl || !cnpjControl) {
         return null;
       }
+
       const cpf = cpfControl.value;
       const cnpj = cnpjControl.value;
 
       if (cpf || cnpj) {
-        return null;
+        return null; // Retorna null se pelo menos um dos campos estiver preenchido
       }
-      return { 'cpfCnpjRequired': true };
+
+      return { 'cpfCnpjRequired': true }; // Retorna um erro se ambos os campos estiverem vazios
     };
   }
+
 
   idCentroCustoValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

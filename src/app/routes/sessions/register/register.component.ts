@@ -4,7 +4,7 @@ import { FormBuilder, Validators, AbstractControl, FormGroup, FormArray, Untyped
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core';
 import { Conta } from 'app/models/conta';
 import { ContaUsuario } from 'app/models/conta-usuario';
@@ -41,7 +41,10 @@ export class RegisterComponent {
     private toastr: ToastrService,
     private datePipe: DatePipe,
     private auth: AuthService,
-    private contaBancariaService: ContaBancariaService) {
+    private contaBancariaService: ContaBancariaService,
+    private router: Router) {
+    this.registerForm.setValidators(this.cpfCnpjRequiredValidator());
+
     // this.userForm = this.formBuilder.group({
     //   nome: ['', Validators.required],
     //   email: ['', [Validators.required, Validators.email]],
@@ -77,28 +80,32 @@ export class RegisterComponent {
   }, { validators: this.cpfCnpjRequiredValidator });
 
   cpfCnpjRequiredValidator(): ValidatorFn {
-    return () => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       const cpfControl = this.registerForm.get('cpf');
       const cnpjControl = this.registerForm.get('cnpj');
 
       if (!cpfControl || !cnpjControl) {
         return null;
       }
+
       const cpf = cpfControl.value;
       const cnpj = cnpjControl.value;
 
       if (cpf || cnpj) {
-        return null;
+        return null; // Retorna null se pelo menos um dos campos estiver preenchido
       }
-      return { 'cpfCnpjRequired': true };
+
+      return { 'cpfCnpjRequired': true }; // Retorna um erro se ambos os campos estiverem vazios
     };
   }
-
 
   ngOnInit() {
     this.tokenCliente = this.activatedRoute.snapshot.params['id'];
     this.listaTipoConta = TipoContaSelect.tiposConta.map(forma => forma.descricao);
     this.getCurrentDate()
+    this.registerForm.get('senha')?.disable()
+    this.registerForm.get('senha')?.setValue('admin')
+
 
   }
 
@@ -118,21 +125,21 @@ export class RegisterComponent {
   //   return { 'cpfCnpjRequired': true };
   // }
 
-  cpfCnpjBancoRequiredValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
-    const cpfControl = formGroup.get('cpfBanco');
-    const cnpjControl = formGroup.get('cnpjBanco');
+  // cpfCnpjBancoRequiredValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
+  //   const cpfControl = formGroup.get('cpfBanco');
+  //   const cnpjControl = formGroup.get('cnpjBanco');
 
-    if (!cpfControl || !cnpjControl) {
-      return null;
-    }
-    const cpf = cpfControl.value;
-    const cnpj = cnpjControl.value;
+  //   if (!cpfControl || !cnpjControl) {
+  //     return null;
+  //   }
+  //   const cpf = cpfControl.value;
+  //   const cnpj = cnpjControl.value;
 
-    if (cpf || cnpj) {
-      return null;
-    }
-    return { 'cpfCnpjRequired': true };
-  }
+  //   if (cpf || cnpj) {
+  //     return null;
+  //   }
+  //   return { 'cpfCnpjRequired': true };
+  // }
 
   salvar() {
     // const contasArray = this.registerForm.get('contas') as FormArray;
@@ -158,6 +165,8 @@ export class RegisterComponent {
         this.contaUsuario = []
       }
     )
+    this.router.navigate(['/login'])
+
 
   }
 

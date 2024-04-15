@@ -1,6 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,6 +23,8 @@ import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo
 import { Usuario } from 'app/models/usuario';
 import { Rateio } from 'app/models/rateio';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
+import { PedidoService } from '../pedido.service';
+import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 
 
 @Component({
@@ -38,11 +40,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   displayedColumnsFiles: string[] = ['file', 'actions'];
   isSubmitting = false;
-  userForm: FormGroup;
+  // userForm: FormGroup;
   contaCnpj: boolean = false;
   pedidoPagamento: PedidoPagamento = new PedidoPagamento();
   listaBancos: string[] = [];
-  listaFormaPagamento: string[] = [];
+  listaFormaPagamento: { id: number; descricao: string }[] = FormasPagamentoSelect.formasPagamento;
   listaParcelas: number[] = []
   pgtoParcelado: boolean = false;
   currentDate: string = "";
@@ -76,46 +78,88 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog,
     private toastr: ToastrService,
     private centroCustoService: CentroDeCustoService,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private pedidoService: PedidoService
   ) {
-    this.userForm = this.formBuilder.group({
-      nome: ['', Validators.required],
-      cpf: [''],
-      cnpj: [''],
-      bancoCadastrado: ['', Validators.required],
-      formaPagamento: ['', Validators.required],
-      dataPagamento: ['', Validators.required],
-      dataVencimento: ['', Validators.required],
-      valorTotalPagamento: ['', Validators.required],
-      qtdParcelas: [''],
-      descricaoPagamento: [''],
-      contaCnpj: [''],
-      pedidoParcelado: [false],
-      gerarParcelas: [false],
-      centroCusto: ['', Validators.required],
-
-      tipoConta: [''],
-      agencia: [''],
-      conta: [''],
-      pix: [''],
-
-      exibirParcelas: [false],
-      tipoTerceiro: [this.listaTiposTerceiro[0]],
-      rateio: [false],
-      usuarioRateio: [''],
-      valorRateioPessoa: ['']
-
-    }, {
-      validators: this.cpfCnpjRequiredValidator
+    this.meuPedifoForm.valueChanges.subscribe(s => {
+      console.log(s);
     });
+    // this.userForm = this.formBuilder.group({
+    //   nome: ['', Validators.required],
+    //   cpf: [''],
+    //   cnpj: [''],
+    //   bancoCadastrado: ['', Validators.required],
+    //   formaPagamento: ['', Validators.required],
+    //   dataPagamento: ['', Validators.required],
+    //   dataVencimento: ['', Validators.required],
+    //   valorTotalPagamento: ['', Validators.required],
+    //   qtdParcelas: [''],
+    //   descricaoPagamento: [''],
+    //   contaCnpj: [''],
+    //   pedidoParcelado: [false],
+    //   gerarParcelas: [false],
+    //   centroCusto: ['', Validators.required],
+
+    //   tipoConta: [''],
+    //   agencia: [''],
+    //   conta: [''],
+    //   pix: [''],
+
+    //   exibirParcelas: [false],
+    //   tipoTerceiro: [this.listaTiposTerceiro[0]],
+    //   rateio: [false],
+    //   usuarioRateio: [''],
+    //   valorRateioPessoa: ['']
+
+    // }, {
+    //   validators: this.cpfCnpjRequiredValidator
+    // });
   }
+
+
+
+  public meuPedifoForm: UntypedFormGroup = new UntypedFormGroup({
+
+    UsuarioID: new UntypedFormControl(0),
+    TipoPedido: new UntypedFormControl(0),
+    ContaID: new UntypedFormControl(undefined,Validators.required),
+    CentroDeCustoID: new UntypedFormControl(0,Validators.required),
+    formaPagamento: new UntypedFormControl(undefined, Validators.required),
+    dataPagamento: new UntypedFormControl(undefined, Validators.required),
+    dataVencimento: new UntypedFormControl(undefined, Validators.required),
+    valorTotal: new UntypedFormControl(undefined, Validators.required),
+    quantidadeParcelas: new UntypedFormControl(undefined),
+
+
+    id: new UntypedFormControl(0),
+    nome: new UntypedFormControl(undefined, Validators.required),
+    cpf: new UntypedFormControl(undefined),
+    cnpj: new UntypedFormControl(undefined),
+    // bancoCadastrado: new UntypedFormControl(undefined, Validators.required),
+    descricaoPagamento: new UntypedFormControl(undefined),
+    contaCnpj: new UntypedFormControl(undefined),
+    pedidoParcelado: new UntypedFormControl(false),
+    gerarParcelas: new UntypedFormControl(false),
+
+    tipoConta: new UntypedFormControl(undefined),
+    agencia: new UntypedFormControl(undefined),
+    conta: new UntypedFormControl(undefined),
+    pix: new UntypedFormControl(undefined),
+
+    exibirParcelas: new UntypedFormControl(false),
+    tipoTerceiro: new UntypedFormControl(this.listaTiposTerceiro[0]),
+    rateio: new UntypedFormControl(false),
+    usuarioRateio: new UntypedFormControl(undefined),
+    valorRateioPessoa: new UntypedFormControl(undefined)
+  });
+
 
 
   ngOnInit() {
     this.desabilitarInputs()
     this.getCurrentDate();
     this.preencheUsuario()
-    this.listaFormaPagamento = FormasPagamentoSelect.formasPagamento.map(forma => forma.descricao);
+    // this.listaFormaPagamento = FormasPagamentoSelect.formasPagamento.map(forma => forma.descricao);
     this.listaTiposTerceiro = TipoTerceiroSelect.tiposTerceiro.map(terceiro => terceiro.descricao);
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
     this.preencheQtdParcelas()
@@ -158,8 +202,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     if (formattedDate) {
       this.pedidoPagamento.dataPagamento = formattedDate;
       this.pedidoPagamento.dataVencimento = formattedDate
-      this.userForm.get('dataPagamento')?.setValue(formattedDate);
-      this.userForm.get('dataVencimento')?.setValue(formattedDate);
+      this.meuPedifoForm.get('dataPagamento')?.setValue(formattedDate);
+      this.meuPedifoForm.get('dataVencimento')?.setValue(formattedDate);
     } else {
       console.error('Erro ao formatar a data.');
     }
@@ -172,10 +216,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    if (this.userForm.valid) {
+    if (this.meuPedifoForm.valid) {
       this.isSubmitting = true;
 
-      const userData: any = this.userForm.value;
+      const userData: any = this.meuPedifoForm.value;
       console.log(userData);
       setTimeout(() => {
         this.isSubmitting = false;
@@ -189,10 +233,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   validationSave() {
-    if (this.userForm.get('pedidoParcelado')?.value) {
+    if (this.meuPedifoForm.get('pedidoParcelado')?.value) {
       const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valor, 0).toFixed(2));
       // const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'))
-      const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value)
+      const valorTotal = parseFloat(this.meuPedifoForm.get('valorTotalPagamento')?.value)
 
 
       if (valorTotal !== parcelas) {
@@ -215,13 +259,18 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
   salvar() {
-    console.log(this.userForm.value)
-    this.toastr.success('Pedido salvo com sucesso', 'Sucesso');
+    // console.log(this.meuPedifoForm.value)
+   this.pedidoService.criarPedido(this.meuPedifoForm.getRawValue()).subscribe(
+    (data: RequestPedido) => {
+      this.toastr.success('Pedido salvo com sucesso', 'Sucesso');
+
+    }
+   )
   }
 
-  cpfCnpjRequiredValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
-    const cpfControl = formGroup.get('cpf');
-    const cnpjControl = formGroup.get('cnpj');
+  cpfCnpjRequiredValidator(): { [key: string]: boolean } | null {
+    const cpfControl = this.meuPedifoForm.get('cpf')?.value;
+    const cnpjControl = this.meuPedifoForm.get('cnpj')?.value;
 
     if (!cpfControl || !cnpjControl) {
       return null;
@@ -236,8 +285,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   limparCpfCnpj() {
-    this.userForm.get('cpf')?.setValue('')
-    this.userForm.get('cnpj')?.setValue('')
+    this.meuPedifoForm.get('cpf')?.setValue('')
+    this.meuPedifoForm.get('cnpj')?.setValue('')
   }
 
   retorno: string = ""
@@ -259,18 +308,19 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   preencheUsuario() {
     this.usuarioService.getByToken().subscribe(
       (data: Usuario) => {
-        this.userForm.get('nome')?.setValue(data.nome);
+        this.meuPedifoForm.get('UsuarioID')?.setValue(data.id);
+        this.meuPedifoForm.get('nome')?.setValue(data.nome);
         this.idUsuario = data.id;
         if (data.cpf != '') {
-          this.userForm.get('cpf')?.setValue(data.cpf);
-          this.userForm.get('contaCnpj')?.setValue(false);
+          this.meuPedifoForm.get('cpf')?.setValue(data.cpf);
+          this.meuPedifoForm.get('contaCnpj')?.setValue(false);
         } else {
-          this.userForm.get('cnpj')?.setValue(data.cnpj);
-          this.userForm.get('contaCnpj')?.setValue(true);
+          this.meuPedifoForm.get('cnpj')?.setValue(data.cnpj);
+          this.meuPedifoForm.get('contaCnpj')?.setValue(true);
         }
         this.preencheDadosBancariosUsuario()
         if (data.idCentroCusto > 0) {
-          this.userForm.get('centroCusto')?.setValue(data.idCentroCusto)
+          this.meuPedifoForm.get('CentroDeCustoID')?.setValue(data.idCentroCusto)
         }
       }
     )
@@ -285,22 +335,25 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   atualizaDadosInput() {
-    const dado = this.userForm.get('bancoCadastrado')?.value;
+    const dado = this.meuPedifoForm.get('ContaID')?.value;
     this.contaService.getContaPorIdUsuario(dado).subscribe(
       (data: ContaTerceiro) => {
-        this.userForm.get('conta')?.setValue(data.conta);
-        this.userForm.get('agencia')?.setValue(data.agencia);
-        this.userForm.get('pix')?.setValue(data.chavePix);
-        this.userForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
+        this.meuPedifoForm.get('conta')?.setValue(data.conta);
+        this.meuPedifoForm.get('agencia')?.setValue(data.agencia);
+        this.meuPedifoForm.get('pix')?.setValue(data.chavePix);
+        this.meuPedifoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
       }
     )
   }
 
   desabilitarInputs() {
-    this.userForm.get('conta')?.disable();
-    this.userForm.get('agencia')?.disable();
-    this.userForm.get('pix')?.disable();
-    this.userForm.get('tipoConta')?.disable();
+    this.meuPedifoForm.get('conta')?.disable();
+    this.meuPedifoForm.get('agencia')?.disable();
+    this.meuPedifoForm.get('pix')?.disable();
+    this.meuPedifoForm.get('tipoConta')?.disable();
+    this.meuPedifoForm.get('nome')?.disable();
+    this.meuPedifoForm.get('cpf')?.disable();
+    this.meuPedifoForm.get('cnpj')?.disable();
   }
   onFileSelected(event: any): void {
     this.toastr.clear();
@@ -370,17 +423,17 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   gerarParcelas() {
     // const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'));
-    const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value);
+    const valorTotal = parseFloat(this.meuPedifoForm.get('valorTotalPagamento')?.value);
 
-    const qtdParcelas = this.userForm.get('qtdParcelas')?.value;
-    const dataPagamentoStr = this.userForm.get('dataPagamento')?.value;
+    const qtdParcelas = this.meuPedifoForm.get('qtdParcelas')?.value;
+    const dataPagamentoStr = this.meuPedifoForm.get('dataPagamento')?.value;
 
     if (valorTotal == 0 || qtdParcelas == 0 || dataPagamentoStr == "") {
       this.toastr.warning('Informações de pagamento incompletas', 'Erro');
       return;
     }
 
-    this.userForm.get('exibirParcelas')?.setValue(true);
+    this.meuPedifoForm.get('exibirParcelas')?.setValue(true);
 
     if (valorTotal && qtdParcelas && dataPagamentoStr) {
       this.parcelas = [];
@@ -416,22 +469,22 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   tooglePedidoParcelado(event: MatSlideToggleChange) {
-    this.userForm.get('pedidoParcelado')?.setValue(event.checked)
-    this.userForm.get('qtdParcelas')?.setValue(0)
+    this.meuPedifoForm.get('pedidoParcelado')?.setValue(event.checked)
+    this.meuPedifoForm.get('qtdParcelas')?.setValue(0)
     this.parcelas = []
     this.dataSource.data = [...this.parcelas];
-    this.userForm.get('rateio')?.disable()
+    this.meuPedifoForm.get('rateio')?.disable()
     if (!event.checked) {
-      this.userForm.get('exibirParcelas')?.setValue(false)
-      this.userForm.get('rateio')?.enable()
+      this.meuPedifoForm.get('exibirParcelas')?.setValue(false)
+      this.meuPedifoForm.get('rateio')?.enable()
     }
   }
 
   toogleRateio(event: MatSlideToggleChange) {
-    this.userForm.get('pedidoParcelado')?.disable()
+    this.meuPedifoForm.get('pedidoParcelado')?.disable()
     if (!event.checked) {
-      this.userForm.get('pedidoParcelado')?.enable()
-      this.userForm.get('usuarioRateio')?.setValue('')
+      this.meuPedifoForm.get('pedidoParcelado')?.enable()
+      this.meuPedifoForm.get('usuarioRateio')?.setValue('')
       this.rateio = []
       this.dataSourceRateio.data = [...this.rateio];
     }
@@ -516,7 +569,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.rateio[index] = { ...rateio };
       this.dataSourceRateio.data = [...this.rateio];
     }
-    this.userForm.get('usuarioRateio')?.setValue('')
+    this.meuPedifoForm.get('usuarioRateio')?.setValue('')
 
   }
 
@@ -540,7 +593,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   calcularValorParcela(qtdParcelas: number): string {
 
-    const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value)
+    const valorTotal = parseFloat(this.meuPedifoForm.get('valorTotalPagamento')?.value)
 
     // const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'));
 
@@ -590,12 +643,12 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   addPessoaListaRateio() {
-    if (this.userForm.get('valorTotalPagamento')?.value <= 0) {
+    if (this.meuPedifoForm.get('valorTotalPagamento')?.value <= 0) {
       this.toastr.warning('Preencha o valor total do pagamento primeiro', 'Atenção');
-      this.userForm.get('usuarioRateio')?.setValue('')
+      this.meuPedifoForm.get('usuarioRateio')?.setValue('')
       return;
     }
-    const userId = this.userForm.get('usuarioRateio')?.value;
+    const userId = this.meuPedifoForm.get('usuarioRateio')?.value;
     const usuario = this.listaUsuarios.find(item => item.id === userId);
 
     if (usuario) {
@@ -604,8 +657,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       if (isAlreadyInRateio) {
         this.toastr.warning('Pessoa já está na lista de rateio.', 'Atenção');
       } else {
-        const valorUsuarioRateio = this.userForm.get('valorTotalPagamento')?.value / 2
-        this.userForm.get('valorTotalPagamento')?.setValue(valorUsuarioRateio)
+        const valorUsuarioRateio = this.meuPedifoForm.get('valorTotalPagamento')?.value / 2
+        this.meuPedifoForm.get('valorTotalPagamento')?.setValue(valorUsuarioRateio)
         const rateio: Rateio = {
           id: usuario.id,
           usuario: usuario,
@@ -621,7 +674,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.toastr.warning('Usuário não encontrado', 'Atenção');
 
     }
-    this.userForm.get('usuarioRateio')?.setValue('')
+    this.meuPedifoForm.get('usuarioRateio')?.setValue('')
 
   }
 

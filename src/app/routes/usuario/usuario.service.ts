@@ -142,5 +142,19 @@ export class UsuarioService {
     return this.http.delete(path, { headers })
   }
 
+  atualizarSenha(pSenha: string): Observable<any> {
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      senha: pSenha
+    });
+    const path = `${this.url}api/usuario/atualizarSenha`;
+
+    return this.http.get(path, { headers })
+  }
+
 
 }

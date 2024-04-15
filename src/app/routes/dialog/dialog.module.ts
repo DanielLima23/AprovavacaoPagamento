@@ -10,8 +10,10 @@ import { DialogEditContaTerceiroDialogComponent } from './edit-conta-terceiro-di
 import { DialogEditUsuarioRegisterContaComponent } from './edit-usuario-register-conta/edit-usuario-register-conta.component';
 import { DialogLogoutComponent } from './logout/logout.component';
 import { DialogConfirmarExclusaoComponent } from './confirmar-exclusao/confirmar-exclusao.component';
+import { DialogTrocaSenhaPrimeiroAcessoComponent } from './troca-senha-primeiro-acesso/troca-senha-primeiro-acesso.component';
+import { DialogTermosSegurancaComponent } from './termos-seguranca/termos-seguranca.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({
