@@ -1,27 +1,30 @@
-<form [formGroup]="meuPedifoForm" (ngSubmit)="onSubmit()" class="row mt-2">
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>Adicionar meu pedido</mat-card-title>
-      </mat-card-header>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Dados pessoais
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <div class="row mt-2">
-        <!-- <div class="col-sm-12">
+<form [formGroup]="meuPedidoForm" class="row mt-2">
+
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Adicionar meu pedido</mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Dados pessoais
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <div class="row mt-2">
+      <!-- <div class="col-sm-12">
           <mat-slide-toggle formControlName="contaCnpj"
                             (change)="toggleCpfCnpj($event)">
             CNPJ?
           </mat-slide-toggle>
         </div> -->
-      </div>
+    </div>
+
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field floatLabel="always"
@@ -34,7 +37,7 @@
             <mat-hint align="end">{{inputNome.value.length}}/50</mat-hint>
           </mat-form-field>
         </div>
-        <div class="col-sm-6" *ngIf="!meuPedifoForm.get('contaCnpj')?.value">
+        <div class="col-sm-6" *ngIf="!meuPedidoForm.get('contaCnpj')?.value">
           <mat-form-field floatLabel="always" style="width: 100%;">
             <mat-label>Cpf</mat-label>
             <input formControlName="cpf" matInput #input maxlength="14"
@@ -44,7 +47,7 @@
             <mat-hint align="end">{{input.value.length}}/14</mat-hint>
           </mat-form-field>
         </div>
-        <div class="col-sm-6" *ngIf="meuPedifoForm.get('contaCnpj')?.value">
+        <div class="col-sm-6" *ngIf="meuPedidoForm.get('contaCnpj')?.value">
           <mat-form-field floatLabel="always" style="width: 100%;">
             <mat-label>Cnpj</mat-label>
             <input formControlName="cnpj" matInput #input maxlength="18"
@@ -57,8 +60,12 @@
       </div>
 
 
-    </mat-card-content>
-  </mat-card>
+  </mat-card-content>
+</mat-card>
+</form>
+
+<form [formGroup]="formaPagamentoForm" class="row mt-2">
+
   <mat-card>
     <mat-card-content>
       <mat-card-header>
@@ -67,13 +74,14 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
+
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
             <mat-label>Selecione uma conta já cadastrada</mat-label>
             <mat-select name="responsavel"
                         (ngModelChange)="atualizaDadosInput()"
-                        formControlName="ContaID">
+                        formControlName="idContaBancaria">
               <mat-option *ngFor="let banco of listaContasUsuario"
                           [value]="banco.id">
                 {{ banco.banco }}
@@ -143,11 +151,11 @@
           <mat-form-field style="width: 100%;">
             <mat-label>Forma de pagamento</mat-label>
             <mat-select (ngModelChange)="validaFormaPagamento()"
-                        name="formaPagamento"
-                        formControlName="formaPagamento">
-                        <mat-option *ngFor="let formaPgto of listaFormaPagamento" [value]="formaPgto.id">
-                          {{ formaPgto.descricao }}
-                        </mat-option>
+                        name="tipoPagamento"
+                        formControlName="tipoPagamento">
+              <mat-option *ngFor="let formaPgto of listaFormaPagamento" [value]="formaPgto.id">
+                {{ formaPgto.descricao }}
+              </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -193,8 +201,9 @@
             <input matInput
                    #inputDescricaoPagamento maxlength="250"
                    placeholder="Insira uma descrição para o pagamento"
-                   id="descricaoPagamento"
-                   formControlName="descricaoPagamento">
+                   id="descricao"
+                   formControlName="descricao"
+                   (change)="setDescricaoNaFormaPagamentoForm()">
             <mat-hint
                       align="end">{{inputDescricaoPagamento.value.length}}/250</mat-hint>
           </mat-form-field>
@@ -202,8 +211,8 @@
         <div class="col-sm-12">
           <mat-form-field style="width: 100%;">
             <mat-label>Centro de custo</mat-label>
-            <mat-select name="CentroDeCustoID"
-                        formControlName="CentroDeCustoID">
+            <mat-select name="idCentroDeCusto"
+                        formControlName="idCentroDeCusto">
               <mat-option *ngFor="let centro of listaCentroCusto"
                           [value]="centro.id">
                 {{ centro.descricao }}
@@ -224,9 +233,9 @@
             Rateio?
           </mat-slide-toggle>
         </div>
-        <mat-divider *ngIf="meuPedifoForm.get('pedidoParcelado')?.value || meuPedifoForm.get('rateio')?.value"
+        <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value || formaPagamentoForm.get('rateio')?.value"
                      class="mt-2"></mat-divider>
-        <div class="col-sm-12 mt-2" *ngIf="meuPedifoForm.get('pedidoParcelado')?.value">
+        <div class="col-sm-12 mt-2" *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value">
           <mat-form-field style="width: 100%;">
             <mat-label>Quantidade de parcelas</mat-label>
             <mat-select name="quantidadeParcelas"
@@ -238,7 +247,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div *ngIf="meuPedifoForm.get('pedidoParcelado')?.value">
+        <div *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value">
           <button formControlName="gerarParcelas" mat-flat-button extended color="primary"
                   class="col-sm-12"
                   (click)="gerarParcelas()">
@@ -249,7 +258,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="meuPedifoForm.get('rateio')?.value">
+  <mat-card *ngIf="meuPedidoForm.get('rateio')?.value">
     <mat-card-content>
       <div class="row">
         <mat-card-header>
@@ -299,7 +308,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="meuPedifoForm.get('exibirParcelas')?.value">
+  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
     <mat-card-content>
       <div class="row">
         <mat-card-header>
@@ -396,7 +405,7 @@
 
       </div> -->
       <mat-card-actions align="end" class="mt-2">
-        <button [disabled]="this.meuPedifoForm.invalid" (click)="validationSave()" mat-flat-button
+        <button [disabled]="this.meuPedidoForm.invalid" (click)="validationSave()" mat-flat-button
                 extended
                 color="primary" class="m-3">
           <mat-icon>save</mat-icon>
