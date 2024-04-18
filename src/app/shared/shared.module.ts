@@ -21,7 +21,7 @@ import { ErrorCodeComponent } from './components/error-code/error-code.component
 import { DisableControlDirective } from './directives/disable-control.directive';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ToObservablePipe } from './pipes/to-observable.pipe';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 const MODULES: any[] = [
   CommonModule,
@@ -38,7 +38,8 @@ const MODULES: any[] = [
   NgxPermissionsModule,
   ToastrModule,
   TranslateModule,
-  NgxMaskModule.forRoot()
+  NgxMaskDirective,
+  NgxMaskPipe
 
 ];
 const COMPONENTS: any[] = [BreadcrumbComponent, PageHeaderComponent, ErrorCodeComponent];
@@ -50,5 +51,6 @@ const PIPES: any[] = [SafeUrlPipe, ToObservablePipe];
   imports: [...MODULES],
   exports: [...MODULES, ...COMPONENTS, ...DIRECTIVES, ...PIPES],
   declarations: [...COMPONENTS, ...COMPONENTS_DYNAMIC, ...DIRECTIVES, ...PIPES],
+  providers: [provideNgxMask()]
 })
 export class SharedModule {}

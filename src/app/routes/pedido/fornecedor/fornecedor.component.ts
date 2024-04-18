@@ -239,6 +239,7 @@ export class PedidoFornecedorComponent implements OnInit {
     const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'));
     const qtdParcelas = this.userForm.get('qtdParcelas')?.value;
     const dataPagamentoStr = this.userForm.get('dataPagamento')?.value;
+    const dataVencimentoStr = this.userForm.get('dataVencimento')?.value;
 
     if (valorTotal == 0 || qtdParcelas == 0 || dataPagamentoStr == "") {
       return;
@@ -247,7 +248,8 @@ export class PedidoFornecedorComponent implements OnInit {
 
     if (valorTotal && qtdParcelas && dataPagamentoStr) {
       this.parcelas = [];
-      let dataVencimento = new Date(dataPagamentoStr + 'T00:00:00Z');
+      let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00Z');
+      let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00Z');
 
       const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
       const centavosRestantes = valorTotal % qtdParcelas;
@@ -256,12 +258,15 @@ export class PedidoFornecedorComponent implements OnInit {
         const valorParcela = (i === 0) ? valorParcelaSemCentavos + centavosRestantes : valorParcelaSemCentavos;
         const parcela: Parcelas = {
           id: i + 1,
-          dataVencimento: this.formatarData(dataVencimento),
-          valor: parseFloat(valorParcela.toFixed(2)),
+          parcelaReferencia: i + 1,
+          dataVencimento: this.formatarData(dataPagamento),
+          dataPagamento: this.formatarData(dataVencimento),
+          valorParcela: parseFloat(valorParcela.toFixed(2)),
           exclusao: false,
         };
         this.parcelas.push(parcela);
 
+        dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
         dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
       }
 
@@ -329,7 +334,7 @@ export class PedidoFornecedorComponent implements OnInit {
 
 
   openNewWindow(arquivo: Arquivo): void {
-    const fileType = arquivo.name.substring(arquivo.name.lastIndexOf('.') + 1);
+    const fileType = arquivo.descricao.substring(arquivo.descricao.lastIndexOf('.') + 1);
 
     if (['jpeg', 'jpg'].includes(fileType.toLowerCase())) {
       const newTab = window.open();
@@ -369,9 +374,10 @@ export class PedidoFornecedorComponent implements OnInit {
 
     const novoArquivo: Arquivo = {
       id: this.numFilesAttached + 1,
-      name: file.name,
+      descricao: file.name,
+      tipoArquivo: file.name.split('.').pop(),
       arquivo: file,
-      base64:''
+      base64: ""
     };
 
     this.dataSourceFile.data = [...this.dataSourceFile.data, novoArquivo];
@@ -401,7 +407,7 @@ export class PedidoFornecedorComponent implements OnInit {
 
   validationSave() {
     if (this.userForm.get('pedidoParcelado')?.value) {
-      const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valor, 0).toFixed(2));
+      const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valorParcela, 0).toFixed(2));
       const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'))
 
       if (valorTotal !== parcelas) {

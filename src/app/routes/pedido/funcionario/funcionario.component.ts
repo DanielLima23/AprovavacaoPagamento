@@ -57,7 +57,7 @@ export class PedidoFuncionarioComponent implements OnInit {
   dataSourceFile = new MatTableDataSource<Arquivo>();
   listaArquivo: Arquivo[] = []
   listaFuncionario: Usuario[] = []
-  listaCentroCusto: CentroDeCusto[]=[]
+  listaCentroCusto: CentroDeCusto[] = []
   rateio: Rateio[] = [];
   dataSourceRateio = new MatTableDataSource<Rateio>(this.rateio);
   listaUsuarios: Usuario[] = []
@@ -98,7 +98,7 @@ export class PedidoFuncionarioComponent implements OnInit {
       rateio: [false],
       usuarioRateio: [''],
       valorRateioPessoa: [''],
-      centroCusto: ['',Validators.required],
+      centroCusto: ['', Validators.required],
     }, {
       validators: this.cpfCnpjRequiredValidator
     });
@@ -150,7 +150,7 @@ export class PedidoFuncionarioComponent implements OnInit {
     this.userForm.get('agencia')?.setValue('');
     this.userForm.get('pix')?.setValue('');
     this.userForm.get('tipoConta')?.setValue('');
-    if(funcionario!.idCentroCusto > 0){
+    if (funcionario!.idCentroCusto > 0) {
       this.userForm.get('centroCusto')?.setValue(funcionario!.idCentroCusto)
     }
 
@@ -247,6 +247,7 @@ export class PedidoFuncionarioComponent implements OnInit {
     const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'));
     const qtdParcelas = this.userForm.get('qtdParcelas')?.value;
     const dataPagamentoStr = this.userForm.get('dataPagamento')?.value;
+    const dataVencimentoStr = this.userForm.get('dataVencimento')?.value;
 
     if (valorTotal == 0 || qtdParcelas == 0 || dataPagamentoStr == "") {
       return;
@@ -255,7 +256,8 @@ export class PedidoFuncionarioComponent implements OnInit {
 
     if (valorTotal && qtdParcelas && dataPagamentoStr) {
       this.parcelas = [];
-      let dataVencimento = new Date(dataPagamentoStr + 'T00:00:00Z');
+      let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00Z');
+      let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00Z');
 
       const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
       const centavosRestantes = valorTotal % qtdParcelas;
@@ -264,12 +266,15 @@ export class PedidoFuncionarioComponent implements OnInit {
         const valorParcela = (i === 0) ? valorParcelaSemCentavos + centavosRestantes : valorParcelaSemCentavos;
         const parcela: Parcelas = {
           id: i + 1,
-          dataVencimento: this.formatarData(dataVencimento),
-          valor: parseFloat(valorParcela.toFixed(2)),
+          parcelaReferencia: i + 1,
+          dataVencimento: this.formatarData(dataPagamento),
+          dataPagamento: this.formatarData(dataVencimento),
+          valorParcela: parseFloat(valorParcela.toFixed(2)),
           exclusao: false,
         };
         this.parcelas.push(parcela);
 
+        dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
         dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
       }
 
@@ -337,7 +342,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
 
   openNewWindow(arquivo: Arquivo): void {
-    const fileType = arquivo.name.substring(arquivo.name.lastIndexOf('.') + 1);
+    const fileType = arquivo.descricao.substring(arquivo.descricao.lastIndexOf('.') + 1);
 
     if (['jpeg', 'jpg'].includes(fileType.toLowerCase())) {
       const newTab = window.open();
@@ -374,13 +379,13 @@ export class PedidoFuncionarioComponent implements OnInit {
       this.toastr.error(`Limite de ${this.limiteArquivos} arquivos atingido.`, 'Erro');
       return;
     }
-
     const novoArquivo: Arquivo = {
       id: this.numFilesAttached + 1,
-      name: file.name,
+      descricao: file.name,
+      tipoArquivo: file.name.split('.').pop(),
       arquivo: file,
       base64: ""
-    };
+    };;
 
     this.dataSourceFile.data = [...this.dataSourceFile.data, novoArquivo];
 
@@ -409,7 +414,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
   validationSave() {
     if (this.userForm.get('pedidoParcelado')?.value) {
-      const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valor, 0).toFixed(2));
+      const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valorParcela, 0).toFixed(2));
       const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'))
 
       if (valorTotal !== parcelas) {
@@ -441,7 +446,7 @@ export class PedidoFuncionarioComponent implements OnInit {
   }
 
   addPessoaListaRateio() {
-    if(this.userForm.get('valorTotalPagamento')?.value <= 0){
+    if (this.userForm.get('valorTotalPagamento')?.value <= 0) {
       this.toastr.error('Preencha o valor total do pagamento primeiro', 'Atenção');
       this.userForm.get('usuarioRateio')?.setValue('')
       return;
@@ -453,9 +458,9 @@ export class PedidoFuncionarioComponent implements OnInit {
       const isAlreadyInRateio = this.dataSourceRateio.data.some(item => item.id === usuario.id);
 
       if (isAlreadyInRateio) {
-        this.toastr.error('Pessoa já está na lista de rateio.','Atenção');
+        this.toastr.error('Pessoa já está na lista de rateio.', 'Atenção');
       } else {
-        const valorUsuarioRateio = this.userForm.get('valorTotalPagamento')?.value/2
+        const valorUsuarioRateio = this.userForm.get('valorTotalPagamento')?.value / 2
         this.userForm.get('valorTotalPagamento')?.setValue(valorUsuarioRateio)
         const rateio: Rateio = {
           id: usuario.id,
@@ -469,7 +474,7 @@ export class PedidoFuncionarioComponent implements OnInit {
         this.rateio = updatedData;
       }
     } else {
-      this.toastr.error('Usuário não encontrado','Atenção');
+      this.toastr.error('Usuário não encontrado', 'Atenção');
 
     }
     this.userForm.get('usuarioRateio')?.setValue('')
