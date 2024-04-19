@@ -74,13 +74,13 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-
+        <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2" color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA CONTA</button>
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
             <mat-label>Selecione uma conta já cadastrada</mat-label>
             <mat-select name="responsavel"
-                        (ngModelChange)="atualizaDadosInput()"
+                        (ngModelChange)="changeContaBancaria()"
                         formControlName="idContaBancaria">
               <mat-option *ngFor="let banco of listaContasUsuario"
                           [value]="banco.id">
@@ -241,7 +241,7 @@
             <mat-label>Selecione a quantidade de parcelas</mat-label>
             <mat-select name="quantidadeParcelas"
                         formControlName="quantidadeParcelas" (selectionChange)="gerarParcelas()">
-              <mat-option *ngFor="let parcela of listaParcelas"
+              <mat-option *ngFor="let parcela of quantidadeMaximaParcela"
                           [value]="parcela">
                 {{ parcela }} {{ calcularValorParcela(parcela) }}
               </mat-option>

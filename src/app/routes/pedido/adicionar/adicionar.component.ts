@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFo
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
 import { ContaTerceiro } from 'app/models/conta-terceiro';
 import { ContaUsuario } from 'app/models/conta-usuario';
@@ -25,6 +25,7 @@ import { Rateio } from 'app/models/rateio';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
 import { PedidoService } from '../pedido.service';
 import { RequestPedido } from 'app/models/auxiliar/request-pedido';
+import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 
 
 @Component({
@@ -34,6 +35,7 @@ import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 
 })
 export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
+
 
   displayedColumns: string[] = ['data', 'valor', 'actions'];
   displayedColumnsRateio: string[] = ['nome', 'valor', 'actions'];
@@ -45,7 +47,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   pedidoPagamento: PedidoPagamento = new PedidoPagamento();
   listaBancos: string[] = [];
   listaFormaPagamento: { id: number; descricao: string }[] = FormasPagamentoSelect.formasPagamento;
-  listaParcelas: number[] = []
+  quantidadeMaximaParcela: number[] = []
   pgtoParcelado: boolean = false;
   currentDate: string = "";
   idUsuario: number = 0;
@@ -79,20 +81,20 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService,
     private centroCustoService: CentroDeCustoService,
     private currencyPipe: CurrencyPipe,
-    private pedidoService: PedidoService
+    private pedidoService: PedidoService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.meuPedidoForm.valueChanges.subscribe(s => {
       console.log(s);
-
     });
     this.meuPedidoForm.valueChanges.subscribe(s => {
       console.log(s);
     });
     const formaPagamentoArray = this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray;
     formaPagamentoArray.push(this.formaPagamentoForm);
-
+    const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    parcelaArrqay.push(this.parcelaForm);
   }
-
 
   public meuPedidoForm: UntypedFormGroup = new UntypedFormGroup({
 
@@ -116,7 +118,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     idContaBancaria: new UntypedFormControl(undefined, Validators.required),
     tipoPagamento: new UntypedFormControl(0),
     valorTotal: new UntypedFormControl(undefined, Validators.required),
-    quantidadeParcelas: new UntypedFormControl(0),
+    quantidadeParcelas: new UntypedFormControl(1),
     valorParcela: new UntypedFormControl(0),
     dataPagamento: new UntypedFormControl(undefined, Validators.required),
     dataVencimento: new UntypedFormControl(undefined, Validators.required),
@@ -140,8 +142,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   public parcelaForm = new UntypedFormGroup({
     id: new UntypedFormControl(0),
-    parcelaReferencia: new UntypedFormControl(0),
-    valorParcela: new UntypedFormControl(0),
+    parcelaReferencia: new UntypedFormControl(1),
+    valorParcela: new UntypedFormControl(undefined),
     dataPagamento: new UntypedFormControl(undefined),
     dataVencimento: new UntypedFormControl(undefined)
   })
@@ -178,15 +180,37 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.meuPedidoForm.get('descricao')?.setValue(this.formaPagamentoForm.get('descricao')?.value)
   }
 
+  idPedido: number = 0;
   ngOnInit() {
+    this.idPedido = this.activatedRoute.snapshot.params['id']
+    if(this.idPedido > 0){
+      this.findPedidoByCodigo()
+      return;
+    }
+
     this.desabilitarInputs()
     this.getCurrentDate();
     this.preencheUsuario()
     this.listaTiposTerceiro = TipoTerceiroSelect.tiposTerceiro.map(terceiro => terceiro.descricao);
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
+
     this.preencheQtdParcelas()
     // this.preencheListaCentros()
     this.preencheListaFuncionario()
+  }
+
+  findPedidoByCodigo(){
+    this.pedidoService.getPedidoById(this.idPedido).subscribe(
+      (pedido: any) => {
+        this.usuarioService.getById(pedido.usuario.id).subscribe(
+          (usuario: any) => {
+            this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+            this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+          }
+        )
+
+      }
+    )
   }
 
   preencheListaFuncionario() {
@@ -217,8 +241,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   preencheQtdParcelas() {
-    for (let i = 2; i <= 60; i++) {
-      this.listaParcelas.push(i);
+    for (let i = 2; i <= 18; i++) {
+      this.quantidadeMaximaParcela.push(i);
     }
   }
 
@@ -242,7 +266,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.isSubmitting = true;
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
       const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valorParcela, 0).toFixed(2));
-      // const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'))
       const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value)
 
       if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
@@ -257,9 +280,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.isSubmitting = false;
         return;
       }
-      // if(){
-
-      // }
     }
     // if(this.userForm.get('rateio')?.value){
     //   const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'))
@@ -296,8 +316,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if(dataPagamento && dataVencimento){
-      if(dataPagamento > dataVencimento){
+    if (dataPagamento && dataVencimento) {
+      if (dataPagamento > dataVencimento) {
         this.toastr.warning('A data de pagamento não pode ser maior que a data de vencimento', 'Atenção');
         this.isSubmitting = false;
         return;
@@ -399,17 +419,15 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     )
   }
 
-  atualizaDadosInput() {
-    // const dado = this.meuPedidoForm.get('ContaID')?.value;
-    // this.contaService.getContaPorIdUsuario(dado).subscribe(
-    //   (data: ContaTerceiro) => {
-    //     this.meuPedidoForm.get('conta')?.setValue(data.conta);
-    //     this.meuPedidoForm.get('agencia')?.setValue(data.agencia);
-    //     this.meuPedidoForm.get('pix')?.setValue(data.chavePix);
-    //     this.meuPedidoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
-    //   }
-    // )
+  changeContaBancaria() {
+    // if(this.listaContasUsuario && this.listaContasUsuario.length <= 0){
+    // this.adicionarConta()
+    // }else{
+    this.atualizarDadosInput()
+    // }
+  }
 
+  atualizarDadosInput() {
     const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
     this.contaService.getContaPorIdUsuario(dado).subscribe(
       (data: any) => {
@@ -572,15 +590,31 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   tooglePedidoParcelado(event: MatSlideToggleChange) {
     if (this.validarGeracaoDeParcela()) {
+      const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+      if (listaParcelasArray) {
+        listaParcelasArray.clear();
+      }
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(event.checked)
-      this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(0)
       this.parcelas = []
       this.dataSource.data = [...this.parcelas];
       this.formaPagamentoForm.get('rateio')?.disable()
       if (!event.checked) {
         this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
         this.formaPagamentoForm.get('rateio')?.enable()
+        this.parcelas = []
+        // this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(0)
+
+        if (!this.formaPagamentoForm.get('pedidoParcelado')?.value) {
+          this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
+          this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
+          this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value)
+          this.parcelaForm.get('parcelaReferencia')?.setValue(1)
+
+          const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+          parcelaArrqay.push(this.parcelaForm);
+        }
       }
+
     } else {
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(!event.checked)
       if (!event.checked) {
@@ -821,5 +855,30 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     })
 
     return this.formaPagamentoForm.get('valorTotal')?.setValue(formater);
+  }
+
+  adicionarConta() {
+    this.openDialogAddContaUsuario();
+  }
+
+  openDialogAddContaUsuario(): void {
+    const idUsuario = this.formaPagamentoForm.get('idUsuario')?.value;
+    const dialogRef = this.dialog.open(DialogAddContaUsuarioComponent, {
+      data: { idUsuario },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const idUsuario = this.formaPagamentoForm.get('idUsuario')?.value;
+        this.contaService.getListContasPorIdUsuario(idUsuario).subscribe(
+          (data: any[]) => {
+            this.listaContasUsuario = data
+            this.formaPagamentoForm.get('idContaBancaria')?.setValue(this.listaContasUsuario[0].id)
+            this.atualizarDadosInput()
+          }
+        )
+        return;
+      }
+    });
   }
 }

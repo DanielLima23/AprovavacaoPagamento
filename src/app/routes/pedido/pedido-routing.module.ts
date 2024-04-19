@@ -8,6 +8,7 @@ import { PedidoFornecedorConsultarComponent } from './fornecedor-consultar/forne
 import { PedidoFuncionarioConsultarComponent } from './funcionario-consultar/funcionario-consultar.component';
 
 const routes: Routes = [{ path: 'adicionar', component: PedidoAdicionarComponent },
+{ path: 'adicionar/:id', component: PedidoAdicionarComponent },
 { path: 'consultar', component: PedidoConsultarComponent },
 { path: 'funcionario', component: PedidoFuncionarioComponent },
 { path: 'fornecedor', component: PedidoFornecedorComponent },

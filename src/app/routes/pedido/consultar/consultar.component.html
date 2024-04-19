@@ -7,38 +7,44 @@
 </mat-card>
 <mat-card>
   <mat-card-header>
-    <button  (click)="adicionar()" mat-raised-button>CRIAR PEDIDO</button>
+    <button (click)="adicionar()" color="primary" mat-raised-button>CRIAR PEDIDO</button>
+    <button (click)="verPedido(47)" color="primary" mat-raised-button>TESTE</button>
+
   </mat-card-header>
-  <br/>
-  <mat-card-content>
-    <table mat-table [dataSource]="pedidos">
-      <!-- Coluna de descrição -->
-      <ng-container matColumnDef="descricao">
-        <th mat-header-cell *matHeaderCellDef> Descrição </th>
-        <td mat-cell *matCellDef="let centro"> {{centro.descricao}} </td>
-      </ng-container>
 
-      <!-- Coluna de responsável -->
-      <ng-container matColumnDef="responsavel">
-        <th mat-header-cell *matHeaderCellDef> Responsável </th>
-        <td mat-cell *matCellDef="let centro"> {{centro.responsavel}} </td>
-      </ng-container>
-
-      <!-- Coluna de ações (editar, excluir, etc.) -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Ações </th>
-        <td mat-cell *matCellDef="let centro">
-          <button mat-icon-button>
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button>
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <mat-card-content class="mt-2">
+    <table #tabela
+           class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
+      <thead>
+        <tr>
+          <th class="text-center color-table align-middle">Mês do pedido</th>
+          <th class="text-center color-table align-middle">Responsável centro de custo</th>
+          <th class="text-center color-table align-middle">Financeiro</th>
+          <th class="text-center color-table align-middle">CEO</th>
+          <th class="text-center color-table align-middle">Diretor</th>
+          <th class="text-center color-table align-middle">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let parcela of pedidos">
+          <tr class="text-center ">
+            <td style="width: 16%;" class="color-table align-middle">{{ "fee"}}
+            </td>
+            <td style="width: 16%;" class="color-table align-middle">{{ "dwd" }}
+            </td>
+            <td style="width: 16%;" class="color-table align-middle">{{ "dw" }}
+            </td>
+            <td style="width: 16%;" class="color-table align-middle">{{ "fed" }}</td>
+            <td style="width: 16%;" class="color-table align-middle">{{ "dd" }}</td>
+            <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
+                      matTooltip="Ver detalhes do pedido" color="accent"><mat-icon>visibility</mat-icon> </button> <!-- <button mat-icon-button (click)="openDialogDelete(parcela)" matTooltip="Deletar"
+                 color="warn">
+           <mat-icon>delete</mat-icon>
+         </button> -->
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
     </table>
   </mat-card-content>
 </mat-card>
