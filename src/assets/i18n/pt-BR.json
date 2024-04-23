@@ -86,10 +86,19 @@
     "CentroDeCusto": "Centro de custo",
     "Fornecedor": "Fornecedor",
     "Administracao": "Administração",
-    "Administracao.Usuarios": "Usuários",
-    "Administracao.Usuarios.AprovarUsuarios": "Aguardando aprovação",
-    "Administracao.Usuarios.Lista": "Todos",
+    "Administracao.Financeiro": "Financeiro",
+    "Administracao.Financeiro.Usuarios": "Usuários",
+    "Administracao.Financeiro.Usuarios.AprovarUsuarios": "Aguardando aprovação",
+    "Administracao.Financeiro.Usuarios.Lista": "Todos",
+    "Administracao.Financeiro.PedidosDePagamento": "Pedidos de pagamento",
     "Administracao.Usuarios.Convidar": "Convidar",
+    "Administracao.CEO": "CEO",
+    "Administracao.CEO.PedidosDePagamento": "Pedidos de pagamento",
+    "Administracao.Diretor": "Diretor",
+    "Administracao.Diretor.PedidosDePagamento": "Pedidos de pagamento",
+
+
+
     "Relatorios": "Relatórios",
     "Relatorios.Pedidos": "Pedidos",
     "Relatorios.Outros": "Outros"

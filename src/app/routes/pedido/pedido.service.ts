@@ -44,5 +44,18 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/' , { headers })
   }
 
+  getAnexoByIdPedido(id: number) : Observable<any>{
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      idPedido: id
+    });
+
+    return this.http.get(this.url + 'api/pedido/RetornaAnexoPedido', { headers })
+  }
+
 
 }

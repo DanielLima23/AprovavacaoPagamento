@@ -12,6 +12,7 @@ export class PedidoConsultarComponent implements OnInit {
 
   displayedColumns: string[] = ['descricao', 'responsavel', 'actions'];
   pedidos: any = [];
+  idPedido: number = 0
 
   constructor(private router: Router,
     private pedidoService: PedidoService
@@ -25,7 +26,9 @@ export class PedidoConsultarComponent implements OnInit {
   }
 
   verPedido(id: number) {
-    this.router.navigate(['/pedido/adicionar', id]);
+    this.idPedido = id
+    this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
+
   }
 
 

@@ -74,7 +74,9 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-        <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2" color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA CONTA</button>
+      <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
+              color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
+        CONTA</button>
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
@@ -192,7 +194,8 @@
                    placeholder="R$ 0,00" id="valorTotal"
                    formControlName="valorTotal"
                    type="text"
-                   [allowNegativeNumbers]="true" mask="separator.2" thousandSeparator="." prefix="R$" separatorLimit="1000000" >
+                   [allowNegativeNumbers]="true" mask="separator.2" thousandSeparator="."
+                   prefix="R$" separatorLimit="1000000">
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -366,7 +369,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button mat-flat-button extended color="warn" class="m-3 mt-2"
+      <button *ngIf="this.idPedido <= 0" mat-flat-button extended color="warn" class="m-3 mt-2"
               (click)="openFileInput.click()">
         <mat-icon>attach_file</mat-icon>
         Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
@@ -405,7 +408,7 @@
 
     </mat-card-content>
   </mat-card>
-  <mat-card>
+  <mat-card *ngIf="this.idPedido <= 0">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
         <button [disabled]=" this.formaPagamentoForm.invalid" (click)="validationSave()"

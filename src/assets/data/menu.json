@@ -53,22 +53,58 @@
       "children": [
         {
           "route": "",
-          "name": "Usuarios",
+          "name": "Financeiro",
           "type": "sub",
-          "icon": "dashboard",
           "children": [
             {
-              "route": "administracao/pendentes-aprovacao",
-              "name": "AprovarUsuarios",
-              "type": "link",
-              "badge": {
-                "color": "red-500",
-                "value": 4
-              }
+              "route": "",
+              "name": "Usuarios",
+              "type": "sub",
+              "icon": "dashboard",
+              "children": [
+                {
+                  "route": "administracao/pendentes-aprovacao",
+                  "name": "AprovarUsuarios",
+                  "type": "link",
+                  "badge": {
+                    "color": "red-500",
+                    "value": 4
+                  }
+                },
+                {
+                  "route": "administracao/lista",
+                  "name": "Lista",
+                  "type": "link"
+                }
+              ]
             },
             {
-              "route": "administracao/lista",
-              "name": "Lista",
+              "route": "",
+              "name": "PedidosDePagamento",
+              "type": "link"
+            }
+          ]
+        },
+        {
+          "route": "",
+          "name": "CEO",
+          "type": "sub",
+          "children": [
+            {
+              "route": "",
+              "name": "PedidosDePagamento",
+              "type": "link"
+            }
+          ]
+        },
+        {
+          "route": "",
+          "name": "Diretor",
+          "type": "sub",
+          "children": [
+            {
+              "route": "",
+              "name": "PedidosDePagamento",
               "type": "link"
             }
           ]

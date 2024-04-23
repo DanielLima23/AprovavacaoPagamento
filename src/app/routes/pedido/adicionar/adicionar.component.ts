@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -26,6 +26,7 @@ import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-d
 import { PedidoService } from '../pedido.service';
 import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 
 
 @Component({
@@ -180,13 +181,18 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.meuPedidoForm.get('descricao')?.setValue(this.formaPagamentoForm.get('descricao')?.value)
   }
 
-  idPedido: number = 0;
+  @Input() idPedido: number = 0;
   ngOnInit() {
-    this.idPedido = this.activatedRoute.snapshot.params['id']
-    if(this.idPedido > 0){
+    // this.idPedido = this.activatedRoute.snapshot.params['id']
+    this.idPedido = history.state.id;
+
+    if (this.idPedido > 0) {
+      this.formaPagamentoForm.disable();
+      this.meuPedidoForm.disable()
       this.findPedidoByCodigo()
       return;
     }
+    this.idPedido = 0
 
     this.desabilitarInputs()
     this.getCurrentDate();
@@ -199,19 +205,59 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.preencheListaFuncionario()
   }
 
-  findPedidoByCodigo(){
+  findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {
             this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+            this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
+            this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
+            this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
             this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
           }
         )
-
+        this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
+          (data: any[]) => {
+            this.listaContasUsuario = data
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.contaUsuario.id)?.id;
+            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+            this.atualizarDadosBancariosInput()
+          }
+        )
+        this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
+        this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
+          (data: any[]) => {
+            this.arquivosBase64 = data;
+            this.arquivosBase64.map(arquivo => {
+              arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+            })
+            this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
+          }
+        )
+        if (pedido.formaPagamento[0].parcelas.length == 1) {
+          const formatador = new FormatadorData();
+          this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
+          this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+          this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+          this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
+          this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
+          this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
+        }
       }
     )
   }
+
+  base64toFile(base64: string, filename: string): File {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new File([byteArray], filename, { type: 'application/pdf' }); // Altere o tipo MIME conforme necessário
+  }
+
 
   preencheListaFuncionario() {
     this.usuarioService.getListFuncionario().subscribe(
@@ -423,11 +469,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     // if(this.listaContasUsuario && this.listaContasUsuario.length <= 0){
     // this.adicionarConta()
     // }else{
-    this.atualizarDadosInput()
+    this.atualizarDadosBancariosInput()
     // }
   }
 
-  atualizarDadosInput() {
+  atualizarDadosBancariosInput() {
     const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
     this.contaService.getContaPorIdUsuario(dado).subscribe(
       (data: any) => {
@@ -874,7 +920,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           (data: any[]) => {
             this.listaContasUsuario = data
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(this.listaContasUsuario[0].id)
-            this.atualizarDadosInput()
+            this.atualizarDadosBancariosInput()
           }
         )
         return;
