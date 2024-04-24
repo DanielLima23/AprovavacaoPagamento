@@ -114,6 +114,7 @@ export class UsuarioEditarComponent implements OnInit {
     this.retornaUsuario()
     this.preencheListaContasUsuario()
     this.preencheListaCentros()
+    this.userForm.get('centroCusto')?.disable()
   }
 
 

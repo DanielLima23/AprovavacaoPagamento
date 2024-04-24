@@ -84,7 +84,7 @@
     "PedidoPagamento.Funcionário":"Funcionário",
     "PedidoPagamento.Fornecedor":"Fornecedor",
     "CentroDeCusto": "Centro de custo",
-    "Fornecedor": "Fornecedor",
+    "Terceiro": "Terceiro",
     "Administracao": "Administração",
     "Administracao.Financeiro": "Financeiro",
     "Administracao.Financeiro.Usuarios": "Usuários",
@@ -96,6 +96,10 @@
     "Administracao.CEO.PedidosDePagamento": "Pedidos de pagamento",
     "Administracao.Diretor": "Diretor",
     "Administracao.Diretor.PedidosDePagamento": "Pedidos de pagamento",
+    "Administracao.ResponsavelCentro": "Responsável",
+    "Administracao.ResponsavelCentro.PedidosDePagamento": "Pedidos de pagamento",
+
+
 
 
 

@@ -37,9 +37,9 @@ const routes: Routes = [
         path: 'usuario',
         loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule),
       },
-      { path: 'fornecedor', loadChildren: () => import('./fornecedor/fornecedor.module').then(m => m.FornecedorModule) },
       { path: 'dialog', loadChildren: () => import('./dialog/dialog.module').then(m => m.DialogModule) },
       { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule) },
+      { path: 'terceiro', loadChildren: () => import('./terceiro/terceiro.module').then(m => m.TerceiroModule) },
 
     ],
   },

@@ -15,7 +15,7 @@ import { Terceiro } from 'app/models/terceiro';
 import { Usuario } from 'app/models/usuario';
 import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
-import { FornecedorService } from 'app/routes/fornecedor/fornecedor.service';
+import { TerceiroService } from 'app/routes/terceiro/terceiro.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
@@ -65,7 +65,7 @@ export class PedidoFornecedorComponent implements OnInit {
     private mapeamentoEnumService: MapeamentoEnumService,
     public dialog: MatDialog,
     private toastr: ToastrService,
-    private fornecedorService: FornecedorService,
+    private terceiroService: TerceiroService,
     private centroCustoService: CentroDeCustoService,
   ) {
     this.userForm = this.formBuilder.group({
@@ -121,7 +121,7 @@ export class PedidoFornecedorComponent implements OnInit {
   }
 
   preencheListaFornecedores() {
-    this.fornecedorService.getListaFornecedorPorCliente().subscribe(
+    this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
         this.listaFornecedor = data;
       }

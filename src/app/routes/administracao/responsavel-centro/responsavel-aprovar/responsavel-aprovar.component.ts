@@ -1,41 +1,43 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { DatePipe, CurrencyPipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, UntypedFormArray, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
-import { ContaTerceiro } from 'app/models/conta-terceiro';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
+import { Rateio } from 'app/models/rateio';
+import { Usuario } from 'app/models/usuario';
+import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
+import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
+import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
-import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
-import { ToastrService } from 'ngx-toastr';
-import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
-import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
-import { Usuario } from 'app/models/usuario';
-import { Rateio } from 'app/models/rateio';
-import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
-import { PedidoService } from '../pedido.service';
-import { RequestPedido } from 'app/models/auxiliar/request-pedido';
-import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
-import { FormatadorData } from 'app/models/auxiliar/formatador-date';
-
+import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
+import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-pedido-adicionar',
-  templateUrl: './adicionar.component.html',
-  styleUrls: ['./adicionar.component.scss'],
-
+  selector: 'app-administracao-responsavel-centro-responsavel-aprovar',
+  templateUrl: './responsavel-aprovar.component.html',
+  styleUrls: ['./responsavel-aprovar.component.scss']
 })
-export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
+export class AdministracaoResponsavelCentroResponsavelAprovarComponent implements OnInit {
+recusarPedido() {
+throw new Error('Method not implemented.');
+}
+aprovarPedido() {
+throw new Error('Method not implemented.');
+}
 
 
   displayedColumns: string[] = ['data', 'valor', 'actions'];
@@ -181,10 +183,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.meuPedidoForm.get('descricao')?.setValue(this.formaPagamentoForm.get('descricao')?.value)
   }
 
-  @Input() idPedido: number = 0;
+   idPedido: number = 0;
   ngOnInit() {
-    // this.idPedido = this.activatedRoute.snapshot.params['id']
-    this.idPedido = history.state.id;
+    this.idPedido = this.activatedRoute.snapshot.params['id']
 
     if (this.idPedido > 0) {
       this.formaPagamentoForm.disable();
@@ -312,7 +313,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   voltar() {
-    this.router.navigate(['/pedido/consultar']);
+    this.router.navigate(['/administracao/responsavel-aprovacao-pendente']);
 
   }
   validationSave() {
@@ -934,4 +935,5 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
 }

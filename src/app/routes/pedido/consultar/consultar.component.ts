@@ -28,8 +28,14 @@ export class PedidoConsultarComponent implements OnInit {
   verPedido(id: number) {
     this.idPedido = id
     this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
-
   }
+
+  preencheListaPedidos(id: any){
+    // this.pedidoService.getStatusPedidoById(id).subscribe(data => {
+    //   this.pedidos = data
+    // })
+  }
+
 
 
 }

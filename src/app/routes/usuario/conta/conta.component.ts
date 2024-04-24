@@ -8,7 +8,6 @@ import { Conta } from 'app/models/conta';
 import { ContaTerceiro } from 'app/models/conta-terceiro';
 import { Terceiro } from 'app/models/terceiro';
 import { Usuario } from 'app/models/usuario';
-import { FornecedorService } from 'app/routes/fornecedor/fornecedor.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { TipoContaSelect } from 'app/util/classes/select-tipo-conta';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';

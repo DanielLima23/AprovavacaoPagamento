@@ -36,8 +36,8 @@
       ]
     },
     {
-      "route": "fornecedor/consultar",
-      "name": "Fornecedor",
+      "route": "terceiro/consultar",
+      "name": "Terceiro",
       "type": "link",
       "icon": "business"
     },
@@ -79,7 +79,7 @@
               ]
             },
             {
-              "route": "",
+              "route": "administracao/financeiro-aprovacao-pendente",
               "name": "PedidosDePagamento",
               "type": "link"
             }
@@ -91,7 +91,7 @@
           "type": "sub",
           "children": [
             {
-              "route": "",
+              "route": "administracao/ceo-aprovacao-pendente",
               "name": "PedidosDePagamento",
               "type": "link"
             }
@@ -103,7 +103,19 @@
           "type": "sub",
           "children": [
             {
-              "route": "",
+              "route": "administracao/diretor-aprovacao-pendente",
+              "name": "PedidosDePagamento",
+              "type": "link"
+            }
+          ]
+        },
+        {
+          "route": "",
+          "name": "ResponsavelCentro",
+          "type": "sub",
+          "children": [
+            {
+              "route": "administracao/responsavel-aprovacao-pendente",
               "name": "PedidosDePagamento",
               "type": "link"
             }

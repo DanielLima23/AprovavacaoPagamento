@@ -2,16 +2,9 @@ import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Conta } from 'app/models/conta';
 import { ContaUsuario } from 'app/models/conta-usuario';
-import { Usuario } from 'app/models/usuario';
-import { FornecedorService } from 'app/routes/fornecedor/fornecedor.service';
-import { BancosService } from 'app/services-outros/bancos-service';
-import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { BancosBr } from 'app/util/bancos-br';
 import { TipoContaSelect } from 'app/util/classes/select-tipo-conta';
-import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
 import { startWith, map, Observable } from 'rxjs';
 

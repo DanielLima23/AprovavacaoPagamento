@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class FornecedorService {
+export class TerceiroService {
 
   private url = Data.url
 
@@ -19,7 +19,7 @@ export class FornecedorService {
   }
 
 
-  registerFornecedor(terceiro: UntypedFormGroup) : Observable<any>{
+  registerTerceiro(terceiro: UntypedFormGroup) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -31,7 +31,7 @@ export class FornecedorService {
     return this.http.post(this.url + 'api/terceiros',terceiro, { headers })
   }
 
-  updateFornecedor(id: number,terceiro: Terceiro) : Observable<any>{
+  updateTerceiro(id: number,terceiro: Terceiro) : Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -43,7 +43,7 @@ export class FornecedorService {
     return this.http.put(path,terceiro, { headers })
   }
 
-  getForncedorById(pCodigoFornecedor: number): Observable<any>{
+  getTerceiroById(pCodigoFornecedor: number): Observable<any>{
     const pToken = this.tokenService.getToken()
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -58,7 +58,7 @@ export class FornecedorService {
     return this.http.get( path, { headers });
   }
 
-  getListaFornecedorPorCliente(): Observable<any>{
+  getListaTerceiroPorCliente(): Observable<any>{
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -70,7 +70,7 @@ export class FornecedorService {
     return this.http.get(this.url + 'api/terceiros/', { headers })
   }
 
-  deleteForncedorById(pCodigoFornecedor: number): Observable<any>{
+  deleteTerceiroById(pCodigoFornecedor: number): Observable<any>{
     const pToken = this.tokenService.getToken()
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -84,6 +84,4 @@ export class FornecedorService {
 
     return this.http.delete( path, { headers });
   }
-
-
 }

@@ -74,9 +74,9 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
+      <!-- <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
               color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
-        CONTA</button>
+        CONTA</button> -->
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
@@ -239,7 +239,8 @@
         </div>
         <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value || formaPagamentoForm.get('rateio')?.value"
                      class="mt-2"></mat-divider>
-        <div class="col-sm-12 mt-2" *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value && this.idPedido <=0">
+        <div class="col-sm-12 mt-2"
+             *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value && this.idPedido <=0">
           <mat-form-field style="width: 100%;">
             <mat-label>Selecione a quantidade de parcelas</mat-label>
             <mat-select name="quantidadeParcelas"
@@ -409,16 +410,21 @@
 
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="this.idPedido <= 0">
+  <mat-card>
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
-        <button [disabled]=" this.formaPagamentoForm.invalid" (click)="validationSave()"
+        <button [disabled]=" this.formaPagamentoForm.invalid" (click)="aprovarPedido()"
                 mat-flat-button
                 extended
                 color="primary" class="m-3"
                 [loading]="isSubmitting">
-          <mat-icon>save</mat-icon>
-          Enviar pedido
+          <mat-icon>check_circle</mat-icon>
+          Aprovar pedido
+        </button>
+        <button mat-flat-button extended color="warn" class="m-3"
+                (click)="recusarPedido()">
+          <mat-icon>cancel</mat-icon>
+          Recusar
         </button>
         <button mat-flat-button extended color="accent" class="m-3"
                 (click)="voltar()">
