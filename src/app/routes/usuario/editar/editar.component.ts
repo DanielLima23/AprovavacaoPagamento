@@ -9,7 +9,7 @@ import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { MatSelectChange } from '@angular/material/select';
 import { ContaTerceiro } from 'app/models/conta-terceiro';

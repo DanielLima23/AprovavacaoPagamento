@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TokenService } from '@core';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { Usuario } from 'app/models/usuario';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { forkJoin } from 'rxjs';
 

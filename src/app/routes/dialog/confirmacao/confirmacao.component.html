@@ -14,14 +14,14 @@
     <mat-card-footer class="mt-2" align="center">
       <button (click)="salvar()" mat-flat-button
               extended
-              color="warn" class="m-3">
-        <mat-icon>delete</mat-icon>
-        {{'table_kitchen_sink.delete' | translate}}
+              color="accent" class="m-3">
+        <mat-icon>check_circle</mat-icon>
+        Sim
       </button>
-      <button mat-flat-button extended color="accent" class="m-3"
+      <button mat-flat-button extended color="warn" class="m-3"
               (click)="cancel()">
-        <mat-icon>reply</mat-icon>
-        {{'table_kitchen_sink.back' | translate}}
+        <mat-icon>cancel</mat-icon>
+        Não
       </button>
     </mat-card-footer>
   </mat-card-content>

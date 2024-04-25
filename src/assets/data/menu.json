@@ -7,12 +7,6 @@
       "icon": "dashboard"
     },
     {
-      "route": "centro-de-custo/consultar",
-      "name": "CentroDeCusto",
-      "type": "link",
-      "icon": "folder"
-    },
-    {
       "route": "",
       "name": "PedidoPagamento",
       "type": "sub",
@@ -34,12 +28,6 @@
           "type": "link"
         }
       ]
-    },
-    {
-      "route": "terceiro/consultar",
-      "name": "Terceiro",
-      "type": "link",
-      "icon": "business"
     },
     {
       "route": "",
@@ -120,6 +108,30 @@
               "type": "link"
             }
           ]
+        },
+        {
+          "route": "",
+          "name": "Terceiros",
+          "type": "sub",
+          "icon": "business",
+          "children":[
+            {
+              "route": "administracao/fornecedor-consultar",
+              "name": "Fornecedor",
+              "type": "link"
+            },
+            {
+              "route": "administracao/funcionario-consultar",
+              "name": "Funcionario",
+              "type": "link"
+            }
+          ]
+        },
+        {
+          "route": "administracao/centro-de-custo-consultar",
+          "name": "CentroDeCusto",
+          "type": "link",
+          "icon": "folder"
         }
       ]
     },

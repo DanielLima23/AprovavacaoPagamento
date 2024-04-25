@@ -7,7 +7,7 @@ import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { RequestAprovacaoUsuario } from 'app/models/req-aprovacao-usuario';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { TipoStatusUsuarioSelect } from 'app/util/classes/select-tipo-status-usuario';

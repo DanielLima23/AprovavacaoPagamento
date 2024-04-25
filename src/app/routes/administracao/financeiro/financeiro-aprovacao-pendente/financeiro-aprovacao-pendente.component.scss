@@ -1,0 +1,12 @@
+.table_custom { --bs-table-bg: transparent !important; }
+
+.color-table {
+  color: var(--primary-bg);
+}
+
+.calendar-container {
+  max-width: 50%px; /* ajuste o tamanho conforme necessário */
+}
+td {
+  white-space: nowrap;
+}

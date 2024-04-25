@@ -1,0 +1,46 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Consultar funcionário
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-header>
+    <button (click)="adicionar()" mat-raised-button>ADICIONAR</button>
+  </mat-card-header>
+  <br />
+  <mat-card-content>
+
+    <table #tabela class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
+      <thead>
+        <tr>
+          <th class="text-center color-table align-middle">Funcionário</th>
+          <!-- <th class="text-center color-table align-middle">Finalidade</th> -->
+          <th class="text-center color-table align-middle">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let funcionario of listaFuncionarios">
+          <tr class="text-center">
+            <td style="width: 33.33%" class="color-table align-middle">{{ funcionario.nome }}</td>
+            <!-- <td style="width: 33.33%;" class="color-table align-middle"> {{funcionario.finalidade}} </td> -->
+            <td style="width: 33.33%;" class="color-table align-middle">
+              <button mat-icon-button (click)="editarFornecedor(funcionario.id)" matTooltip="Editar"
+                      color="accent">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openDialogDelete(funcionario)" matTooltip="Deletar"
+                      color="warn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>

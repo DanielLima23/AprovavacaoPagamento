@@ -24,11 +24,7 @@ const routes: Routes = [
       { path: '403', component: Error403Component },
       { path: '404', component: Error404Component },
       { path: '500', component: Error500Component },
-      {
-        path: 'centro-de-custo',
-        loadChildren: () =>
-          import('./centro-de-custo/centro-de-custo.module').then(m => m.CentroDeCustoModule),
-      },
+
       {
         path: 'pedido',
         loadChildren: () => import('./pedido/pedido.module').then(m => m.PedidoModule),
@@ -39,7 +35,6 @@ const routes: Routes = [
       },
       { path: 'dialog', loadChildren: () => import('./dialog/dialog.module').then(m => m.DialogModule) },
       { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule) },
-      { path: 'terceiro', loadChildren: () => import('./terceiro/terceiro.module').then(m => m.TerceiroModule) },
 
     ],
   },

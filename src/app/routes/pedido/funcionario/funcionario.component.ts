@@ -15,7 +15,7 @@ import { PedidoPagamento } from 'app/models/pedidoPagamento';
 import { Rateio } from 'app/models/rateio';
 import { Terceiro } from 'app/models/terceiro';
 import { Usuario } from 'app/models/usuario';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';

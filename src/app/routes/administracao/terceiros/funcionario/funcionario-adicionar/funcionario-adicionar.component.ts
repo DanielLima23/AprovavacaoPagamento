@@ -6,22 +6,22 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaTerceiro } from 'app/models/conta-terceiro';
 import { Terceiro } from 'app/models/terceiro';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { DialogEditContaTerceiroDialogComponent } from 'app/routes/dialog/edit-conta-terceiro-dialog/edit-conta-terceiro-dialog.component';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
-import { TerceiroService } from '../terceiro.service';
+import { TerceiroService } from '../../terceiro.service';
 
 @Component({
-  selector: 'app-terceiro-adicionar',
-  templateUrl: './adicionar.component.html',
-  styleUrls: ['./adicionar.component.scss']
+  selector: 'app-administracao-terceiros-funcionario-funcionario-adicionar',
+  templateUrl: './funcionario-adicionar.component.html',
+  styleUrls: ['./funcionario-adicionar.component.scss']
 })
-export class TerceiroAdicionarComponent implements OnInit {
+export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent implements OnInit {
 
-  fornecedor: Terceiro = new Terceiro();
+  funcionario: Terceiro = new Terceiro();
   isSubmitting = false;
   contaCnpj: boolean = false;
   token: any = "";
@@ -29,7 +29,7 @@ export class TerceiroAdicionarComponent implements OnInit {
   listaFormaPagamento: string[] = [];
   listaCentroCusto: CentroDeCusto[] = []
   displayedColumns: string[] = ['banco', 'agencia', 'conta', 'chavePix', 'actions'];
-  idFornecedor: number = 0
+  idFuncionario: number = 0
   listaContasTerceiro: ContaTerceiro[] = []
 
   constructor(private formBuilder: FormBuilder,
@@ -55,11 +55,11 @@ export class TerceiroAdicionarComponent implements OnInit {
 
   ngOnInit() {
     this.listaFormaPagamento = FormasPagamentoSelect.formasPagamento.map(forma => forma.descricao);
-    this.idFornecedor = 0;
+    this.idFuncionario = 0;
     this.preencheListaCentros()
-    this.idFornecedor = this.activatedRoute.snapshot.params['id'];
-    if (this.idFornecedor) {
-      this.findFornecedorById(this.idFornecedor);
+    this.idFuncionario = this.activatedRoute.snapshot.params['id'];
+    if (this.idFuncionario) {
+      this.findFornecedorById(this.idFuncionario);
       this.preencheListaContasTerceiro()
     }
   }
@@ -68,14 +68,14 @@ export class TerceiroAdicionarComponent implements OnInit {
   public fornecedorForm: UntypedFormGroup = new UntypedFormGroup({
     id: new UntypedFormControl(0),
     nome: new UntypedFormControl(undefined, Validators.required),
-    finalidade: new UntypedFormControl(undefined, Validators.required),
+    finalidade: new UntypedFormControl("Funcinoario", Validators.required),
     contaCnpj: new UntypedFormControl(false),
     cpf: new UntypedFormControl(""),
     cnpj: new UntypedFormControl(""),
     // tipoPagamento: new UntypedFormControl(undefined),
     // tipoPagamentoDTO: new UntypedFormControl(undefined),
     idCentroCusto: new UntypedFormControl(undefined, Validators.required),
-    tipoTerceiro: new UntypedFormControl(1),
+    tipoTerceiro: new UntypedFormControl(0),
   }, { validators: this.cpfCnpjRequiredValidator });
 
 
@@ -85,7 +85,7 @@ export class TerceiroAdicionarComponent implements OnInit {
         this.fornecedorForm.patchValue(data)
         this.fornecedorForm.get('tipoPagamentoDTO')?.setValue(this.mapeamentoEnumService.mapearTipoPagamentoDescricao(data.tipoPagamento));
         this.ajustesConta(data)
-        if (this.fornecedor.cnpj) {
+        if (this.funcionario.cnpj) {
           this.contaCnpj = true;
         } else {
           this.contaCnpj = false;
@@ -114,7 +114,7 @@ export class TerceiroAdicionarComponent implements OnInit {
   }
 
   voltar() {
-    this.router.navigate(['/fornecedor/consultar']);
+    this.router.navigate(['administracao/funcionario-consultar']);
   }
 
   salvar() {
@@ -161,11 +161,11 @@ export class TerceiroAdicionarComponent implements OnInit {
   }
 
   adicionarConta() {
-    this.router.navigate(['/fornecedor/conta', this.fornecedor.id]);
+    this.router.navigate(['/fornecedor/conta', this.funcionario.id]);
   }
 
   editarContaBanco(id: number) {
-    this.router.navigate(['/fornecedor/conta', this.fornecedor.id, id]);
+    this.router.navigate(['/fornecedor/conta', this.funcionario.id, id]);
   }
 
   excluirContaBanco(id: any) {
@@ -186,7 +186,7 @@ export class TerceiroAdicionarComponent implements OnInit {
   }
 
   preencheListaContasTerceiro() {
-    this.contaTerceiroService.getListContasPorIdTerceiro(this.idFornecedor).subscribe(
+    this.contaTerceiroService.getListContasPorIdTerceiro(this.idFuncionario).subscribe(
       (data: ContaTerceiro[]) => {
         this.listaContasTerceiro = data;
       }

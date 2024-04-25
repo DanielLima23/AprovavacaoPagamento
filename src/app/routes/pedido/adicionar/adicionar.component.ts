@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { Usuario } from 'app/models/usuario';
 import { Rateio } from 'app/models/rateio';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';

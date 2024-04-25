@@ -3,15 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Terceiro } from 'app/models/terceiro';
 import { DialogEditFornecedorDialogComponent } from 'app/routes/dialog/edit-fornecedor-dialog/edit-fornecedor-dialog.component';
+import { TerceiroService } from 'app/routes/administracao/terceiros/terceiro.service';
 import { ToastrService } from 'ngx-toastr';
-import { TerceiroService } from '../terceiro.service';
 
 @Component({
-  selector: 'app-terceiro-consultar',
-  templateUrl: './consultar.component.html',
-  styleUrls: ['./consultar.component.scss']
+  selector: 'app-administracao-terceiros-fornecedor-fornecedor-consultar',
+  templateUrl: './fornecedor-consultar.component.html',
+  styleUrls: ['./fornecedor-consultar.component.scss']
 })
-export class TerceiroConsultarComponent implements OnInit {
+export class AdministracaoTerceirosFornecedorFornecedorConsultarComponent implements OnInit {
 
   constructor(private router: Router,
     private terceiroService: TerceiroService,
@@ -29,11 +29,11 @@ export class TerceiroConsultarComponent implements OnInit {
   }
 
   adicionar() {
-    this.router.navigate(['/fornecedor/adicionar']);
+    this.router.navigate(['administracao/fornecedor-adicionar']);
   }
 
   editarFornecedor(idForncedor: any) {
-    this.router.navigate(['/fornecedor/adicionar', idForncedor]);
+    this.router.navigate(['administracao/fornecedor-adicionar', idForncedor]);
   }
 
 
@@ -50,7 +50,7 @@ export class TerceiroConsultarComponent implements OnInit {
   preencheListaFornecedores() {
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
-        this.listaFornecedores = data;
+        this.listaFornecedores = data.filter( terceiro => terceiro.tipoTerceiro == 1)
       }
     )
   }
@@ -77,4 +77,5 @@ export class TerceiroConsultarComponent implements OnInit {
 
     this.excluirFornecedor(parcela.id)
   }
+
 }

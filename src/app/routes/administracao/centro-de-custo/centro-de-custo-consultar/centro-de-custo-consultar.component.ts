@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CentroDeCustoService } from '../centro-de-custo.service';
-import { CentroDeCusto } from 'app/models/centro-de-custo';
-import { Router } from '@angular/router';
-import { DialogEditCentroCustoDialogComponent } from 'app/routes/dialog/edit-centro-custo-dialog/edit-centro-custo-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { CentroDeCusto } from 'app/models/centro-de-custo';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
+import { DialogEditCentroCustoDialogComponent } from 'app/routes/dialog/edit-centro-custo-dialog/edit-centro-custo-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-centro-de-custo-consultar',
-  templateUrl: './consultar.component.html',
-  styleUrls: ['./consultar.component.scss'],
+  selector: 'app-administracao-centro-de-custo-centro-de-custo-consultar',
+  templateUrl: './centro-de-custo-consultar.component.html',
+  styleUrls: ['./centro-de-custo-consultar.component.scss']
 })
-export class CentroDeCustoConsultarComponent implements OnInit {
+export class AdministracaoCentroDeCustoCentroDeCustoConsultarComponent implements OnInit {
+
   displayedColumns: string[] = ['descricao', 'responsavel', 'actions'];
 
   centroCusto = new CentroDeCusto();
@@ -43,7 +44,7 @@ export class CentroDeCustoConsultarComponent implements OnInit {
   }
 
   editarCentroCusto(idCentro: number) {
-    this.router.navigate(['/centro-de-custo/adicionar', idCentro]);
+    this.router.navigate(['/administracao/centro-de-custo-adicionar', idCentro]);
   }
 
   excluirCentroCusto(idCentro: number) {
@@ -58,7 +59,7 @@ export class CentroDeCustoConsultarComponent implements OnInit {
   }
 
   adicionar() {
-    this.router.navigate(['/centro-de-custo/adicionar']);
+    this.router.navigate(['/administracao/centro-de-custo-adicionar']);
   }
 
   openDialogDelete(parcela: CentroDeCusto): void {
@@ -96,4 +97,5 @@ export class CentroDeCustoConsultarComponent implements OnInit {
   //     this.dataSourceRateio.data = [...this.rateio];
   //   }
   // }
+
 }

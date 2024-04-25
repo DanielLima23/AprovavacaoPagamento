@@ -7,13 +7,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { RequestAprovaPedido } from 'app/models/auxiliar/request-aprova-pedido';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
 import { Rateio } from 'app/models/rateio';
+import { StatusPedidoAprovacao } from 'app/models/status-pedido-aprovacao';
 import { Usuario } from 'app/models/usuario';
-import { CentroDeCustoService } from 'app/routes/centro-de-custo/centro-de-custo.service';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
@@ -32,12 +34,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./responsavel-aprovar.component.scss']
 })
 export class AdministracaoResponsavelCentroResponsavelAprovarComponent implements OnInit {
-recusarPedido() {
-throw new Error('Method not implemented.');
-}
-aprovarPedido() {
-throw new Error('Method not implemented.');
-}
+  recusarPedido() {
+    throw new Error('Method not implemented.');
+  }
+  aprovarPedido() {
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
+    requestAprovaPedido.responsavel = 1;
+    this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+      (data:any) => {
+        this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
+        this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
+      }
+    )
+  }
 
 
   displayedColumns: string[] = ['data', 'valor', 'actions'];
@@ -87,12 +96,11 @@ throw new Error('Method not implemented.');
     private pedidoService: PedidoService,
     private activatedRoute: ActivatedRoute
   ) {
-    this.meuPedidoForm.valueChanges.subscribe(s => {
-      console.log(s);
-    });
-    this.meuPedidoForm.valueChanges.subscribe(s => {
-      console.log(s);
-    });
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras.state) {
+      this.pedido = navigation.extras.state.pedido;
+    }
+
     const formaPagamentoArray = this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray;
     formaPagamentoArray.push(this.formaPagamentoForm);
     const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
@@ -183,17 +191,20 @@ throw new Error('Method not implemented.');
     this.meuPedidoForm.get('descricao')?.setValue(this.formaPagamentoForm.get('descricao')?.value)
   }
 
-   idPedido: number = 0;
+  pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
-    this.idPedido = this.activatedRoute.snapshot.params['id']
 
-    if (this.idPedido > 0) {
+    if(!this.pedido.pedidoId){
+      this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
+    }
+
+    if (this.pedido.pedidoId > 0) {
       this.formaPagamentoForm.disable();
       this.meuPedidoForm.disable()
       this.findPedidoByCodigo()
       return;
     }
-    this.idPedido = 0
+    this.pedido.pedidoId = 0
 
     this.desabilitarInputs()
     this.getCurrentDate();
@@ -207,7 +218,7 @@ throw new Error('Method not implemented.');
   }
 
   findPedidoByCodigo() {
-    this.pedidoService.getPedidoById(this.idPedido).subscribe(
+    this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {

@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CentroDeCusto } from 'app/models/centro-de-custo';
-import { UsuarioService } from 'app/routes/usuario/usuario.service';
-import { CentroDeCustoService } from '../centro-de-custo.service';
-import { Usuario } from 'app/models/usuario';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { ValidatorFn, AbstractControl, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CentroDeCusto } from 'app/models/centro-de-custo';
+import { Usuario } from 'app/models/usuario';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-centro-de-custo-adicionar',
-  templateUrl: './adicionar.component.html',
-  styleUrls: ['./adicionar.component.scss'],
+  selector: 'app-administracao-centro-de-custo-centro-de-custo-adicionar',
+  templateUrl: './centro-de-custo-adicionar.component.html',
+  styleUrls: ['./centro-de-custo-adicionar.component.scss']
 })
-export class CentroDeCustoAdicionarComponent implements OnInit {
-
+export class AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent implements OnInit {
 
   centroCusto: CentroDeCusto = new CentroDeCusto();
   listaResponsaveis: Usuario[] = []
@@ -119,7 +117,7 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
   }
 
   voltar() {
-    this.router.navigate(['/centro-de-custo/consultar']);
+    this.router.navigate(['/administracao/centro-de-custo-consultar']);
   }
 
   preencherListaResponsaveis() {
@@ -129,6 +127,5 @@ export class CentroDeCustoAdicionarComponent implements OnInit {
       }
     )
   }
-
 
 }
