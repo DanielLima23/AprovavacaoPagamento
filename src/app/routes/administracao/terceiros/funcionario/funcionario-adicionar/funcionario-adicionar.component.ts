@@ -59,7 +59,7 @@ export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent impl
     this.preencheListaCentros()
     this.idFuncionario = this.activatedRoute.snapshot.params['id'];
     if (this.idFuncionario) {
-      this.findFornecedorById(this.idFuncionario);
+      this.findFuncionarioById(this.idFuncionario);
       this.preencheListaContasTerceiro()
     }
   }
@@ -79,7 +79,7 @@ export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent impl
   }, { validators: this.cpfCnpjRequiredValidator });
 
 
-  findFornecedorById(pIdFornecedor: number) {
+  findFuncionarioById(pIdFornecedor: number) {
     this.terceiroService.getTerceiroById(pIdFornecedor).subscribe(
       (data: Terceiro) => {
         this.fornecedorForm.patchValue(data)
@@ -161,11 +161,11 @@ export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent impl
   }
 
   adicionarConta() {
-    this.router.navigate(['/fornecedor/conta', this.funcionario.id]);
+    this.router.navigate(['administracao/funcionario-conta', this.idFuncionario]);
   }
 
   editarContaBanco(id: number) {
-    this.router.navigate(['/fornecedor/conta', this.funcionario.id, id]);
+    this.router.navigate(['administracao/funcionario-conta', this.idFuncionario, id]);
   }
 
   excluirContaBanco(id: any) {

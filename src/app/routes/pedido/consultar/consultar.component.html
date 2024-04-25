@@ -8,7 +8,7 @@
 <mat-card>
   <mat-card-header>
     <button (click)="adicionar()" color="primary" mat-raised-button>CRIAR PEDIDO</button>
-    <button (click)="verPedido(52)" color="primary" mat-raised-button>TESTE</button>
+    <!-- <button (click)="verPedido(52)" color="primary" mat-raised-button>TESTE</button> -->
 
   </mat-card-header>
 
@@ -18,6 +18,9 @@
       <thead>
         <tr>
           <th class="text-center color-table align-middle">Mês do pedido</th>
+          <th class="text-center color-table align-middle">Usuário</th>
+          <th class="text-center color-table align-middle">Valor total do pedido</th>
+          <th class="text-center color-table align-middle">Parcelado</th>
           <th class="text-center color-table align-middle">Responsável centro de custo</th>
           <th class="text-center color-table align-middle">Financeiro</th>
           <th class="text-center color-table align-middle">CEO</th>
@@ -26,18 +29,53 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let parcela of pedidos">
+        <ng-container *ngFor="let pedido of pedidos">
           <tr class="text-center ">
-            <td style="width: 16%;" class="color-table align-middle">{{ "fee"}}
+            <td class="color-table align-middle">{{ pedido.dataCadastro | date
+              }}
             </td>
-            <td style="width: 16%;" class="color-table align-middle">{{ "dwd" }}
+            <td class="color-table align-middle">{{ pedido.usuario
+              }}
             </td>
-            <td style="width: 16%;" class="color-table align-middle">{{ "dw" }}
+            <td class="color-table align-middle">{{
+              pedido.valorPedido | currency: 'BRL'
+              }}
             </td>
-            <td style="width: 16%;" class="color-table align-middle">{{ "fed" }}</td>
-            <td style="width: 16%;" class="color-table align-middle">{{ "dd" }}</td>
+            <td class="color-table align-middle">{{
+              pedido.quantidadeParcelas > 1 ? "Sim" : "Não"
+              }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+            'text-warning': pedido.responsavel === 0,
+            'text-success': pedido.responsavel === 1,
+            'text-danger': pedido.responsavel === 2
+          }">{{ pedido.responsavel == 0 ? "Pendente" : pedido.responsavel == 1 ? "Aprovado" :
+              "Recusado" }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+         'text-warning': pedido.financeiro === 0,
+            'text-success': pedido.financeiro === 1,
+            'text-danger': pedido.financeiro === 2
+          }">{{ pedido.financeiro == 0 ? "Pendente" : pedido.financeiro == 1 ? "Aprovado" :
+              "Recusado"
+              }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+             'text-warning': pedido.ceo === 0,
+            'text-success': pedido.ceo === 1,
+            'text-danger': pedido.ceo === 2
+          }">{{ pedido.ceo == 0 ? "Pendente" : pedido.ceo == 1 ? "Aprovado" : "Recusado"}}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+               'text-warning': pedido.diretor === 0,
+            'text-success': pedido.diretor === 1,
+            'text-danger': pedido.diretor === 2
+          }">{{ pedido.diretor == 0 ? "Pendente" : pedido.diretor == 1 ? "Aprovado" :
+              "Recusado"}}
+            </td>
             <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
-                      matTooltip="Ver detalhes do pedido" color="accent"><mat-icon>visibility</mat-icon> </button> <!-- <button mat-icon-button (click)="openDialogDelete(parcela)" matTooltip="Deletar"
+                      matTooltip="Ver detalhes do pedido"
+                      color="accent" (click)="verPedido(pedido.pedidoId)"><mat-icon>visibility</mat-icon> </button> <!-- <button mat-icon-button (click)="openDialogDelete(parcela)" matTooltip="Deletar"
                  color="warn">
            <mat-icon>delete</mat-icon>
          </button> -->
@@ -48,4 +86,3 @@
     </table>
   </mat-card-content>
 </mat-card>
-

@@ -19,6 +19,8 @@ import { AdministracaoTerceirosFornecedorFornecedorAdicionarComponent } from './
 import { AdministracaoTerceirosFornecedorFornecedorConsultarComponent } from './terceiros/fornecedor/fornecedor-consultar/fornecedor-consultar.component';
 import { AdministracaoCentroDeCustoCentroDeCustoConsultarComponent } from './centro-de-custo/centro-de-custo-consultar/centro-de-custo-consultar.component';
 import { AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent } from './centro-de-custo/centro-de-custo-adicionar/centro-de-custo-adicionar.component';
+import { AdministracaoTerceirosFornecedorFornecedorContaComponent } from './terceiros/fornecedor/fornecedor-conta/fornecedor-conta.component';
+import { AdministracaoTerceirosFuncionarioFuncionarioContaComponent } from './terceiros/funcionario/funcionario-conta/funcionario-conta.component';
 
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent },
@@ -48,10 +50,13 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'centro-de-custo-consultar', component: AdministracaoCentroDeCustoCentroDeCustoConsultarComponent },
 { path: 'centro-de-custo-adicionar', component: AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent },
 { path: 'centro-de-custo-adicionar/:id', component: AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent },
+{ path: 'fornecedor-conta', component: AdministracaoTerceirosFornecedorFornecedorContaComponent },
+{ path: 'fornecedor-conta/:id', component: AdministracaoTerceirosFornecedorFornecedorContaComponent },
+{ path: 'fornecedor-conta/:id/:idConta', component: AdministracaoTerceirosFornecedorFornecedorContaComponent },
 
-
-
-
+{ path: 'funcionario-conta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent },
+{ path: 'funcionario-conta/:id', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent },
+{ path: 'funcionario-conta/:id/:idConta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent }
 
 
 ];

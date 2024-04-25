@@ -161,11 +161,11 @@ export class AdministracaoTerceirosFornecedorFornecedorAdicionarComponent implem
   }
 
   adicionarConta() {
-    this.router.navigate(['/fornecedor/conta', this.fornecedor.id]);
+    this.router.navigate(['administracao/fornecedor-conta', this.idFornecedor]);
   }
 
   editarContaBanco(id: number) {
-    this.router.navigate(['/fornecedor/conta', this.fornecedor.id, id]);
+    this.router.navigate(['/administracao/fornecedor-conta', this.idFornecedor, id]);
   }
 
   excluirContaBanco(id: any) {

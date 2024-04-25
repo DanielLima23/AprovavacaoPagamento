@@ -19,6 +19,7 @@ export class PedidoConsultarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.preencheListaPedidos()
   }
 
   adicionar() {
@@ -30,10 +31,10 @@ export class PedidoConsultarComponent implements OnInit {
     this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
   }
 
-  preencheListaPedidos(id: any){
-    // this.pedidoService.getStatusPedidoById(id).subscribe(data => {
-    //   this.pedidos = data
-    // })
+  preencheListaPedidos(){
+    this.pedidoService.getListPedidosUsuario().subscribe(data => {
+      this.pedidos = data
+    })
   }
 
 

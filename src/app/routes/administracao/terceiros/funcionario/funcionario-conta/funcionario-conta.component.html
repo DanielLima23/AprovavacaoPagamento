@@ -1,0 +1,108 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        Adicionar conta bancária
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
+      <div class="col-sm-12">
+        <mat-slide-toggle formControlName="contaPadrao">
+          Conta padrão?
+        </mat-slide-toggle>
+      </div>
+      <div class="col-sm-6 mt-2">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Selecione um banco</mat-label>
+          <input type="text" matInput formControlName="banco" [matAutocomplete]="auto"
+                 placeholder="Selecione um banco">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let banco of filteredBancos | async" [value]="banco">
+              {{ banco }}
+            </mat-option>
+          </mat-autocomplete>
+
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6 mt-2">
+        <mat-form-field style="width: 100%;">
+          <mat-label>Selecione um tipo de conta</mat-label>
+          <mat-select [(ngModel)]="contaTerceiro.tipoContaDTO" name="tipoConta"
+                      formControlName="tipoConta">
+            <mat-option *ngFor="let tipoConta of listaTipoConta" [value]="tipoConta">
+              {{ tipoConta }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Agência</mat-label>
+          <input [(ngModel)]="contaTerceiro.agencia" matInput #input maxlength="10"
+                 placeholder="Insira o número da agência" id="agencia"
+                 formControlName="agencia">
+          <mat-hint align="end">{{input.value.length}}/10</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-6">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Conta</mat-label>
+          <input [(ngModel)]="contaTerceiro.conta" matInput #input maxlength="10"
+                 placeholder="Insira o número da conta" id="conta"
+                 formControlName="conta">
+          <mat-hint align="end">{{input.value.length}}10</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12">
+        <mat-slide-toggle formControlName="contaCnpj" (change)="toggleCpfCnpj($event)">
+          CNPJ?
+        </mat-slide-toggle>
+      </div>
+      <div class="col-sm-6 mt-2" *ngIf="!userForm.get('contaCnpj')?.value">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Cpf</mat-label>
+          <input formControlName="cpf" matInput #input maxlength="14" placeholder="Insira seu Cpf"
+                 id="cpf" mask="000.000.000-00">
+          <mat-hint align="end">{{input.value.length}}/14</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-6 mt-2" *ngIf="userForm.get('contaCnpj')?.value">
+        <mat-form-field floatLabel="always" style="width: 100%;">
+          <mat-label>Cnpj</mat-label>
+          <input formControlName="cnpj" matInput #input maxlength="18" placeholder="Insira seu cnpj"
+                 id="cnpj" mask="00.000.000/0000-00">
+          <mat-hint align="end">{{input.value.length}}/18</mat-hint>
+        </mat-form-field>
+      </div>
+
+
+
+      <div class="col-sm-6 mt-2">
+        <mat-form-field floatLabel="always"
+                        style="width: 100%;">
+          <mat-label>Chave pix</mat-label>
+          <input [(ngModel)]="contaTerceiro.chavePix" matInput #inputChavePix
+                 maxlength="50"
+                 placeholder="Insira sua chave pix" id="chavePix"
+                 formControlName="chavePix">
+          <mat-hint align="end">{{inputChavePix.value.length}}/50</mat-hint>
+        </mat-form-field>
+      </div>
+      <mat-card-footer align="end" class="mt-2">
+        <button [disabled]="userForm.invalid" mat-flat-button extended color="primary"
+                class="m-3" (click)="salvar()">
+          <mat-icon>save</mat-icon>
+          Salvar
+        </button>
+        <button mat-flat-button extended color="accent" class="m-3" (click)="voltar()">
+          <mat-icon>reply</mat-icon>
+          Voltar
+        </button>
+      </mat-card-footer>
+    </form>
+  </mat-card-content>
+</mat-card>

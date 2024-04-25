@@ -409,10 +409,10 @@
 
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="this.idPedido <= 0">
+  <mat-card >
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
-        <button [disabled]=" this.formaPagamentoForm.invalid" (click)="validationSave()"
+        <button *ngIf="this.idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid" (click)="validationSave()"
                 mat-flat-button
                 extended
                 color="primary" class="m-3"

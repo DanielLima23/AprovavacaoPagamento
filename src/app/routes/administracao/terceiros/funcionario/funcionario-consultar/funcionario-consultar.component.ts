@@ -25,29 +25,29 @@ export class AdministracaoTerceirosFuncionarioFuncionarioConsultarComponent impl
 
 
   ngOnInit() {
-    this.preencheListaFornecedores()
+    this.preencheListaFuncionarios()
   }
 
   adicionar() {
     this.router.navigate(['administracao/funcionario-adicionar']);
   }
 
-  editarFornecedor(idForncedor: any) {
-    this.router.navigate(['administracao/funcionario-adicionar', idForncedor]);
+  editarFuncionario(id: any) {
+    this.router.navigate(['administracao/funcionario-adicionar', id]);
   }
 
 
-  excluirFornecedor(fornecedorId: any) {
-    this.terceiroService.deleteTerceiroById(fornecedorId).subscribe(
+  excluirFuncionario(id: any) {
+    this.terceiroService.deleteTerceiroById(id).subscribe(
       (data: any) => {
-        this.preencheListaFornecedores();
+        this.preencheListaFuncionarios();
         this.toastr.success('Deletado com sucesso!','Sucesso');
       },
       (error: any) => { }
     );
   }
 
-  preencheListaFornecedores() {
+  preencheListaFuncionarios() {
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
         this.listaFuncionarios = data.filter( terceiro => terceiro.tipoTerceiro == 0)
@@ -68,14 +68,14 @@ export class AdministracaoTerceirosFuncionarioFuncionarioConsultarComponent impl
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.atualizarFornecedor(result.id, result);
+        this.atualizarFuncionario(result.id, result);
       }
     });
   }
 
-  atualizarFornecedor(id: any, parcela: Terceiro) {
+  atualizarFuncionario(id: any, parcela: Terceiro) {
 
-    this.excluirFornecedor(parcela.id)
+    this.excluirFuncionario(parcela.id)
   }
 
 }

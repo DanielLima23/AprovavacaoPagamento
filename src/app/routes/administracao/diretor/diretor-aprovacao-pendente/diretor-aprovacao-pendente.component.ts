@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { RequestAprovaPedido } from 'app/models/auxiliar/request-aprova-pedido';
 import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-administracao-diretor-diretor-aprovacao-pendente',
@@ -17,7 +19,8 @@ export class AdministracaoDiretorDiretorAprovacaoPendenteComponent implements On
 
   constructor(private pedidoService: PedidoService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -30,21 +33,37 @@ export class AdministracaoDiretorDiretorAprovacaoPendenteComponent implements On
       })
   }
   verDetalhesPedido(pedido: any) {
-    this.router.navigate(['/administracao/diretor-aprovar',pedido.pedidoId], { state: { pedido: pedido }});
+    this.router.navigate(['/administracao/diretor-aprovar', pedido.pedidoId], { state: { pedido: pedido } });
     //this.router.navigate(['/administracao/financeiro-aprovar'], { state: { pedido: pedido } });
   }
 
   mensagemConfirmacao: string = "Deseja aprovar esse pedido?"
-  openDialogConfirmarAprovacao(id: any): void {
-    const dialogRef = this.dialog.open(DialogConfirmacaoComponent,{
-      data: {mensagemConfirmacao: this.mensagemConfirmacao}
+  openDialogConfirmarAprovacao(pedido: any): void {
+    const dialogRef = this.dialog.open(DialogConfirmacaoComponent, {
+      data: { mensagemConfirmacao: this.mensagemConfirmacao }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //this.recusarUsuario(id);
+        this.aprovarPedido(pedido);
       }
     });
+  }
+
+  idCentroDeCusto: any
+  aprovarPedido(pedido: any) {
+    this.pedidoService.getPedidoById(pedido.pedidoId).subscribe(
+      (data: any) => {
+        this.idCentroDeCusto = data.formaPagamento[0].centroDeCusto.id
+        const requestAprovaPedido = new RequestAprovaPedido(pedido, this.idCentroDeCusto, "")
+        requestAprovaPedido.diretor = 1;
+        this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+          (data: any) => {
+            this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')
+            this.preencheListaStatusPedidos()
+          }
+        )
+      })
   }
 
 }
