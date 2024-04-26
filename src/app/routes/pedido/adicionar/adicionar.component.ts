@@ -619,6 +619,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
+          quantidadeParcelas: qtdParcelas,
           exclusao: false,
         };
         this.parcelas.push(parcela);

@@ -631,6 +631,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
+          quantidadeParcelas:0,
           exclusao: false,
         };
         this.parcelas.push(parcela);

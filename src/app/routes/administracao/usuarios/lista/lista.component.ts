@@ -63,18 +63,20 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
   }
 
   copiarTexto() {
-    this.textoParaCopiar = this.userForm.get('linkRegister')?.value;
-    navigator.clipboard.writeText(this.textoParaCopiar).then(() => {
-      this._snackBar.open('Texto copiado para a área de transferência', 'Fechar', {
-        duration: 2000,
-      });
-    }, (err) => {
-      console.error('Erro ao copiar texto: ', err);
-      this._snackBar.open('Erro ao copiar texto', 'Fechar', {
-        duration: 2000,
-      });
+
+    const tempInput = document.createElement('textarea');
+    tempInput.value = this.textoParaCopiar;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+
+    this._snackBar.open('Texto copiado para a área de transferência', 'Fechar', {
+      duration: 2000,
     });
+    //}
   }
+
 
 
   populaNomeCentroNoUsuario() {
