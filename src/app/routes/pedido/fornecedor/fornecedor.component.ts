@@ -262,6 +262,7 @@ export class PedidoFornecedorComponent implements OnInit {
           dataVencimento: this.formatarData(dataPagamento),
           dataPagamento: this.formatarData(dataVencimento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
+          statusPagamento: 0,
           exclusao: false,
         };
         this.parcelas.push(parcela);

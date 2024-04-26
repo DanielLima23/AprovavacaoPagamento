@@ -8,10 +8,15 @@ export abstract class BaseToken {
     return this.attributes.access_token;
   }
 
-  
+
   get access_token_cliente(): string {
     return this.attributes.access_token_cliente;
   }
+
+  get roles(): any {
+    return this.attributes.roles;
+  }
+
 
   get refresh_token(): string | void {
     return this.attributes.refresh_token;
@@ -31,6 +36,10 @@ export abstract class BaseToken {
 
   getTokenCliente():any{
     return this.access_token_cliente;
+  }
+
+  getRoles():any{
+    return this.roles;
   }
   valid(): boolean {
     return this.hasAccessToken() && !this.isExpired();

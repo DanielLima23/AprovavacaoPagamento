@@ -13,6 +13,7 @@ import { DialogTrocaSenhaPrimeiroAcessoComponent } from './troca-senha-primeiro-
 import { DialogTermosSegurancaComponent } from './termos-seguranca/termos-seguranca.component';
 import { DialogAddContaUsuarioComponent } from './add-conta-usuario/add-conta-usuario.component';
 import { DialogConfirmacaoComponent } from './confirmacao/confirmacao.component';
+import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -26,7 +27,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'troca-senha-primeiro-acesso', component: DialogTrocaSenhaPrimeiroAcessoComponent },
 { path: 'termos-seguranca', component: DialogTermosSegurancaComponent },
 { path: 'add-conta-usuario', component: DialogAddContaUsuarioComponent },
-{ path: 'confirmacao', component: DialogConfirmacaoComponent }
+{ path: 'confirmacao', component: DialogConfirmacaoComponent },
+{ path: 'pedidos-agendadors-financeiro', component: DialogPedidosAgendadorsFinanceiroComponent }
 ];
 
 @NgModule({

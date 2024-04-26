@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService, User } from '@core/authentication';
 import { Usuario } from 'app/models/usuario';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { DialogLogoutComponent } from 'app/routes/dialog/logout/logout.component';
 import { DialogTermosSegurancaComponent } from 'app/routes/dialog/termos-seguranca/termos-seguranca.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
@@ -49,7 +50,8 @@ export class UserPanelComponent implements OnInit {
     private usuarioService: UsuarioService,
     private dialog: MatDialog,
     private soundService: SoundService,
-    private http: HttpClient
+    private http: HttpClient,
+    private centroDeCustoService: CentroDeCustoService
   ) { }
 
   ngOnInit(): void {
@@ -80,7 +82,12 @@ export class UserPanelComponent implements OnInit {
     this.usuarioService.getByToken().subscribe(
       (data: Usuario) => {
         this.user.name = data.nome;
-        this.user.email = data.email;
+        this.centroDeCustoService.getById(data.idCentroCusto).subscribe(
+          (centro: any) => {
+            this.user.email = centro.descricao;
+
+          }
+        )
       },
       (error: any) => {
       }

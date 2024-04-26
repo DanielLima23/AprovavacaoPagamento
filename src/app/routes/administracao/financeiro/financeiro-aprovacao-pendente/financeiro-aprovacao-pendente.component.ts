@@ -1,9 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RequestAprovaPedido } from 'app/models/auxiliar/request-aprova-pedido';
 import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 import { DialogLogoutComponent } from 'app/routes/dialog/logout/logout.component';
+import { DialogPedidosAgendadorsFinanceiroComponent } from 'app/routes/dialog/pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +23,8 @@ export class AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent impleme
   constructor(private pedidoService: PedidoService,
     private router: Router,
     public dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -45,9 +48,9 @@ export class AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent impleme
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(DialogLogoutComponent, {
-      width: '400px',
-      data: { date: moment(this.selectedDate).format('LL') }
+    const dataFormatada = this.datePipe.transform(this.selectedDate, 'yyyy-MM-ddTHH:mm:ss');
+    const dialogRef = this.dialog.open(DialogPedidosAgendadorsFinanceiroComponent, {
+      data: { date: dataFormatada }
     });
 
     dialogRef.afterClosed().subscribe(result => {

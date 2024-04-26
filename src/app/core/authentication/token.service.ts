@@ -38,7 +38,7 @@ export class TokenService implements OnDestroy {
   }
 
   getTokenFormatado() : any{
-    const pToken = this.getToken()    
+    const pToken = this.getToken()
 
     const tokenModelObjeto: string = JSON.stringify(pToken)
 
@@ -47,7 +47,7 @@ export class TokenService implements OnDestroy {
   }
 
   getTokenFormatadoCliente() : any{
-    const pToken = this.getTokenCliente()    
+    const pToken = this.getTokenCliente()
 
     const tokenModelObjeto: string = JSON.stringify(pToken)
 
@@ -62,7 +62,11 @@ export class TokenService implements OnDestroy {
   getTokenCliente(): any | undefined {
     return this._token?.getTokenCliente()
   }
-  
+
+  getRoles(): any | undefined {
+    return this._token?.getRoles()
+  }
+
 
   refresh(): Observable<BaseToken | undefined> {
     this.buildRefresh();

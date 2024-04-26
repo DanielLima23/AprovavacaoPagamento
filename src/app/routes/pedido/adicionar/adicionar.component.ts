@@ -53,7 +53,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   currentDate: string = "";
   idUsuario: number = 0;
   listaContasUsuario: ContaUsuario[] = []
-  parcelas: Parcelas[] = [];
+  parcelas: any[] = [];
   rateio: Rateio[] = [];
   numFilesAttached: number = 0;
   fileNames: string[] = [];
@@ -618,6 +618,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           dataVencimento: this.formatarData(dataVencimento),
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
+          statusPagamento: 0,
           exclusao: false,
         };
         this.parcelas.push(parcela);

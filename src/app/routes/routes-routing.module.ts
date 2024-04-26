@@ -34,7 +34,7 @@ const routes: Routes = [
         loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule),
       },
       { path: 'dialog', loadChildren: () => import('./dialog/dialog.module').then(m => m.DialogModule) },
-      { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule) },
+      { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule), canActivate:[authGuard], data: { roles: [0] }},
 
     ],
   },

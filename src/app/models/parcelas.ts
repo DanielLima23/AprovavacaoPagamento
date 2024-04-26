@@ -4,5 +4,7 @@ export class Parcelas {
   dataVencimento: string = ""
   dataPagamento: string = ""
   valorParcela: number = 0
+  statusPagamento: number = 0
+  // quantidadeParcelas: number = 0
   exclusao: boolean = false
 }
