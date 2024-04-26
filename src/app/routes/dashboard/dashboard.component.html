@@ -5,7 +5,7 @@
     </mat-card-header>
   </mat-card-content>
 </mat-card>
-<mat-card>
+<mat-card *ngIf="pedidos.length > 0">
 
 
   <mat-card-content class="mt-2 table-responsive">
@@ -83,5 +83,11 @@
         </ng-container>
       </tbody>
     </table>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="pedidos.length === 0">
+  <mat-card-content class="text-center">
+    Você não possui pedidos em andamento.
   </mat-card-content>
 </mat-card>

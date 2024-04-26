@@ -63,6 +63,7 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
   }
 
   copiarTexto() {
+    this.textoParaCopiar = this.userForm.get('linkRegister')?.value;
     navigator.clipboard.writeText(this.textoParaCopiar).then(() => {
       this._snackBar.open('Texto copiado para a área de transferência', 'Fechar', {
         duration: 2000,
@@ -96,7 +97,6 @@ export class AdministracaoUsuariosListaComponent implements OnInit {
       }
     });
 
-    console.log(this.filteredListaUsuarios);
   }
 
 

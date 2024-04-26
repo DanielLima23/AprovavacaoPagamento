@@ -102,18 +102,8 @@
     "Administracao.Terceiros.Fornecedor": "Fornecedor",
     "Administracao.Terceiros.Funcionario": "Funcionário",
     "Administracao.CentroDeCusto": "Centro de custo",
-
-
-
-
-
-
-
-
-
-    "Relatorios": "Relatórios",
-    "Relatorios.Pedidos": "Pedidos",
-    "Relatorios.Outros": "Outros"
+    "Administracao.Relatorios": "Relatórios",
+    "Administracao.Relatorios.Pedidos": "Pedidos"
 
   },
   "validations": {

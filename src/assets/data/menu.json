@@ -132,26 +132,22 @@
           "name": "CentroDeCusto",
           "type": "link",
           "icon": "folder"
-        }
-      ]
-    },
-    {
-      "route": "",
-      "name": "Relatorios",
-      "type": "sub",
-      "icon": "description",
-      "children": [
-        {
-          "route": "",
-          "name": "Pedidos",
-          "type": "link"
         },
         {
           "route": "",
-          "name": "Outros",
-          "type": "link"
+          "name": "Relatorios",
+          "type": "sub",
+          "icon": "description",
+          "children": [
+            {
+              "route": "administracao/relatorios",
+              "name": "Pedidos",
+              "type": "link"
+            }
+          ]
         }
       ]
     }
+
   ]
 }
