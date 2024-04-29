@@ -16,14 +16,14 @@ const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard],
+    // canActivate: [authGuard],
+    // canActivateChild: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: '403', component: Error403Component },
-      { path: '404', component: Error404Component },
-      { path: '500', component: Error500Component },
+      { path: 'dashboard', component: DashboardComponent,canActivate: [authGuard],  data: { roles: [0,1,2,3,4] } },
+      { path: '403', component: Error403Component,canActivate: [authGuard],  data: { roles: [0,1,2,3,4] } },
+      { path: '404', component: Error404Component,canActivate: [authGuard],  data: { roles: [0,1,2,3,4] } },
+      { path: '500', component: Error500Component,canActivate: [authGuard],  data: { roles: [0,1,2,3,4] } },
 
       {
         path: 'pedido',
@@ -34,7 +34,7 @@ const routes: Routes = [
         loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule),
       },
       { path: 'dialog', loadChildren: () => import('./dialog/dialog.module').then(m => m.DialogModule) },
-      { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule), canActivate:[authGuard], data: { roles: [0] }},
+      { path: 'administracao', loadChildren: () => import('./administracao/administracao.module').then(m => m.AdministracaoModule)},
 
     ],
   },

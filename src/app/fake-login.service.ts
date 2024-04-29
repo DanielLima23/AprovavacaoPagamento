@@ -24,7 +24,8 @@ export class FakeLoginService extends LoginService {
 
     return this.http.get(this.url + 'api/usuario/login', { headers }).pipe(
       map((data: any) => {
-        this.token = { access_token: data.token, token_type: 'bearer', access_token_cliente: data.tokenCliente , roles: data.usuarioCliente[0].tipo} as Token;
+
+        this.token = { access_token: data.token, token_type: 'bearer', access_token_cliente: data.tokenCliente , roles: [data.usuarioCliente[0].tipo]} as Token;
         return this.token;
       }),
       catchError((error: any) => {

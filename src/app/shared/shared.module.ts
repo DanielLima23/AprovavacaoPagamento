@@ -23,6 +23,8 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ToObservablePipe } from './pipes/to-observable.pipe';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
+
+
 const MODULES: any[] = [
   CommonModule,
   RouterModule,
@@ -39,7 +41,7 @@ const MODULES: any[] = [
   ToastrModule,
   TranslateModule,
   NgxMaskDirective,
-  NgxMaskPipe
+  NgxMaskPipe,
 
 ];
 const COMPONENTS: any[] = [BreadcrumbComponent, PageHeaderComponent, ErrorCodeComponent];

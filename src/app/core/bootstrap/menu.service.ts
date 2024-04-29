@@ -48,8 +48,9 @@ export class MenuService {
   }
 
   /** Initialize the menu data. */
-  set(menu: Menu[]): Observable<Menu[]> {
-    this.menu$.next(menu);
+  set(menu: Menu[], roles: any): Observable<Menu[]> {
+    const menuFiltrado = this.filterMenu(menu, roles);
+    this.menu$.next(menuFiltrado);
     return this.menu$.asObservable();
   }
 
@@ -147,4 +148,70 @@ export class MenuService {
       }
     });
   }
+
+  // private filterMenu(menu: (Menu | MenuChildrenItem)[], roles: string[]): Menu[] {
+  //   const filteredMenu: Menu[] = [];
+
+  //   menu.forEach(item => {
+  //     if (item) {
+  //       const permissions = (item as Menu).permissions as string[];
+  //       if (roles && permissions && Array.isArray(roles) && Array.isArray(permissions)) {
+  //         const intersection = permissions.filter(permission => roles.includes(permission));
+  //         if (intersection.length > 0) {
+  //           if (item.children && item.children.length > 0) {
+  //             const filteredChildren = this.filterMenu(item.children, roles);
+  //             if (filteredChildren.length > 0) {
+  //               const menuItem = { ...item, children: filteredChildren };
+  //               filteredMenu.push(menuItem as Menu);
+  //             }
+  //           } else {
+  //             filteredMenu.push(item as Menu);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   return filteredMenu;
+  // }
+
+
+  private filterMenu(menu: (Menu | MenuChildrenItem)[], roles: string[]): Menu[] {
+    const filteredMenu: Menu[] = [];
+
+    menu.forEach(item => {
+      const filteredItem = this.filterMenuItem(item, roles);
+      if (filteredItem) {
+        filteredMenu.push(filteredItem);
+      }
+    });
+
+    return filteredMenu;
+  }
+
+  private filterMenuItem(item: Menu | MenuChildrenItem, roles: string[]): Menu | null {
+    if (item) {
+      const permissions = (item as Menu).permissions as string[];
+      if (roles && permissions && Array.isArray(roles) && Array.isArray(permissions)) {
+        const intersection = permissions.filter(permission => roles.includes(permission));
+        if (intersection.length > 0) {
+          const children = (item as Menu).children;
+          if (children && children.length > 0) {
+            const filteredChildren = this.filterMenu(children, roles);
+            if (filteredChildren.length > 0) {
+              return { ...item, children: filteredChildren } as Menu;
+            }
+          } else {
+            return item as Menu;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+
+
+
+
 }

@@ -337,34 +337,20 @@
           <tbody>
             <ng-container *ngFor="let parcela of parcelas">
               <tr class="text-center ">
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{
+                <td style="width: 20%;" class="color-table align-middle">{{
                   parcela.parcelaReferencia + "/" + parcela.quantidadeParcelas}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.dataVencimento |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataVencimento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.dataPagamento |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataPagamento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.valorParcela |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela |
                   currency: 'BRL' }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.statusPagamento === 0? "Pendente" : "Pago"}}</td>
-                <td style="width: 20%;" class="color-table align-middle"  [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }" *ngIf="this.idPedido <= 0">
+                  'text-warning': parcela.statusPagamento== 0,
+                  'text-success': parcela.statusPagamento === 1,
+                }">{{ parcela.statusPagamento
+                  === 0? "Pendente" : "Pago"}}</td>
+                <td style="width: 20%;" class="color-table align-middle" *ngIf="this.idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">
                     <mat-icon>edit</mat-icon>

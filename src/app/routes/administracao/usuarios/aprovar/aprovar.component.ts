@@ -51,7 +51,7 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     this.idUsuario = this.activatedRoute.snapshot.params['id'];
     this.retornaUsuario()
     this.preencheListaCentros()
-    this.preencheListaCentros()
+    //this.preencheListaCentros()
     this.desabilitarCampos()
   }
 

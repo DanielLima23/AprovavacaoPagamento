@@ -77,7 +77,11 @@ export class AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent impleme
       (data: any) => {
         this.idCentroDeCusto = data.formaPagamento[0].centroDeCusto.id
         const requestAprovaPedido = new RequestAprovaPedido(pedido, this.idCentroDeCusto, "")
-        requestAprovaPedido.financeiro = 1;
+        if (pedido.responsavel == 0) {
+          requestAprovaPedido.responsavel = 1
+        } else if (pedido.financeiro == 0) {
+          requestAprovaPedido.financeiro = 1
+        }
         this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
           (data: any) => {
             this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')

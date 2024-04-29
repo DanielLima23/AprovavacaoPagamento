@@ -16,13 +16,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(private router: Router,
     private pedidoService: PedidoService,
-    private cdr: ChangeDetectorRef // Adicionei ChangeDetectorRef
+    private cdr: ChangeDetectorRef
 
   ) { }
 
   ngOnInit() {
-
-    this.preencheListaPedidos()
+    setTimeout(() => {
+      this.preencheListaPedidos()
+    }, 100);
   }
 
   verPedido(id: number) {
@@ -32,7 +33,7 @@ export class DashboardComponent implements OnInit {
   preencheListaPedidos(){
     this.pedidoService.getListPedidosUsuario().subscribe(data => {
       this.pedidos = data
-      this.cdr.detectChanges(); // Detectar mudanças
+      this.cdr.detectChanges();
 
     })
   }

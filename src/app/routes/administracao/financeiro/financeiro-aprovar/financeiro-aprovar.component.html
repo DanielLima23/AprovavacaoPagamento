@@ -332,37 +332,27 @@
               <th class="text-center color-table align-middle">Valor</th>
               <th class="text-center color-table align-middle">Pagamento</th>
 
-              <th class="text-center color-table align-middle" *ngIf="this.pedido.pedidoId <= 0">Ações</th>
+              <th class="text-center color-table align-middle" *ngIf="this.pedido.pedidoId <= 0">
+                Ações</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let parcela of parcelas">
               <tr class="text-center ">
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{
+                <td style="width: 20%;" class="color-table align-middle">{{
                   parcela.parcelaReferencia + "/" + parcela.quantidadeParcelas}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.dataVencimento |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataVencimento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.dataPagamento |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataPagamento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
-                }">{{ parcela.valorParcela |
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela |
                   currency: 'BRL' }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'bg-warning': parcela.statusPagamento === 0,
-                  'bg-success': parcela.statusPagamento === 1,
+                  'text-warning': parcela.statusPagamento== 0,
+                  'text-success': parcela.statusPagamento === 1,
                 }">{{ parcela.statusPagamento === 0? "Pendente" : "Pago"}}</td>
-                <td style="width: 20%;" class="color-table align-middle" *ngIf="this.pedido.pedidoId <= 0">
+                <td style="width: 20%;" class="color-table align-middle"
+                    *ngIf="this.pedido.pedidoId <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="accent">
                     <mat-icon>edit</mat-icon>
@@ -388,7 +378,8 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.pedido.pedidoId <= 0" mat-flat-button extended color="warn" class="m-3 mt-2"
+      <button *ngIf="this.pedido.pedidoId <= 0" mat-flat-button extended color="warn"
+              class="m-3 mt-2"
               (click)="openFileInput.click()">
         <mat-icon>attach_file</mat-icon>
         Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
@@ -412,7 +403,8 @@
                 <button mat-icon-button (click)="openNewWindow(arquivo)" matTooltip="Visualizar">
                   <mat-icon>visibility</mat-icon>
                 </button>
-                <button *ngIf="this.pedido.pedidoId <= 0" mat-icon-button (click)="removeFile(arquivo)"
+                <button *ngIf="this.pedido.pedidoId <= 0" mat-icon-button
+                        (click)="removeFile(arquivo)"
                         matTooltip="Deletar">
                   <mat-icon>delete</mat-icon>
                 </button>

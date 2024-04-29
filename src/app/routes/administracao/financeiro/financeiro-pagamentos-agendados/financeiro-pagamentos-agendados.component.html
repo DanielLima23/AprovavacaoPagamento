@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Calendário de agendamento</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <div class="container mt-2">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 border rounded">
+          <mat-calendar [selected]="selectedDate"
+                        (selectedChange)="dateSelected($event)"></mat-calendar>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+

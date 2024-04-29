@@ -14,11 +14,11 @@
   <br />
   <mat-card-content class="table-responsive">
 
-    <mat-form-field class="col-sm-2" floatLabel="always"
+    <mat-form-field  floatLabel="always"
                     style="width: 100%;">
       <mat-label>Filtro</mat-label>
       <input matInput #input maxlength="50"
-             placeholder="Consultar centro de custo" [(ngModel)]="filter">
+             placeholder="Insira o nome do centro de custo" [(ngModel)]="filter">
     </mat-form-field>
 
     <table #tabela
@@ -36,7 +36,7 @@
             <td style="width: 33.33%;" class="color-table align-middle">{{ centro.descricao }}</td>
             <td style="width: 33.33%; white-space: nowrap;" class="color-table align-middle">
               <span [ngClass]="{'centro-destacado': centro.reponsavel === null}">
-                {{ centro.reponsavel?.nome ? centro.reponsavel.nome : 'Não contém' }}
+                {{ centro?.reponsavel?.nome ? centro.reponsavel.nome : 'Não contém' }}
               </span>
             </td>
             <td style="width: 33.33%;" class="color-table align-middle">

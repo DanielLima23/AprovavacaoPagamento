@@ -40,6 +40,11 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
   }
   aprovarPedido() {
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
+    if(this.pedido.responsavel == 0){
+      requestAprovaPedido.responsavel = 1
+    }else if(this.pedido.financeiro == 0){
+      requestAprovaPedido.financeiro = 1
+    }
     requestAprovaPedido.financeiro = 1;
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
       (data:any) => {

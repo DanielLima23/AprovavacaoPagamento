@@ -56,8 +56,9 @@ export class UserPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.user().subscribe(user => (this.user = user));
-    this.retornaUsuario()
-    //this.preencherListaUsuariosPendentes()
+    setTimeout(() => {
+      this.retornaUsuario();
+    }, 100);    //this.preencherListaUsuariosPendentes()
   }
 
   logout() {

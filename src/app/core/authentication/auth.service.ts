@@ -106,4 +106,14 @@ export class AuthService {
 
     return this.loginService.me().pipe(tap(user => this.user$.next(user)));
   }
+
+  hasPermission(userRoles: any, routeRoles: any): boolean {
+    if (!Array.isArray(userRoles)) {
+      userRoles = [userRoles];
+    }
+    if (!Array.isArray(routeRoles)) {
+      routeRoles = [routeRoles];
+    }
+    return routeRoles.some((role:any) => userRoles.includes(role));
+  }
 }
