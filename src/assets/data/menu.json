@@ -24,7 +24,7 @@
           "route": "pedido/funcionario-consultar",
           "name": "Funcionário",
           "type": "link",
-          "permissions": [0,1,3,4]
+          "permissions": [0,1,3,4,6]
         },
         {
           "route": "pedido/fornecedor-consultar",
@@ -39,7 +39,7 @@
       "name": "Administracao",
       "type": "sub",
       "icon": "supervisor_account",
-      "permissions": [0,1,3,4],
+      "permissions": [0,1,3,4,6],
       "children": [
         {
           "route": "",
@@ -115,11 +115,13 @@
           "route": "",
           "name": "ResponsavelCentro",
           "type": "sub",
+          "permissions": [6],
           "children": [
             {
               "route": "administracao/responsavel-aprovacao-pendente",
               "name": "PedidosDePagamento",
-              "type": "link"
+              "type": "link",
+              "permissions": [6]
             }
           ]
         },

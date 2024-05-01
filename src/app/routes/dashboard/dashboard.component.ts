@@ -33,8 +33,8 @@ export class DashboardComponent implements OnInit {
   preencheListaPedidos(){
     this.pedidoService.getListPedidosUsuario().subscribe(data => {
       this.pedidos = data
+      this.pedidos.filter((pedido: any) => pedido.statusPagemento == 0)
       this.cdr.detectChanges();
-
     })
   }
 

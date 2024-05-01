@@ -109,4 +109,17 @@ export class CentroDeCustoService {
 
     return this.http.get(path, { headers });
   }
+
+  getListCentroDeCustoPorResponsavel(): Observable<any>{
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? ''
+    });
+
+    return this.http.get(this.url + 'api/centroDeCustos/RetornaPorResponsavel', { headers })
+  }
+
 }

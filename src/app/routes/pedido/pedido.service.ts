@@ -19,19 +19,19 @@ export class PedidoService {
 
   }
 
-  criarPedido(pReqPedido: UntypedFormGroup) : Observable<any>{
+  criarPedido(pReqPedido: UntypedFormGroup): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
-      tokenUsuario: pTokenUsuario ??'',
+      tokenUsuario: pTokenUsuario ?? '',
       tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.post(this.url + 'api/pedido/NovoPedido',pReqPedido, { headers })
+    return this.http.post(this.url + 'api/pedido/NovoPedido', pReqPedido, { headers })
   }
 
-  getPedidoById(pIdPedido: number) : Observable<any>{
+  getPedidoById(pIdPedido: number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -41,7 +41,7 @@ export class PedidoService {
       IDPedido: pIdPedido
     });
 
-    return this.http.get(this.url + 'api/pedido/' , { headers })
+    return this.http.get(this.url + 'api/pedido/', { headers })
   }
 
   // getStatusPedidoById(pIdPedido: number) : Observable<any>{
@@ -57,7 +57,7 @@ export class PedidoService {
   //   return this.http.get(this.url + 'api/pedido/RetornaStatusPedido', { headers })
   // }
 
-  getListStatusPedido() : Observable<any>{
+  getListStatusPedido(): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -69,7 +69,7 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/RetornaListaStatusPedidos', { headers })
   }
 
-  getAnexoByIdPedido(id: number) : Observable<any>{
+  getAnexoByIdPedido(id: number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -82,7 +82,7 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/RetornaAnexoPedido', { headers })
   }
 
-  aprovarPedido(requestAprovaPedido: any):Observable<any> {
+  aprovarPedido(requestAprovaPedido: any): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -91,10 +91,10 @@ export class PedidoService {
       tokenCliente: pTokenCliente ?? '',
     });
 
-    return this.http.put(this.url + 'api/pedido/AprovarPedido',requestAprovaPedido, { headers })
+    return this.http.put(this.url + 'api/pedido/AprovarPedido', requestAprovaPedido, { headers })
   }
 
-  getListPedidosUsuario(): Observable<any>{
+  getListPedidosUsuario(): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -106,7 +106,7 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/RetornaListaStatusPedidosUsuario', { headers })
   }
 
-  getListParcelasPendentesPorData(date: string):Observable<any> {
+  getListParcelasPendentesPorData(date: string): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -120,7 +120,7 @@ export class PedidoService {
   }
 
 
-  pagarParcela(parcelaId: any):Observable<any> {
+  pagarParcela(parcelaId: any): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -133,7 +133,19 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/AtualizarPagamento', { headers })
   }
 
+  getPedidosUsuarioPorData(dataInicio: any, dataFim: any): Observable<any> {
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
 
 
 
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      datainicio: dataInicio,
+      datafim: dataFim
+    });
+
+    return this.http.get(this.url + 'api/pedido/RelatorioPedidosUsuario', { headers })
+  }
 }

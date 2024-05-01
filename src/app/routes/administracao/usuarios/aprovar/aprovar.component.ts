@@ -177,9 +177,15 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     request.tipoUsuario = this.aprovarUsuarioForm.get('tipoUsuario')?.value
     this.usuarioService.aprovarUsuario(request).subscribe(
       (data: any) => {
-        this.toastr.success('Usuário aprovado com sucesso', 'Sucesso')
-        this.aprovarUsuarioForm.reset()
-        this.router.navigate(['/administracao/pendentes-aprovacao']);
+        if(data != null || data != undefined){
+          this.toastr.success('Usuário aprovado com sucesso', 'Sucesso')
+          this.aprovarUsuarioForm.reset()
+          this.router.navigate(['/administracao/pendentes-aprovacao']);
+        }
+        else{
+          this.toastr.error('Já existe um usuário com esse tipo de perfil','Erro')
+        }
+
       }
     )
   }

@@ -56,7 +56,12 @@ export class AdministracaoDiretorDiretorAprovacaoPendenteComponent implements On
       (data: any) => {
         this.idCentroDeCusto = data.formaPagamento[0].centroDeCusto.id
         const requestAprovaPedido = new RequestAprovaPedido(pedido, this.idCentroDeCusto, "")
-        requestAprovaPedido.diretor = 1;
+        // requestAprovaPedido.diretor = 1;
+        if (pedido.responsavel == 0) {
+          requestAprovaPedido.responsavel = 1
+        } else if (pedido.diretor == 0) {
+          requestAprovaPedido.diretor = 1
+        }
         this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
           (data: any) => {
             this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')

@@ -142,9 +142,14 @@ export class AdministracaoUsuariosEditarComponent implements OnInit {
     request.tipoUsuario = this.usuarioForm.get('tipoUsuario')?.value
     this.usuarioService.aprovarUsuario(request).subscribe(
       (data: any) => {
-        this.toastr.success('Usuário atualizado com sucesso', 'Sucesso')
-        this.router.navigate(['/administracao/editar', this.idUsuario]);
-        this.preencheListaContasUsuario()
+        if(data != null || data != undefined){
+          this.toastr.success('Usuário atualizado com sucesso', 'Sucesso')
+          this.router.navigate(['/administracao/editar', this.idUsuario]);
+          this.preencheListaContasUsuario()
+        }
+        else{
+          this.toastr.error('Já existe um usuário com esse tipo de perfil','Erro')
+        }
       }
     )
   }

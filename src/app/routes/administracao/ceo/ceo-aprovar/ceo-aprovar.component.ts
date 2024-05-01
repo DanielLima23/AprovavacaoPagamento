@@ -40,7 +40,12 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
   }
   aprovarPedido() {
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
-    requestAprovaPedido.ceo = 1;
+    // requestAprovaPedido.ceo = 1;
+    if (this.pedido.responsavel == 0) {
+      requestAprovaPedido.responsavel = 1
+    } else if (this.pedido.ceo == 0) {
+      requestAprovaPedido.ceo = 1
+    }
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
       (data:any) => {
         this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')

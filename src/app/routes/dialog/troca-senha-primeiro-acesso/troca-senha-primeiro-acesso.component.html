@@ -17,12 +17,12 @@
                  formControlName="novaSenha" type="password"
                  (input)="checkPasswords(trocarSenhaForm)"
                  [type]="senhaVisivel">
-                 <button mat-icon-button tabindex="-1" (click)="togglePasswordVisibility()"
+                 <!-- <button mat-icon-button tabindex="-1" (click)="togglePasswordVisibility()"
                     class="position-absolute end-0 mt-1"
                     style="top: 50%; transform: translateY(-50%);">
               <mat-icon>{{ senhaVisivel === 'password' ? 'visibility' : 'visibility_off'
                 }}</mat-icon>
-            </button>
+            </button> -->
         </mat-form-field>
       </div>
 
@@ -34,12 +34,12 @@
                  formControlName="confirmaNovaSenha" type="password"
                  (input)="checkPasswords(trocarSenhaForm)"
                  [type]="confirmarSenhaVisivel">
-                 <button mat-icon-button tabindex="-1" (click)="toggleConfirmPasswordVisibility()"
+                 <!-- <button mat-icon-button tabindex="-1" (click)="toggleConfirmPasswordVisibility()"
                  class="position-absolute end-0 mt-1"
                  style="top: 50%; transform: translateY(-50%);">
            <mat-icon>{{ confirmarSenhaVisivel === 'password' ? 'visibility' : 'visibility_off'
              }}</mat-icon>
-         </button>
+         </button> -->
           <mat-error *ngIf="trocarSenhaForm.get('confirmaNovaSenha')?.hasError('notSame')">
             As senhas não coincidem.
           </mat-error>

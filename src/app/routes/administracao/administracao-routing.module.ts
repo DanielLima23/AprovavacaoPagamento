@@ -39,16 +39,15 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'diretor-aprovacao-pendente', component: AdministracaoDiretorDiretorAprovacaoPendenteComponent,canActivate: [authGuard],  data: { roles: [4] } },
 { path: 'diretor-aprovar', component: AdministracaoDiretorDiretorAprovarComponent,canActivate: [authGuard],  data: { roles: [4] } },
 { path: 'diretor-aprovar/:id', component: AdministracaoDiretorDiretorAprovarComponent,canActivate: [authGuard],  data: { roles: [4] } },
-
 {
   path: 'financeiro-aprovacao-pendente', component: AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent, canActivate: [authGuard],  data: { roles: [1] }},
 { path: 'financeiro-aprovar', component: AdministracaoFinanceiroFinanceiroAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'financeiro-aprovar/:id', component: AdministracaoFinanceiroFinanceiroAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'financeiro-pagamentos-agendados', component: AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent, canActivate: [authGuard],  data: { roles: [1] } },
 
-{ path: 'responsavel-aprovacao-pendente', component: AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent },
-{ path: 'responsavel-aprovar', component: AdministracaoResponsavelCentroResponsavelAprovarComponent },
-{ path: 'responsavel-aprovar/:id', component: AdministracaoResponsavelCentroResponsavelAprovarComponent },
+{ path: 'responsavel-aprovacao-pendente', component: AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent,canActivate: [authGuard],  data: { roles: [6] } },
+{ path: 'responsavel-aprovar', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
+{ path: 'responsavel-aprovar/:id', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
 
 { path: 'funcionario-consultar', component: AdministracaoTerceirosFuncionarioFuncionarioConsultarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-adicionar', component: AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
