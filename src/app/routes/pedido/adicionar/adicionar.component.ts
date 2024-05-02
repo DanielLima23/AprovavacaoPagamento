@@ -182,9 +182,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   @Input() idPedido: number = 0;
+  isRelatorio: any
   ngOnInit() {
     // this.idPedido = this.activatedRoute.snapshot.params['id']
     this.idPedido = history.state.id;
+    this.isRelatorio = history.state.relatorio
 
     if (this.idPedido > 0) {
       this.formaPagamentoForm.disable();
@@ -217,14 +219,17 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
             this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
           }
         )
+
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.contaUsuario.id)?.id;
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
         )
+
+
         this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
         this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
           (data: any[]) => {
@@ -312,7 +317,12 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   voltar() {
-    this.router.navigate(['/pedido/consultar']);
+    if(this.isRelatorio){
+       this.router.navigate(['/administracao/relatorio-pedido']);
+    }else{
+      this.router.navigate(['/pedido/consultar']);
+
+    }
 
   }
   validationSave() {
@@ -587,6 +597,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
   gerarParcelas() {
+    const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    if (listaParcelasArray) {
+      listaParcelasArray.clear();
+    }
     const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value);
 
     const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;

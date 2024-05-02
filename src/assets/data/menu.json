@@ -161,7 +161,7 @@
           "permissions": [0,1,3,4],
           "children": [
             {
-              "route": "administracao/relatorios",
+              "route": "administracao/relatorio-pedido",
               "name": "Pedidos",
               "type": "link",
               "permissions": [0,1,3,4]

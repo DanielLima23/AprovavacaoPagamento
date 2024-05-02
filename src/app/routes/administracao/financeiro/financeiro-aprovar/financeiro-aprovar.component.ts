@@ -45,7 +45,6 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
     }else if(this.pedido.financeiro == 0){
       requestAprovaPedido.financeiro = 1
     }
-    requestAprovaPedido.financeiro = 1;
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
       (data:any) => {
         this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
@@ -244,7 +243,7 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.contaUsuario.id)?.id;
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }

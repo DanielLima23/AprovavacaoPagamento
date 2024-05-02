@@ -23,6 +23,7 @@ import { AdministracaoTerceirosFornecedorFornecedorContaComponent } from './terc
 import { AdministracaoTerceirosFuncionarioFuncionarioContaComponent } from './terceiros/funcionario/funcionario-conta/funcionario-conta.component';
 import { AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent } from './financeiro/financeiro-pagamentos-agendados/financeiro-pagamentos-agendados.component';
 import { authGuard } from '@core';
+import { AdministracaoRelatoriosRelatorioPedidoComponent } from './relatorios/relatorio-pedido/relatorio-pedido.component';
 
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [1] } },
@@ -68,6 +69,7 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'funcionario-conta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id/:idConta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'relatorio-pedido', component: AdministracaoRelatoriosRelatorioPedidoComponent },
 ];
 
 @NgModule({

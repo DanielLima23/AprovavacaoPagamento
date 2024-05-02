@@ -9,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { TokenService } from '@core/authentication';
+import { AuthService, TokenService } from '@core/authentication';
 import { BASE_URL } from './base-url-interceptor';
 
 @Injectable()
@@ -18,12 +18,16 @@ export class TokenInterceptor implements HttpInterceptor {
 
   constructor(
     private tokenService: TokenService,
+    private auth: AuthService,
     private router: Router,
     @Optional() @Inject(BASE_URL) private baseUrl?: string
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const handler = () => {
+      if(!this.auth.check() && this.router.url.includes('auth')){
+        this.router.navigateByUrl('/auth/login');
+      }
       if (request.url.includes('/auth/logout')) {
         this.router.navigateByUrl('/auth/login');
       }

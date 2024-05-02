@@ -4,6 +4,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { TokenService } from '@core';
 import { Data } from 'app/data/data';
 import { RequestPedido } from 'app/models/auxiliar/request-pedido';
+import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
 import { Terceiro } from 'app/models/terceiro';
 import { Observable } from 'rxjs';
 
@@ -133,19 +134,27 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/AtualizarPagamento', { headers })
   }
 
-  getPedidosUsuarioPorData(dataInicio: any, dataFim: any): Observable<any> {
+  getPedidosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? ''
+    });
 
+    return this.http.post(this.url + 'api/pedido/RelatorioPedidosUsuario',requestRelatorioPedido, { headers })
+  }
+
+  getPedidosUsuarioPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? '',
-      datainicio: dataInicio,
-      datafim: dataFim
+      tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.get(this.url + 'api/pedido/RelatorioPedidosUsuario', { headers })
+    return this.http.post(this.url + 'api/pedido/RelatorioPedidosADM', requestRelatorioPedido,{ headers })
   }
 }

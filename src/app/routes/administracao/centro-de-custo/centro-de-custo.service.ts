@@ -50,7 +50,7 @@ export class CentroDeCustoService {
       tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.get(this.url + 'api/usuario/resposaveis', { headers })
+    return this.http.get(this.url + 'api/usuario/retornaUsuariosAprovados', { headers })
   }
 
   registerCentroCusto(centro: UntypedFormGroup): Observable<any> {

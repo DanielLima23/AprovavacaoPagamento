@@ -1,17 +1,14 @@
 <mat-card>
   <mat-card-content>
     <mat-card-header>
-      <mat-card-title>Consultar meus pedidos</mat-card-title>
+      <mat-card-title>Relatório de pedidos</mat-card-title>
     </mat-card-header>
   </mat-card-content>
 </mat-card>
 <mat-card>
-  <mat-card-header>
-    <button (click)="adicionar()" color="primary" mat-raised-button>Criar pedido</button>
-  </mat-card-header>
+
   <mat-card-content class="mt-2 table-responsive">
     <form [formGroup]="consultarPedidoForm">
-      <mat-divider></mat-divider>
       <mat-form-field class="col-sm-4 mt-2" hintLabel="" floatLabel="always" style="width: 100%;">
         <mat-label>Data início</mat-label>
         <input matInput #inputDataVencimento maxlength="" placeholder="" id="dataInicio"
@@ -28,6 +25,30 @@
           <mat-option [value]="99">Todos</mat-option>
           <mat-option *ngFor="let status of listaTipoStatusPagamento" [value]="status.id">
             {{ status.descricao }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <mat-form-field style="width: 100%;" class="col-sm-6 mt-2">
+        <mat-label>Selecione um usuario</mat-label>
+        <mat-select name="usuarioID"
+                    formControlName="usuarioID" (selectionChange)="bloquearFiltroCentroCusto()">
+          <mat-option [value]="0">Nenhum</mat-option>
+          <mat-option *ngFor="let usuario of listaUsuarios"
+                      [value]="usuario.id" >
+            {{ usuario.nome }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field style="width: 100%;" class="col-sm-6 mt-2">
+        <mat-label>Selecione um centro de custo</mat-label>
+        <mat-select name="centroDeCustoID"
+                    formControlName="centroDeCustoID" matTooltip="Para selecionar um centro não pode ter um usuário selecionado">
+          <mat-option [value]="0">Nenhum</mat-option>
+          <mat-option *ngFor="let centro of listaCentroCusto"
+                      [value]="centro.id">
+            {{ centro.descricao }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -105,7 +126,7 @@
             <td class="color-table align-middle" [ngClass]="{
               'text-warning': pedido.statusPagamento === 0,
               'text-success': pedido.statusPagamento === 1,
-            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Pago" }}
+            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Aprovado" }}
             </td>
             <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
                       matTooltip="Ver detalhes do pedido"
