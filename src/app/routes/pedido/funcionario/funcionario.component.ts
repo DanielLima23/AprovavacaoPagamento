@@ -29,6 +29,7 @@ import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
 import { PedidoService } from '../pedido.service';
 import { TerceiroService } from 'app/routes/administracao/terceiros/terceiro.service';
+import { DialogAddContaFuncionarioComponent } from 'app/routes/dialog/add-conta-funcionario/add-conta-funcionario.component';
 
 @Component({
   selector: 'app-pedido-funcionario',
@@ -756,20 +757,25 @@ export class PedidoFuncionarioComponent implements OnInit {
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
-        this.usuarioService.getById(pedido.usuario.id).subscribe(
-          (usuario: any) => {
-            this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
-            this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
-            this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
-            this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
-            this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+        this.preencheListaFuncionario()
+        this.terceiroService.getTerceiroById(pedido.formaPagamento[0].terceiro.id).subscribe(
+          (terceiro: any) => {
+            this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
+            if (terceiro.cpf) {
+              this.meuPedidoForm.get('cpf')?.setValue(terceiro.cpf);
+              this.meuPedidoForm.get('contaCnpj')?.setValue(false);
+            } else {
+              this.meuPedidoForm.get('cnpj')?.setValue(terceiro.cnpj);
+              this.meuPedidoForm.get('contaCnpj')?.setValue(true);
+            }
+            this.meuPedidoForm.get('TerceiroID')?.setValue(terceiro.id);
           }
         )
 
-        this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
+        this.contaService.getListContasPorIdTerceiro(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasTerceiro = data
-            const contaSelecionada = this.listaContasTerceiro.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
+            const contaSelecionada = this.listaContasTerceiro.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
             this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
@@ -866,8 +872,7 @@ export class PedidoFuncionarioComponent implements OnInit {
     if (this.isRelatorio) {
       this.router.navigate(['/administracao/relatorio-pedido']);
     } else {
-      this.router.navigate(['/pedido/consultar']);
-
+      this.router.navigate(['/pedido/funcionario-consultar']);
     }
 
   }
@@ -954,7 +959,7 @@ export class PedidoFuncionarioComponent implements OnInit {
       (data: any) => {
         this.toastr.success('Pedido enviado com sucesso', 'Sucesso');
         this.isSubmitting = false;
-        this.router.navigate(['/pedido/consultar']);
+        this.router.navigate(['/pedido/funcionario-consultar']);
       }
     )
   }
@@ -1477,15 +1482,14 @@ export class PedidoFuncionarioComponent implements OnInit {
   }
 
   openDialogAddContaUsuario(): void {
-    const idUsuario = this.formaPagamentoForm.get('idUsuario')?.value;
-    const dialogRef = this.dialog.open(DialogAddContaUsuarioComponent, {
-      data: { idUsuario },
+    const idTerceiro = this.meuPedidoForm.get('TerceiroID')?.value;
+    const dialogRef = this.dialog.open(DialogAddContaFuncionarioComponent, {
+      data: { idTerceiro },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const idUsuario = this.formaPagamentoForm.get('idUsuario')?.value;
-        this.contaService.getListContasPorIdUsuario(idUsuario).subscribe(
+        this.contaService.getListContasPorIdTerceiro(idTerceiro).subscribe(
           (data: any[]) => {
             this.listaContasTerceiro = data
             this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(this.listaContasTerceiro[0].id)

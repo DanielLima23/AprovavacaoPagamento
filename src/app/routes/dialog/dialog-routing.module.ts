@@ -14,6 +14,7 @@ import { DialogTermosSegurancaComponent } from './termos-seguranca/termos-segura
 import { DialogAddContaUsuarioComponent } from './add-conta-usuario/add-conta-usuario.component';
 import { DialogConfirmacaoComponent } from './confirmacao/confirmacao.component';
 import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
+import { DialogAddContaFuncionarioComponent } from './add-conta-funcionario/add-conta-funcionario.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -28,7 +29,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'termos-seguranca', component: DialogTermosSegurancaComponent },
 { path: 'add-conta-usuario', component: DialogAddContaUsuarioComponent },
 { path: 'confirmacao', component: DialogConfirmacaoComponent },
-{ path: 'pedidos-agendadors-financeiro', component: DialogPedidosAgendadorsFinanceiroComponent }
+{ path: 'pedidos-agendadors-financeiro', component: DialogPedidosAgendadorsFinanceiroComponent },
+{ path: 'add-conta-funcionario', component: DialogAddContaFuncionarioComponent }
 ];
 
 @NgModule({

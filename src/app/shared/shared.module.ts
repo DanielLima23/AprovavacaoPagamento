@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -53,6 +53,6 @@ const PIPES: any[] = [SafeUrlPipe, ToObservablePipe];
   imports: [...MODULES],
   exports: [...MODULES, ...COMPONENTS, ...DIRECTIVES, ...PIPES],
   declarations: [...COMPONENTS, ...COMPONENTS_DYNAMIC, ...DIRECTIVES, ...PIPES],
-  providers: [provideNgxMask()]
+  providers: [provideNgxMask(), { provide: LOCALE_ID, useValue: 'pt-BR' }]
 })
-export class SharedModule {}
+export class SharedModule { }

@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { TokenService } from '@core';
 import { Data } from 'app/data/data';
-import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
-import { Terceiro } from 'app/models/terceiro';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -170,4 +168,6 @@ export class PedidoService {
 
     return this.http.post(this.url + 'api/pedido/RelatorioPedidosADM', requestRelatorioPedido,{ headers })
   }
+
+
 }

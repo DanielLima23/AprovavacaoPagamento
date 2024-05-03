@@ -238,7 +238,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }

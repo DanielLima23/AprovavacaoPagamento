@@ -465,8 +465,8 @@
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
             <mat-label>Funcionário</mat-label>
-            <mat-select name="funcionario" (selectionChange)="popularFuncionarioInput($event.value)"
-                        formControlName="funcionario">
+            <mat-select name="TerceiroID" (selectionChange)="popularFuncionarioInput($event.value)"
+                        formControlName="TerceiroID">
               <mat-option  *ngFor="let funcionario of listaFuncionario" [value]="funcionario.id">
                 {{ funcionario.nome }}
               </mat-option>
@@ -510,7 +510,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.listaContasTerceiro && this.listaContasTerceiro.length <=0" class="mt-2"
+      <button *ngIf="this.listaContasTerceiro && this.listaContasTerceiro.length <=0 && this.meuPedidoForm.get('TerceiroID')?.value" class="mt-2"
               color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
         CONTA</button>
       <div class="row mt-2">

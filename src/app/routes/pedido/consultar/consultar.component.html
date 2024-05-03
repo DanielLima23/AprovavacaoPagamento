@@ -5,7 +5,7 @@
     </mat-card-header>
   </mat-card-content>
 </mat-card>
-<mat-card>
+<mat-card >
   <mat-card-header>
     <button (click)="adicionar()" color="primary" mat-raised-button>Criar pedido</button>
   </mat-card-header>
@@ -41,7 +41,7 @@
     <mat-divider class="mt-2"></mat-divider>
 
 
-    <table #tabela
+    <table #tabela  *ngIf="pedidos.length > 0"
            class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
       <thead>
         <tr>
@@ -119,5 +119,11 @@
         </ng-container>
       </tbody>
     </table>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="pedidos.length === 0">
+  <mat-card-content class="text-center">
+    Você não possui pedidos em andamento.
   </mat-card-content>
 </mat-card>

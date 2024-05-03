@@ -71,6 +71,8 @@ export class PedidoFuncionarioConsultarComponent implements OnInit {
     requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59'
     requestRelatorioPedido.statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value
     requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value
+    requestRelatorioPedido.terceiro = true
+    requestRelatorioPedido.tipoTerceiro = 0
 
     this.pedidoService.getPedidosUsuarioPorData(requestRelatorioPedido).subscribe(
       (data: any[]) => {
