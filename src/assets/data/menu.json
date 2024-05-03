@@ -58,27 +58,6 @@
               "name": "PagamentosAgendados",
               "type": "link",
               "permissions": [1]
-            },
-            {
-              "route": "",
-              "name": "Usuarios",
-              "type": "sub",
-              "icon": "dashboard",
-              "permissions": [1],
-              "children": [
-                {
-                  "route": "administracao/pendentes-aprovacao",
-                  "name": "AprovarUsuarios",
-                  "type": "link",
-                  "permissions": [1]
-                },
-                {
-                  "route": "administracao/lista",
-                  "name": "Lista",
-                  "type": "link",
-                  "permissions": [1]
-                }
-              ]
             }
 
           ]
@@ -127,7 +106,7 @@
         },
         {
           "route": "",
-          "name": "Terceiros",
+          "name": "Cadastros",
           "type": "sub",
           "icon": "business",
           "permissions": [0,1,3,4],
@@ -143,15 +122,36 @@
               "name": "Funcionario",
               "type": "link",
               "permissions": [0,1,3,4]
+            },
+            {
+              "route": "administracao/centro-de-custo-consultar",
+              "name": "CentroDeCusto",
+              "type": "link",
+              "icon": "folder",
+              "permissions": [0,1,3,4]
+            },
+            {
+              "route": "",
+              "name": "Usuarios",
+              "type": "sub",
+              "icon": "dashboard",
+              "permissions": [0,1,3,4],
+              "children": [
+                {
+                  "route": "administracao/pendentes-aprovacao",
+                  "name": "AprovarUsuarios",
+                  "type": "link",
+                  "permissions": [0,1,3,4]
+                },
+                {
+                  "route": "administracao/lista",
+                  "name": "Lista",
+                  "type": "link",
+                  "permissions": [0,1,3,4]
+                }
+              ]
             }
           ]
-        },
-        {
-          "route": "administracao/centro-de-custo-consultar",
-          "name": "CentroDeCusto",
-          "type": "link",
-          "icon": "folder",
-          "permissions": [0,1,3,4]
         },
         {
           "route": "",

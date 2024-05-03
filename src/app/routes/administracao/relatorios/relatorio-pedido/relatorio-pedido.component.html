@@ -67,7 +67,7 @@
       <thead>
         <tr>
           <!-- <th class="text-center color-table align-middle">Mês do pedido</th> -->
-          <th class="text-center color-table align-middle">Usuário</th>
+          <th class="text-center color-table align-middle">Pessoa</th>
           <th class="text-center color-table align-middle">Valor total do pedido</th>
           <th class="text-center color-table align-middle">Parcelado</th>
           <th class="text-center color-table align-middle">Responsável</th>
@@ -84,7 +84,7 @@
             <!-- <td class="color-table align-middle">{{ pedido.dataCadastro | date
               }}
             </td> -->
-            <td class="color-table align-middle">{{ pedido.usuario
+            <td class="color-table align-middle">{{ pedido.terceiro ? pedido.terceiro : pedido.usuario
               }}
             </td>
             <td class="color-table align-middle">{{

@@ -519,7 +519,7 @@
             <mat-label>Selecione uma conta já cadastrada</mat-label>
             <mat-select name="responsavel"
                         (ngModelChange)="changeContaBancaria()"
-                        formControlName="idContaBancaria">
+                        formControlName="idContaBancariaTerceiro">
               <mat-option *ngFor="let banco of listaContasTerceiro"
                           [value]="banco.id">
                 {{ banco.banco }}
@@ -668,7 +668,7 @@
           </mat-slide-toggle>
         </div>
         <div class="col-sm-2">
-          <mat-slide-toggle formControlName="rateio"
+          <mat-slide-toggle *ngIf="false" formControlName="rateio"
                             (change)="toogleRateio($event)">
             Rateio?
           </mat-slide-toggle>

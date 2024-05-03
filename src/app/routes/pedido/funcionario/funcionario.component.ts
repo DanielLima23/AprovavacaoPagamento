@@ -644,7 +644,8 @@ export class PedidoFuncionarioComponent implements OnInit {
   public meuPedidoForm: UntypedFormGroup = new UntypedFormGroup({
 
     ID: new UntypedFormControl(0),
-    TipoPedido: new UntypedFormControl(0),
+    TipoPedido: new UntypedFormControl(2),
+    TerceiroID: new UntypedFormControl(0),
     descricao: new UntypedFormControl(undefined),
     listaFormaPagamento: new UntypedFormArray([]),
     nome: new UntypedFormControl(undefined, Validators.required),
@@ -660,7 +661,8 @@ export class PedidoFuncionarioComponent implements OnInit {
     idUsuario: new UntypedFormControl(0),
     idCentroDeCusto: new UntypedFormControl(0, Validators.required),
     rateioID: new UntypedFormControl(0),
-    idContaBancaria: new UntypedFormControl(undefined, Validators.required),
+    // idContaBancaria: new UntypedFormControl(undefined, Validators.required),
+    idContaBancariaTerceiro: new UntypedFormControl(undefined, Validators.required),
     tipoPagamento: new UntypedFormControl(0),
     valorTotal: new UntypedFormControl(undefined, Validators.required),
     quantidadeParcelas: new UntypedFormControl(1),
@@ -768,7 +770,7 @@ export class PedidoFuncionarioComponent implements OnInit {
           (data: any[]) => {
             this.listaContasTerceiro = data
             const contaSelecionada = this.listaContasTerceiro.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
-            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+            this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
         )
@@ -948,7 +950,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
   salvar() {
 
-    this.pedidoService.criarPedido(this.meuPedidoForm.getRawValue()).subscribe(
+    this.pedidoService.criarPedidoTerceiro(this.meuPedidoForm.getRawValue()).subscribe(
       (data: any) => {
         this.toastr.success('Pedido enviado com sucesso', 'Sucesso');
         this.isSubmitting = false;
@@ -1035,8 +1037,8 @@ export class PedidoFuncionarioComponent implements OnInit {
   }
 
   atualizarDadosBancariosInput() {
-    const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    this.contaService.getContaPorIdUsuario(dado).subscribe(
+    const idConta = this.formaPagamentoForm.get('idContaBancariaTerceiro')?.value;
+    this.contaService.getContaPorIdTerceiro(idConta).subscribe(
       (data: any) => {
         this.formaPagamentoForm.get('conta')?.setValue(data.conta);
         this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
@@ -1486,7 +1488,7 @@ export class PedidoFuncionarioComponent implements OnInit {
         this.contaService.getListContasPorIdUsuario(idUsuario).subscribe(
           (data: any[]) => {
             this.listaContasTerceiro = data
-            this.formaPagamentoForm.get('idContaBancaria')?.setValue(this.listaContasTerceiro[0].id)
+            this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(this.listaContasTerceiro[0].id)
             this.atualizarDadosBancariosInput()
           }
         )
@@ -1499,6 +1501,7 @@ export class PedidoFuncionarioComponent implements OnInit {
     const funcionario: Terceiro | undefined = this.listaFuncionario.find(f => f.id === userId);
 
     if (funcionario) {
+      this.meuPedidoForm.get('TerceiroID')?.setValue(funcionario.id)
       if (funcionario.cpf) {
         this.meuPedidoForm.get('cpf')?.setValue(funcionario.cpf);
         this.meuPedidoForm.get('contaCnpj')?.setValue(false);
@@ -1513,10 +1516,13 @@ export class PedidoFuncionarioComponent implements OnInit {
     this.formaPagamentoForm.get('pix')?.setValue('');
     this.formaPagamentoForm.get('tipoConta')?.setValue('');
     if (funcionario!.idCentroCusto > 0) {
+      this.preencheListaCentros(funcionario!.idCentroCusto)
       this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(funcionario!.idCentroCusto)
     }
 
   }
+
+
 
 
 }
