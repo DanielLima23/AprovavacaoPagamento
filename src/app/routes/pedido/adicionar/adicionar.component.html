@@ -154,7 +154,7 @@
             <mat-label>Forma de pagamento</mat-label>
             <mat-select (ngModelChange)="validaFormaPagamento()"
                         name="tipoPagamento"
-                        formControlName="tipoPagamento">
+                        formControlName="tipoPagamento"id="tipoPagamento">
               <mat-option *ngFor="let formaPgto of listaFormaPagamento" [value]="formaPgto.id">
                 {{ formaPgto.descricao }}
               </mat-option>
@@ -252,14 +252,15 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <!-- <div *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value">
-          <button formControlName="gerarParcelas" mat-flat-button extended color="primary"
-                  class="col-sm-12"
-                  (click)="gerarParcelas()">
+        <div *ngIf="isDateParcelaInvalid" align="center">
+          <button formControlName="gerarParcelas" mat-flat-button extended color="primary" id="btnGerarParcela"
+                  class="col-sm-10 pulsating-button"
+                  (click)="gerarParcelas()"
+                  >
             <mat-icon>refresh</mat-icon>
             Gerar parcelas
           </button>
-        </div> -->
+        </div>
       </div>
     </mat-card-content>
   </mat-card>

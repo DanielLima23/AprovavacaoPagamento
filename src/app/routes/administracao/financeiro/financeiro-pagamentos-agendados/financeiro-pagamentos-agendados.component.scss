@@ -1,4 +1,14 @@
-.has-order {
-  background-color: rgb(0, 144, 24) !important;
-  border: 1px solid rgb(12, 189, 80) !important;
+.table_custom { --bs-table-bg: transparent !important; }
+
+.color-table {
+  color: var(--primary-bg);
+}
+
+td {
+  white-space: nowrap;
+}
+
+::ng-deep .data-pagamento {
+  font-size: 18px;
+  margin-top: 15px;
 }

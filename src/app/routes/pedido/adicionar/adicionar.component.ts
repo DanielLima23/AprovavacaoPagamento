@@ -317,9 +317,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   voltar() {
-    if(this.isRelatorio){
-       this.router.navigate(['/administracao/relatorio-pedido']);
-    }else{
+    if (this.isRelatorio) {
+      this.router.navigate(['/administracao/relatorio-pedido']);
+    } else {
       this.router.navigate(['/pedido/consultar']);
 
     }
@@ -395,12 +395,37 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.parcelaForm.get('parcelaReferencia')?.setValue(1)
     }
 
+    if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
+      const listaParcelas = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+
+      if (listaParcelas.length > 0) {
+        const primeiroItem = listaParcelas.at(0);
+
+        const primeiroItemValues = primeiroItem.value;
+
+        if (primeiroItemValues.dataPagamento != this.formaPagamentoForm.get('dataPagamento')?.value) {
+          this.toastr.warning('A data de pagamento foi alterada, clique no botão "Gerar parcelas" para atualizar".', 'Atenção')
+          this.isDateParcelaInvalid = true
+          this.rolarParaSecaoDestino()
+          this.isSubmitting = false
+          return
+        }
+      }
+    }
+
 
     this.salvar();
 
   }
   dataVencimentoValidation: Date = new Date()
+  isDateParcelaInvalid: boolean = false;
 
+  rolarParaSecaoDestino(){
+    const elementoDestino = document.querySelector('#tipoPagamento');
+      if (elementoDestino) {
+        elementoDestino.scrollIntoView({ behavior: 'smooth' });
+      }
+  }
 
   salvar() {
 
@@ -647,7 +672,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.dataSource.data = [...this.parcelas];
 
     }
-    console.log(this.parcelas);
+    this.isDateParcelaInvalid = false
   }
 
   formatarData(data: Date): string {

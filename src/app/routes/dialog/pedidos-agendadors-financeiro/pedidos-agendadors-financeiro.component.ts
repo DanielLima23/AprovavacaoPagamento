@@ -42,9 +42,9 @@ export class DialogPedidosAgendadorsFinanceiroComponent implements OnInit {
   }
 
   preencheListaPedidos() {
-    this.pedidoService.getListParcelasPendentesPorData(this.date.date).subscribe(data => {
-      this.parcelas = data.filter((parcela: any) => parcela.statusPagamento == 0)
-    })
+    // this.pedidoService.getListParcelasPendentesPorData(this.date.date).subscribe(data => {
+    //   this.parcelas = data.filter((parcela: any) => parcela.statusPagamento == 0)
+    // })
   }
 
 }

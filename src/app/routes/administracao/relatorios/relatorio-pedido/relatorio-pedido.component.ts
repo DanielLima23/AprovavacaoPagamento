@@ -9,6 +9,8 @@ import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.serv
 import { Usuario } from 'app/models/usuario';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
+import { Terceiro } from 'app/models/terceiro';
+import { TerceiroService } from '../../terceiros/terceiro.service';
 
 @Component({
   selector: 'app-administracao-relatorios-relatorio-pedido',
@@ -22,6 +24,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   listaTipoStatusPagamento: any
   isPrimeiraConsulta: boolean = true;
   listaUsuarios: Usuario[] = []
+  listaFuncionarios: Terceiro[]=[]
   listaCentroCusto: CentroDeCusto[] = []
 
   constructor(private router: Router,
@@ -29,8 +32,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private centroService: CentroDeCustoService,
-    private cdref: ChangeDetectorRef,
-  ) { }
+    private terceiroService: TerceiroService  ) { }
 
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
@@ -38,7 +40,9 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     statusPagamento: new UntypedFormControl(99),
     centroDeCustoID: new UntypedFormControl(0),
     usuarioID: new UntypedFormControl(0),
-    filtraStatusPagamento: new UntypedFormControl(false)
+    filtraStatusPagamento: new UntypedFormControl(false),
+    tipoTerceiro: new UntypedFormControl(0),
+    terceiro: new UntypedFormControl(false)
   });
 
   ngOnInit() {
@@ -47,6 +51,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     this.preencheListaCentros()
     this.preencheListaUsuarios()
     this.consultarPedidos()
+    this.preencheListaFuncionarios()
 
   }
 
@@ -74,6 +79,15 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
       }
     )
   }
+
+  preencheListaFuncionarios() {
+    this.terceiroService.getListaTerceiroPorCliente().subscribe(
+      (data: Terceiro[]) => {
+        this.listaFuncionarios = data.filter( terceiro => terceiro.tipoTerceiro == 0)
+      }
+    )
+  }
+
   getCurrentDate(): void {
     const dataFim = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     const startDate = new Date();
@@ -114,16 +128,31 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   }
 
 
-  bloquearFiltroCentroCusto() {
+  setValorNullCentroDeCusto() {
     const usuarioId = this.consultarPedidoForm.get('usuarioID')?.value;
     if(usuarioId > 0){
-      this.consultarPedidoForm.get('centroDeCustoID')?.disable()
+      //this.consultarPedidoForm.get('centroDeCustoID')?.disable()
       this.consultarPedidoForm.get('centroDeCustoID')?.setValue(0)
 
     }else{
-      this.consultarPedidoForm.get('centroDeCustoID')?.enable()
+      //this.consultarPedidoForm.get('centroDeCustoID')?.enable()
 
     }
   }
+
+  setValorNullUsuario() {
+    const centroDeCustoID = this.consultarPedidoForm.get('centroDeCustoID')?.value;
+    if(centroDeCustoID > 0){
+      //this.consultarPedidoForm.get('centroDeCustoID')?.disable()
+      this.consultarPedidoForm.get('usuarioID')?.setValue(0)
+
+    }else{
+      //this.consultarPedidoForm.get('centroDeCustoID')?.enable()
+
+    }
+  }
+
+
+
 
 }
