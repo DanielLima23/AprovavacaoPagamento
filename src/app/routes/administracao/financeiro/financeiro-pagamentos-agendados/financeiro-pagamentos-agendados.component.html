@@ -53,50 +53,44 @@
 
 
 
-
-
-
-
-
-
-
 <mat-card>
   <mat-card-content>
     <mat-card-header>
       <mat-card-title>Pagamentos agendados</mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
-    <mat-accordion *ngIf="listaParcelasPorMes" >
+    <mat-accordion *ngIf="listaParcelasPorMes">
       <ng-container *ngFor="let mes of listaParcelasPorMes" >
-        <mat-expansion-panel [expanded]="isMesOpen(mes.mesAno)" class="mt-1">
-          <mat-expansion-panel-header >
+        <mat-expansion-panel [expanded]="isMesOpen(mes.mesAno)" class="mt-1" (expandedChange)="clearIdsParcelas()">
+          <mat-expansion-panel-header>
             <mat-panel-title>
               {{ mes.mesAno }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let dia of mes.dias">
-            <mat-expansion-panel [expanded]="isDiaOpen(mes.mesAno, dia.dia)">
-              <mat-expansion-panel-header class="mt-2">
+          <button matTooltip="Clique na linha da tabela para selecionar"[matTooltipDisabled]="false" [disabled]="getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary" class="mb-2">Pagar selecionados</button>
+
+          <ng-container *ngFor="let dia of mes.dias" class="mt-2">
+            <mat-expansion-panel [expanded]="isDiaOpen(mes.mesAno, dia.dia)" class="mt-2">
+              <mat-expansion-panel-header >
                 <mat-panel-title>
                   {{ dia.dia | date }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <button [disabled]="this.getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary">Pagar selecionados</button>
 
-              <table class="table table-sm table_custom table-striped table-hover table-bordered mt-4" >
-                <thead>
-                  <tr>
-                    <th class="text-center color-table align-middle">Referência parcela</th>
-                    <th class="text-center color-table align-middle">Valor</th>
-                    <th class="text-center color-table align-middle">Data pagamento</th>
-                    <th class="text-center color-table align-middle">Data vencimento</th>
-                    <th class="text-center color-table align-middle">Status</th>
-                    <th class="text-center color-table align-middle">Ações</th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let parcela of dia.parcelas">
-                  <tr *ngFor="let item of parcela.parcelas"  class="text-center" [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id)" style="cursor: pointer;">
-                    <ng-container >
+              <div class="table-responsive">
+                <table class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
+                  <thead>
+                    <tr>
+                      <th class="text-center color-table align-middle sticky-sm-top">Referência parcela</th>
+                      <th class="text-center color-table align-middle sticky-sm-top">Valor</th>
+                      <th class="text-center color-table align-middle">Data pagamento</th>
+                      <th class="text-center color-table align-middle">Data vencimento</th>
+                      <th class="text-center color-table align-middle">Status</th>
+                      <th class="text-center color-table align-middle">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let parcela of dia.parcelas">
+                    <tr *ngFor="let item of parcela.parcelas" class="text-center" [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id)" style="cursor: pointer;">
                       <td class="color-table align-middle">{{ item.parcelaReferencia + '/' + item.quantidadeParcelas }}</td>
                       <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}</td>
                       <td class="color-table align-middle">{{ item.dataPagamento | date }}</td>
@@ -105,15 +99,14 @@
                         {{ item.statusPagamento == 0 ? 'Pendente' : 'Pago' }}
                       </td>
                       <td style="width: 16%;" class="color-table align-middle">
-                        <button mat-icon-button matTooltip="Marcar como pago" color="primary" (click)="aprovarParcela(item.id,false)" [disabled]="this.getSelectedRows().length > 0">
+                        <button mat-icon-button matTooltip="Pagar" color="primary" (click)="pagarParcela(item.id)" [disabled]="getSelectedRows().length > 0">
                           <mat-icon>check_circle</mat-icon>
                         </button>
                       </td>
-                    </ng-container>
-
-                  </tr>
-                </tbody>
-              </table>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </mat-expansion-panel>
           </ng-container>
         </mat-expansion-panel>

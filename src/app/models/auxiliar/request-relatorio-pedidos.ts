@@ -7,5 +7,6 @@ export class RequestRelatorioPedidos {
   statusPagamento: number = 0
   terceiro: boolean = false
   tipoTerceiro:number = 0
+  idTerceiro: number = 0
 
 }

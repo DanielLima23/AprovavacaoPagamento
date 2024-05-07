@@ -15,6 +15,7 @@ import { DialogAddContaUsuarioComponent } from './add-conta-usuario/add-conta-us
 import { DialogConfirmacaoComponent } from './confirmacao/confirmacao.component';
 import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
 import { DialogAddContaFuncionarioComponent } from './add-conta-funcionario/add-conta-funcionario.component';
+import { DialogParcelasNaoAprovadasComponent } from './parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -30,7 +31,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'add-conta-usuario', component: DialogAddContaUsuarioComponent },
 { path: 'confirmacao', component: DialogConfirmacaoComponent },
 { path: 'pedidos-agendadors-financeiro', component: DialogPedidosAgendadorsFinanceiroComponent },
-{ path: 'add-conta-funcionario', component: DialogAddContaFuncionarioComponent }
+{ path: 'add-conta-funcionario', component: DialogAddContaFuncionarioComponent },
+{ path: 'parcelas-nao-aprovadas', component: DialogParcelasNaoAprovadasComponent }
 ];
 
 @NgModule({

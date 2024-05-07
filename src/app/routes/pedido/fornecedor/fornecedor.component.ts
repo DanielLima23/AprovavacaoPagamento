@@ -32,6 +32,7 @@ export class PedidoFornecedorComponent implements OnInit {
   onSubmit() {
     throw new Error('Method not implemented.');
   }
+  ultimoPedido: any
 
   displayedColumns: string[] = ['data', 'valor', 'actions'];
   displayedColumnsFiles: string[] = ['file', 'actions'];
@@ -106,6 +107,8 @@ export class PedidoFornecedorComponent implements OnInit {
     this.preencheListaCentros()
 
   }
+
+
   preencheListaCentros() {
     this.centroCustoService.getListaCentroDeCusto().subscribe(
       (data: CentroDeCusto[]) => {

@@ -17,8 +17,9 @@ import { DialogConfirmacaoComponent } from './confirmacao/confirmacao.component'
 import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
 import { DatePipe } from '@angular/common';
 import { DialogAddContaFuncionarioComponent } from './add-conta-funcionario/add-conta-funcionario.component';
+import { DialogParcelasNaoAprovadasComponent } from './parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({

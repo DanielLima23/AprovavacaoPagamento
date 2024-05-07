@@ -580,6 +580,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
 
 
+  ultimoPedido: any
 
   displayedColumns: string[] = ['data', 'valor', 'actions'];
   displayedColumnsRateio: string[] = ['nome', 'valor', 'actions'];
@@ -752,6 +753,76 @@ export class PedidoFuncionarioComponent implements OnInit {
     this.preencheQtdParcelas()
     // this.preencheListaCentros()
     this.preencheListaFuncionario()
+  }
+
+  retornaUltimoPedido(id: any) {
+    this.pedidoService.getUltimoPedidoFuncionario(id).subscribe(
+      (data: any) => {
+        this.ultimoPedido = data
+        if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
+          this.limparTela()
+        }
+      }
+    )
+  }
+
+  usarUltimoPedido() {
+    this.setUltimoPedidoEmTela()
+  }
+
+  setUltimoPedidoEmTela() {
+    this.preencheListaFuncionario()
+    this.terceiroService.getTerceiroById(this.ultimoPedido.formaPagamento[0].terceiro.id).subscribe(
+      (terceiro: any) => {
+        this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
+        if (terceiro.cpf) {
+          this.meuPedidoForm.get('cpf')?.setValue(terceiro.cpf);
+          this.meuPedidoForm.get('contaCnpj')?.setValue(false);
+        } else {
+          this.meuPedidoForm.get('cnpj')?.setValue(terceiro.cnpj);
+          this.meuPedidoForm.get('contaCnpj')?.setValue(true);
+        }
+        this.meuPedidoForm.get('TerceiroID')?.setValue(terceiro.id);
+      }
+    )
+
+    this.contaService.getListContasPorIdTerceiro(this.ultimoPedido.usuario.id).subscribe(
+      (data: any[]) => {
+        this.listaContasTerceiro = data
+        const contaSelecionada = this.listaContasTerceiro.find(conta => conta.id === this.ultimoPedido.formaPagamento[0].contaBancaria ? this.ultimoPedido.formaPagamento[0].contaBancaria.id : this.ultimoPedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
+        this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(contaSelecionada)
+        this.atualizarDadosBancariosInput()
+      }
+    )
+
+
+    this.formaPagamentoForm.get('tipoPagamento')?.setValue(this.ultimoPedido.formaPagamento[0].tipoPagamento)
+    this.pedidoService.getAnexoByIdPedido(this.ultimoPedido.id).subscribe(
+      (data: any[]) => {
+        this.arquivosBase64 = data;
+        this.arquivosBase64.map(arquivo => {
+          arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+        })
+        this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
+      }
+    )
+    const formatador = new FormatadorData();
+    const hoje: Date = new Date();
+    const dataAtual: string = hoje.toISOString().slice(0, 10);
+    this.formaPagamentoForm.get('dataPagamento')?.setValue(dataAtual)
+    this.formaPagamentoForm.get('dataVencimento')?.setValue(dataAtual)
+    this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
+    this.formaPagamentoForm.get('descricao')?.setValue(this.ultimoPedido.descricao)
+    this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+    this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+
+    if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+      this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(this.ultimoPedido.formaPagamento[0].quantidadeParcelas)
+      this.gerarParcelas()
+    }
+
   }
 
   findPedidoByCodigo() {
@@ -1524,6 +1595,28 @@ export class PedidoFuncionarioComponent implements OnInit {
       this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(funcionario!.idCentroCusto)
     }
 
+    this.retornaUltimoPedido(funcionario?.id)
+    //this.setUltimoPedidoEmTela()
+
+
+
+  }
+
+  limparTela() {
+    //this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(0)
+    this.formaPagamentoForm.get('descricao')?.setValue(undefined)
+    this.formaPagamentoForm.get('pedidoParcelado')?.setValue(0)
+    this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(0)
+    this.formaPagamentoForm.get('rateio')?.setValue(0)
+    this.formaPagamentoForm.get('valorTotal')?.setValue(undefined)
+    this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
+
+    const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    if (listaParcelasArray) {
+      listaParcelasArray.clear();
+    }
+    this.arquivosBase64 = []
+    this.parcelas = []
   }
 
 

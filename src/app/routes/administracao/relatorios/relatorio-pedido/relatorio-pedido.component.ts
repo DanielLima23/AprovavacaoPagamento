@@ -38,11 +38,13 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     dataInicio: new UntypedFormControl(undefined),
     dataFim: new UntypedFormControl(undefined),
     statusPagamento: new UntypedFormControl(99),
-    centroDeCustoID: new UntypedFormControl(0),
-    usuarioID: new UntypedFormControl(0),
+    idCentroDeCusto: new UntypedFormControl(0),
+    idUsuario: new UntypedFormControl(0),
     filtraStatusPagamento: new UntypedFormControl(false),
     tipoTerceiro: new UntypedFormControl(0),
-    terceiro: new UntypedFormControl(false)
+    terceiro: new UntypedFormControl(false),
+    tipoRelatorio: new UntypedFormControl('usuario'),
+    idTerceiro: new UntypedFormControl(0)
   });
 
   ngOnInit() {
@@ -53,6 +55,17 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     this.consultarPedidos()
     this.preencheListaFuncionarios()
 
+  }
+
+  radioUsuario(){
+    this.consultarPedidoForm.get('terceiro')?.setValue(false);
+    this.consultarPedidoForm.get('tipoTerceiro')?.setValue(0)
+    this.consultarPedidoForm.get('idTerceiro')?.setValue(0)
+  }
+
+  rafioFuncionario(){
+    this.consultarPedidoForm.get('terceiro')?.setValue(true);
+    this.consultarPedidoForm.get('idUsuario')?.setValue(0)
   }
 
   adicionar() {
@@ -102,9 +115,11 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     requestRelatorioPedido.dataInicio= this.consultarPedidoForm.get('dataInicio')?.value
     requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59'
     requestRelatorioPedido.statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value
-    requestRelatorioPedido.idUsuario = this.consultarPedidoForm.get('usuarioID')?.value
-    requestRelatorioPedido.idCentroDeCusto = this.consultarPedidoForm.get('centroDeCustoID')?.value
+    requestRelatorioPedido.idUsuario = this.consultarPedidoForm.get('idUsuario')?.value
+    requestRelatorioPedido.idCentroDeCusto = this.consultarPedidoForm.get('idCentroDeCusto')?.value
     requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value
+    requestRelatorioPedido.terceiro = this.consultarPedidoForm.get('terceiro')?.value
+    requestRelatorioPedido.idTerceiro = this.consultarPedidoForm.get('idTerceiro')?.value
     this.pedidoService.getPedidosUsuarioPorDataAdm(requestRelatorioPedido).subscribe(
       (data: any[]) => {
         this.pedidos = data;
@@ -129,10 +144,12 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
 
 
   setValorNullCentroDeCusto() {
-    const usuarioId = this.consultarPedidoForm.get('usuarioID')?.value;
-    if(usuarioId > 0){
+    const usuarioId = this.consultarPedidoForm.get('idUsuario')?.value;
+    const idFuncionario = this.consultarPedidoForm.get('idTerceiro')?.value;
+
+    if(usuarioId > 0 || idFuncionario > 0){
       //this.consultarPedidoForm.get('centroDeCustoID')?.disable()
-      this.consultarPedidoForm.get('centroDeCustoID')?.setValue(0)
+      this.consultarPedidoForm.get('idCentroDeCusto')?.setValue(0)
 
     }else{
       //this.consultarPedidoForm.get('centroDeCustoID')?.enable()
@@ -140,11 +157,13 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     }
   }
 
-  setValorNullUsuario() {
-    const centroDeCustoID = this.consultarPedidoForm.get('centroDeCustoID')?.value;
+  setValorNullPessoas() {
+    const centroDeCustoID = this.consultarPedidoForm.get('idCentroDeCusto')?.value;
     if(centroDeCustoID > 0){
       //this.consultarPedidoForm.get('centroDeCustoID')?.disable()
-      this.consultarPedidoForm.get('usuarioID')?.setValue(0)
+      this.consultarPedidoForm.get('idUsuario')?.setValue(0)
+      this.consultarPedidoForm.get('idTerceiro')?.setValue(0)
+
 
     }else{
       //this.consultarPedidoForm.get('centroDeCustoID')?.enable()

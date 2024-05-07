@@ -37,7 +37,7 @@ import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 })
 export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
-
+  ultimoPedido: any
   displayedColumns: string[] = ['data', 'valor', 'actions'];
   displayedColumnsRateio: string[] = ['nome', 'valor', 'actions'];
 
@@ -95,6 +95,18 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     formaPagamentoArray.push(this.formaPagamentoForm);
     const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
     parcelaArrqay.push(this.parcelaForm);
+  }
+
+  retornaUltimoPedido() {
+    this.pedidoService.getUltimoPedidoUsuario().subscribe(
+      (data: any) => {
+        this.ultimoPedido = data
+      }
+    )
+  }
+
+  usarUltimoPedido() {
+    this.setUltimoPedidoEmTela()
   }
 
   public meuPedidoForm: UntypedFormGroup = new UntypedFormGroup({
@@ -195,7 +207,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       return;
     }
     this.idPedido = 0
-
+    this.retornaUltimoPedido()
     this.desabilitarInputs()
     this.getCurrentDate();
     this.preencheUsuario()
@@ -258,6 +270,60 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         }
       }
     )
+  }
+
+  setUltimoPedidoEmTela() {
+
+    this.usuarioService.getById(this.ultimoPedido.usuario.id).subscribe(
+      (usuario: any) => {
+        this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+        this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
+        this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
+        this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
+        this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+      }
+    )
+
+    this.contaService.getListContasPorIdUsuario(this.ultimoPedido.usuario.id).subscribe(
+      (data: any[]) => {
+        this.listaContasUsuario = data
+        const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === this.ultimoPedido.formaPagamento[0].contaBancaria.id)?.id
+        this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+        this.atualizarDadosBancariosInput()
+      }
+    )
+
+
+    this.formaPagamentoForm.get('tipoPagamento')?.setValue(this.ultimoPedido.formaPagamento[0].tipoPagamento)
+    this.pedidoService.getAnexoByIdPedido(this.ultimoPedido.id).subscribe(
+      (data: any[]) => {
+        this.arquivosBase64 = data;
+        this.arquivosBase64.map(arquivo => {
+          arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+        })
+        this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
+      }
+    )
+    const formatador = new FormatadorData();
+    const hoje: Date = new Date();
+    const dataAtual: string = hoje.toISOString().slice(0, 10);
+    this.formaPagamentoForm.get('dataPagamento')?.setValue(dataAtual)
+    this.formaPagamentoForm.get('dataVencimento')?.setValue(dataAtual)
+    this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
+    this.formaPagamentoForm.get('descricao')?.setValue(this.ultimoPedido.descricao)
+    this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+    this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+
+    if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+      this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(this.ultimoPedido.formaPagamento[0].quantidadeParcelas)
+
+      // this.ultimoPedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
+      //   this.parcelas.push(parcela);
+      // })
+      this.gerarParcelas()
+    }
   }
 
   base64toFile(base64: string, filename: string): File {
@@ -420,11 +486,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   dataVencimentoValidation: Date = new Date()
   isDateParcelaInvalid: boolean = false;
 
-  rolarParaSecaoDestino(){
+  rolarParaSecaoDestino() {
     const elementoDestino = document.querySelector('#tipoPagamento');
-      if (elementoDestino) {
-        elementoDestino.scrollIntoView({ behavior: 'smooth' });
-      }
+    if (elementoDestino) {
+      elementoDestino.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   salvar() {

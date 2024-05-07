@@ -93,6 +93,8 @@
 
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogParcelasNaoAprovadasComponent } from 'app/routes/dialog/parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -125,11 +127,12 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
   panelStates: PainelState[] = [];
   selectedRowIds: Set<number> = new Set<number>();
   selectedParcelaId: number | null = null;
-
+  listaParcelasValidacao: any
   constructor(
     private pedidoService: PedidoService,
     private toastr: ToastrService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -207,16 +210,21 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     };
     return meses[mes];
   }
-
-  aprovarParcela(id: number, multi: boolean) {
-    this.pedidoService.pagarParcela(id).subscribe(() => {
-      if (!multi) {
+  parcelasId: number[] = []
+  pagarParcela(id: number) {
+    this.parcelasId.push(id)
+    this.pedidoService.pagarParcela(this.parcelasId).subscribe((data: any) => { // Adicione (data: any) =>
+      if (data != null && data.length > 0) {
+        this.openDialogParcelasNaoAprovadas(data)
+      } else {
         this.preencheListaParcelasPendentes();
-        this.toastr.success('Parcela paga', 'Sucesso');
+        this.toastr.success('Parcelas pagas', 'Sucesso');
       }
     });
-
+    this.parcelasId = [];
+    this.selectedRowIds.clear();
   }
+
 
   savePanelStates() {
     this.panelStates = [];
@@ -289,17 +297,35 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
   }
 
   aprovarSelecionados() {
-    Promise.all(
-      this.idsSelecionados.map((id: any) => {
-        return this.aprovarParcela(id, true);
-      })
-    ).then(() => {
+    this.pedidoService.pagarParcela(this.idsSelecionados).subscribe((data: any) => {
       this.preencheListaParcelasPendentes();
       this.selectedRowIds.clear()
-      this.toastr.success('Parcelas paga', 'Sucesso');
+      if (data != null && data.length > 0) {
+        this.openDialogParcelasNaoAprovadas(data)
+      } else {
+        this.toastr.success('Parcelas paga', 'Sucesso');
+      }
+
     });
   }
 
+  openDialogParcelasNaoAprovadas(data: any): void {
+    const dialogRef = this.dialog.open(DialogParcelasNaoAprovadasComponent, {
+      data: { data },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.preencheListaParcelasPendentes()
+        this.toastr.success('Parcelas paga', 'Sucesso');
+      }
+    });
+  }
+
+  clearIdsParcelas() {
+    this.selectedRowIds.clear()
+    this.parcelasId = []
+  }
   // async aprovarSelecionados() {
   //   for (const id of this.idsSelecionados) {
   //     await this.aprovarParcela(id, true);

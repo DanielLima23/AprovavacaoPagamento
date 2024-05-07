@@ -1,0 +1,185 @@
+<!-- <mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-icon class="pt-1" color="warn">warning</mat-icon>
+      <mat-card-title  style="color: white;">Atenção</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+    <mat-card-content class="mt-2" style="color: rgb(151, 90, 90); background-color: #f9d6d6; text-align: center; padding: 10px;">
+      Alguns pagamentos não foram aprovados porque existem parcelas anteriores pendentes. Se desejar, você pode aprová-las agora.
+    </mat-card-content>
+
+    <button [disabled]="getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary" class="mt-2">Pagar selecionados</button>
+
+    <table class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
+      <thead>
+        <tr>
+          <th class="text-center color-table align-middle sticky-sm-top">Referência parcela</th>
+          <th class="text-center color-table align-middle sticky-sm-top">Valor</th>
+          <th class="text-center color-table align-middle">Data pagamento</th>
+          <th class="text-center color-table align-middle">Data vencimento</th>
+          <th class="text-center color-table align-middle">Status</th>
+          <th class="text-center color-table align-middle">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="parcelasNaoAprovadas && parcelasNaoAprovadas.data && parcelasNaoAprovadas.data.length > 0">
+          <ng-container *ngFor="let parcela of parcelasNaoAprovadas.data">
+            <ng-container *ngFor="let item of parcela.parcelasAtrasadas">
+              <tr class="text-center" [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id)" style="cursor: pointer;">
+                <td class="color-table align-middle">{{ item.parcelaReferencia +"/"+ item.quantidadeParcelas}}</td>
+                <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}</td>
+                <td class="color-table align-middle">{{ item.dataPagamento | date }}</td>
+                <td class="color-table align-middle">{{ item.dataVencimento | date }}</td>
+                <td class="color-table align-middle" [ngClass]="{'text-warning': item.statusPagamento === 0, 'text-success': item.statusPagamento === 1}">
+                  {{ item.statusPagamento === 0 ? 'Pendente' : 'Pago' }}
+                </td>
+                <td style="width: 16%;" class="color-table align-middle">
+                  <button mat-icon-button matTooltip="Pagar" color="primary" (click)="pagarParcela(item.id)" [disabled]="getSelectedRows().length > 0">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!parcelasNaoAprovadas || !parcelasNaoAprovadas.data || parcelasNaoAprovadas.data.length === 0">
+          <tr>
+            <td colspan="6" class="text-center">Nenhuma parcela pendente encontrada.</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card> -->
+
+
+
+<!-- <mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-icon class="pt-1" color="warn">warning</mat-icon>
+      <mat-card-title style="color: white;">Atenção</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+    <mat-card-content class="mt-2" style="color: rgb(151, 90, 90); background-color: #f9d6d6; text-align: center; padding: 10px;">
+      Alguns pagamentos não foram aprovados porque existem parcelas anteriores pendentes. Se desejar, você pode aprová-las agora.
+    </mat-card-content>
+
+    <button [disabled]="getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary" class="mt-2">Pagar selecionados</button>
+
+    <table class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
+      <thead>
+        <tr>
+          <th class="text-center color-table align-middle sticky-sm-top">Referência parcela</th>
+          <th class="text-center color-table align-middle">Valor</th>
+          <th class="text-center color-table align-middle">Data pagamento</th>
+          <th class="text-center color-table align-middle">Data vencimento</th>
+          <th class="text-center color-table align-middle">Status</th>
+          <th class="text-center color-table align-middle">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="parcelasNaoAprovadas && parcelasNaoAprovadas.data && parcelasNaoAprovadas.data.length > 0">
+          <ng-container *ngFor="let parcela of parcelasNaoAprovadas.data">
+            <ng-container *ngFor="let item of parcela.parcelasAtrasadas">
+              <tr class="text-center" [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id, parcela.idParcela)" style="cursor: pointer;">
+                <td class="color-table align-middle">{{ item.parcelaReferencia + '/' + item.quantidadeParcelas }}</td>
+                <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}</td>
+                <td class="color-table align-middle">{{ item.dataPagamento | date }}</td>
+                <td class="color-table align-middle">{{ item.dataVencimento | date }}</td>
+                <td class="color-table align-middle" [ngClass]="{'text-warning': item.statusPagamento === 0, 'text-success': item.statusPagamento === 1}">
+                  {{ item.statusPagamento === 0 ? 'Pendente' : 'Pago' }}
+                </td>
+                <td style="width: 16%;" class="color-table align-middle">
+                  <button mat-icon-button matTooltip="Pagar" color="primary" (click)="pagarParcela(item.id)" [disabled]="getSelectedRows().length > 0 || !isPreviousParcelaSelected(item.id, parcela)">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </td>
+              </tr>
+
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!parcelasNaoAprovadas || !parcelasNaoAprovadas.data || parcelasNaoAprovadas.data.length === 0">
+          <tr>
+            <td colspan="6" class="text-center">Nenhuma parcela pendente encontrada.</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card> -->
+
+
+
+
+
+
+
+
+
+
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-icon class="pt-1" color="accent">warning</mat-icon>
+      <mat-card-title style="color: white;">Atenção</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+    <mat-card-content class="mt-2 bg-dark" style="text-align: center; padding: 10px;">
+      <p style="color: white;">      Alguns pagamentos não foram aprovados porque existem parcelas anteriores pendentes. Se desejar, você pode aprová-las agora.
+      </p>
+    </mat-card-content>
+
+      <button matTooltip="Clique na linha da tabela para selecionar" [disabled]="getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary" class="mt-2">Pagar selecionados</button>
+
+
+    <ng-container *ngIf="parcelasNaoAprovadas && parcelasNaoAprovadas.data && parcelasNaoAprovadas.data.length > 0" >
+      <div class="table-responsive-sm" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
+          <thead class="table-dark">
+            <tr>
+              <th class="text-center color-table align-middle sticky-sm-top">Referência parcela</th>
+              <th class="text-center color-table align-middle sticky-sm-top">Valor</th>
+              <th class="text-center color-table align-middle sticky-sm-top">Data pagamento</th>
+              <th class="text-center color-table align-middle sticky-sm-top">Data vencimento</th>
+              <th class="text-center color-table align-middle sticky-sm-top">Status</th>
+              <!-- <th class="text-center color-table align-middle sticky-sm-top">Ações</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let parcela of parcelasNaoAprovadas.data, let i = index">
+              <tr *ngIf="i != 0">
+                <td colspan="6" class="text-center bg-dark"> </td>
+              </tr>
+              <tr class="text-center" [class.bg-info]="rowIsSelected(item.id)" *ngFor="let item of parcela.parcelasAtrasadas" (click)="onRowClick(item.id, parcela.idParcela)" style="cursor: pointer;">
+                <td class="color-table align-middle">{{ item.parcelaReferencia + '/' + item.quantidadeParcelas }}</td>
+                <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}</td>
+                <td class="color-table align-middle">{{ item.dataPagamento | date }}</td>
+                <td class="color-table align-middle">{{ item.dataVencimento | date }}</td>
+                <td class="color-table align-middle" [ngClass]="{'text-warning': item.statusPagamento === 0, 'text-success': item.statusPagamento === 1}">
+                  {{ item.statusPagamento === 0 ? 'Pendente' : 'Pago' }}
+                </td>
+                <!-- <td style="width: 16%;" class="color-table align-middle">
+                  <button mat-icon-button matTooltip="Pagar" color="primary" (click)="pagarParcela(item.id)" [disabled]="getSelectedRows().length > 0 || !isPreviousParcelaSelected(item.id, parcela.idParcela)">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </td> -->
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!parcelasNaoAprovadas || !parcelasNaoAprovadas.data || parcelasNaoAprovadas.data.length === 0">
+      <tr>
+        <td colspan="6" class="text-center">Nenhuma parcela pendente encontrada.</td>
+      </tr>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

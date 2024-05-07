@@ -30,35 +30,29 @@
         </mat-select>
       </mat-form-field>
       <div class="col-sm-12">
-        <mat-radio-group aria-label="Select an option">
-          <mat-radio-button value="1">Usuários</mat-radio-button>
-          <mat-radio-button value="2">Funcionários</mat-radio-button>
+        <mat-radio-group aria-label="Select an option" formControlName="tipoRelatorio">
+          <mat-radio-button value="usuario" (change)="radioUsuario()">Usuários</mat-radio-button>
+          <mat-radio-button value="funcionario" (change)="rafioFuncionario()">Funcionários</mat-radio-button>
         </mat-radio-group>
       </div>
 
-
-
-      <mat-form-field style="width: 100%;" class="col-sm-6 mt-2">
-        <mat-label>Selecione um usuario</mat-label>
-        <mat-select name="usuarioID"
-                    formControlName="usuarioID" (selectionChange)="setValorNullCentroDeCusto()"
+      <mat-form-field *ngIf="consultarPedidoForm.get('tipoRelatorio')?.value === 'usuario'" style="width: 100%;" class="col-sm-6 mt-2">
+        <mat-label>Selecione um usuário</mat-label>
+        <mat-select name="idUsuario" formControlName="idUsuario" (selectionChange)="setValorNullCentroDeCusto()"
                     matTooltip="Quando um usuário é selecionado, o centro de custo previamente selecionado é automaticamente desselecionado.">
           <mat-option [value]="0">Nenhum</mat-option>
-          <mat-option *ngFor="let usuario of listaUsuarios"
-                      [value]="usuario.id">
+          <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
             {{ usuario.nome }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field style="width: 100%;" class="col-sm-6 mt-2">
+      <mat-form-field *ngIf="consultarPedidoForm.get('tipoRelatorio')?.value === 'funcionario'" style="width: 100%;" class="col-sm-6 mt-2">
         <mat-label>Selecione um funcionário</mat-label>
-        <mat-select name="usuarioID"
-                    formControlName="usuarioID" (selectionChange)="setValorNullCentroDeCusto()"
-                    matTooltip="Quando um funcionário selecionado, o centro de custo previamente selecionado é automaticamente desselecionado.">
+        <mat-select name="idTerceiro" formControlName="idTerceiro" (selectionChange)="setValorNullCentroDeCusto()"
+                    matTooltip="Quando um funcionário é selecionado, o centro de custo previamente selecionado é automaticamente desselecionado.">
           <mat-option [value]="0">Nenhum</mat-option>
-          <mat-option *ngFor="let funcionario of listaFuncionarios"
-                      [value]="funcionario.id">
+          <mat-option *ngFor="let funcionario of listaFuncionarios" [value]="funcionario.id">
             {{ funcionario.nome }}
           </mat-option>
         </mat-select>
@@ -66,8 +60,8 @@
 
       <mat-form-field style="width: 100%;" class="col-sm-6 mt-2">
         <mat-label>Selecione um centro de custo</mat-label>
-        <mat-select name="centroDeCustoID" (selectionChange)="setValorNullUsuario()"
-                    formControlName="centroDeCustoID"
+        <mat-select name="idCentroDeCusto" (selectionChange)="setValorNullPessoas()"
+                    formControlName="idCentroDeCusto"
                     matTooltip="Quando um centro de custo é selecionado, o usuário previamente selecionado é automaticamente desselecionado.">
           <mat-option [value]="0">Nenhum</mat-option>
           <mat-option *ngFor="let centro of listaCentroCusto"

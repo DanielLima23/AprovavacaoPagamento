@@ -144,17 +144,16 @@ export class PedidoService {
   }
 
 
-  pagarParcela(parcelaId: any): Observable<any> {
+  pagarParcela(parcelasId: any): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? '',
-      parcelaId: parcelaId
+      tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.get(this.url + 'api/pedido/AtualizarPagamento', { headers })
+    return this.http.post(this.url + 'api/pedido/AtualizarPagamento', parcelasId,{ headers })
   }
 
   getPedidosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
@@ -179,6 +178,31 @@ export class PedidoService {
     });
 
     return this.http.post(this.url + 'api/pedido/RelatorioPedidosADM', requestRelatorioPedido,{ headers })
+  }
+
+  getUltimoPedidoUsuario(){
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? ''
+    });
+
+    return this.http.get(this.url + 'api/pedido/RetornaUltimoPedidoPorUsuario',{ headers })
+  }
+
+  getUltimoPedidoFuncionario(terceiroID: any){
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      terceiroID: terceiroID
+    });
+
+    return this.http.get(this.url + 'api/pedido/RetornaUltimoPedidoTerceiro',{ headers })
   }
 
 
