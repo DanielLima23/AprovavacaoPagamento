@@ -16,6 +16,8 @@ import { DialogConfirmacaoComponent } from './confirmacao/confirmacao.component'
 import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors-financeiro/pedidos-agendadors-financeiro.component';
 import { DialogAddContaFuncionarioComponent } from './add-conta-funcionario/add-conta-funcionario.component';
 import { DialogParcelasNaoAprovadasComponent } from './parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
+import { DialogPedidosPorParcelaComponent } from './pedidos-por-parcela/pedidos-por-parcela.component';
+import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -32,7 +34,9 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'confirmacao', component: DialogConfirmacaoComponent },
 { path: 'pedidos-agendadors-financeiro', component: DialogPedidosAgendadorsFinanceiroComponent },
 { path: 'add-conta-funcionario', component: DialogAddContaFuncionarioComponent },
-{ path: 'parcelas-nao-aprovadas', component: DialogParcelasNaoAprovadasComponent }
+{ path: 'parcelas-nao-aprovadas', component: DialogParcelasNaoAprovadasComponent },
+{ path: 'pedidos-por-parcela', component: DialogPedidosPorParcelaComponent },
+{ path: 'pedidos-por-parcela-funcionario', component: DialogPedidosPorParcelaFuncionarioComponent }
 ];
 
 @NgModule({

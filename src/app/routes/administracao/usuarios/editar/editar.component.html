@@ -126,15 +126,16 @@
       <div class="col-sm-6">
         <mat-form-field style="width: 100%;">
           <mat-label>Permissão</mat-label>
-          <mat-select formControlName="tipoUsuarioDTO"
-                      name="tipoUsuarioDTO" id="tipoUsuarioDTO" (selectionChange)="setTipoUsuario()">
-            <mat-option *ngFor="let tipo of listaTipoUsuario"
-                        [value]="tipo" >
-              {{ tipo }}
-            </mat-option>
+          <mat-select formControlName="tipoUsuarioDTO" name="tipoUsuarioDTO" id="tipoUsuarioDTO" (selectionChange)="setTipoUsuario()">
+            <ng-container *ngFor="let tipo of listaTipoUsuario">
+              <mat-option *ngIf="tipo !== 'Master'" [value]="tipo">
+                {{ tipo }}
+              </mat-option>
+            </ng-container>
           </mat-select>
         </mat-form-field>
       </div>
+
 
 
       <mat-card-footer align="end">

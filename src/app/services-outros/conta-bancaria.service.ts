@@ -38,10 +38,11 @@ export class ContaBancariaService {
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      id:id
     });
 
-    const path = `${this.url}api/contaTerceiro/${id}`;
+    const path = `${this.url}api/contaTerceiro/`;
 
     return this.http.put(path, value, { headers })
   }
@@ -52,9 +53,10 @@ export class ContaBancariaService {
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ??'',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      terceiroId:id
     });
-    const path = `${this.url}api/contaTerceiro/terceiro/${id}`;
+    const path = `${this.url}api/contaTerceiro/RetornaListaPorTerceiroID`;
 
     return this.http.get(path, { headers })
   }
@@ -65,9 +67,10 @@ export class ContaBancariaService {
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ??'',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      id: id
     });
-    const path = `${this.url}api/contaTerceiro/${id}`;
+    const path = `${this.url}api/contaTerceiro/`;
 
     return this.http.get(path, { headers })
   }
@@ -79,10 +82,11 @@ export class ContaBancariaService {
 
     const headers = new HttpHeaders({
       tokenUsuario: pToken ??'',
-      tokenCliente: pTokenCliente??''
+      tokenCliente: pTokenCliente??'',
+      id:id
     });
 
-    const path = `${this.url}api/contaTerceiro/${id}`;
+    const path = `${this.url}api/contaTerceiro/`;
 
     return this.http.delete( path, { headers });
   }

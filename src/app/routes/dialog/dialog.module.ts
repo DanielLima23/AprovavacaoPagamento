@@ -18,14 +18,18 @@ import { DialogPedidosAgendadorsFinanceiroComponent } from './pedidos-agendadors
 import { DatePipe } from '@angular/common';
 import { DialogAddContaFuncionarioComponent } from './add-conta-funcionario/add-conta-funcionario.component';
 import { DialogParcelasNaoAprovadasComponent } from './parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
+import { DialogPedidosPorParcelaComponent } from './pedidos-por-parcela/pedidos-por-parcela.component';
+import { PedidoModule } from '../pedido/pedido.module';
+import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent, DialogPedidosPorParcelaComponent, DialogPedidosPorParcelaFuncionarioComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({
   imports: [
     SharedModule,
-    DialogRoutingModule
+    DialogRoutingModule,
+    PedidoModule
   ],
   declarations: [
     ...COMPONENTS,

@@ -232,8 +232,15 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
-            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+            const contaSelecionada = this.listaContasUsuario.find(conta => {
+              if (pedido.formaPagamento[0].contaBancaria) {
+                return conta.id === pedido.formaPagamento[0].contaBancaria.id;
+              } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+                return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
+              } else {
+                return false; // Se nenhum dos dois estiver definido, retorna falso
+              }
+            })?.id;            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
         )

@@ -25,13 +25,13 @@ import { AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent } from '.
 import { authGuard } from '@core';
 import { AdministracaoRelatoriosRelatorioPedidoComponent } from './relatorios/relatorio-pedido/relatorio-pedido.component';
 
-const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'pendentes-aprovacao', component: AdministracaoUsuariosPendentesAprovacaoComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'aprovar', component: AdministracaoUsuariosAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'aprovar/:id', component: AdministracaoUsuariosAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'editar', component: AdministracaoUsuariosEditarComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'editar/:id', component: AdministracaoUsuariosEditarComponent, canActivate: [authGuard],  data: { roles: [1] } },
+const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'pendentes-aprovacao', component: AdministracaoUsuariosPendentesAprovacaoComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'aprovar', component: AdministracaoUsuariosAprovarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'aprovar/:id', component: AdministracaoUsuariosAprovarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'editar', component: AdministracaoUsuariosEditarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'editar/:id', component: AdministracaoUsuariosEditarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 
 { path: 'ceo-aprovacao-pendente', component: AdministracaoCeoCeoAprovacaoPendenteComponent, canActivate: [authGuard],  data: { roles: [3] } },
 { path: 'ceo-aprovar', component: AdministracaoCeoCeoAprovarComponent,canActivate: [authGuard],  data: { roles: [3] } },
@@ -69,7 +69,7 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'funcionario-conta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id/:idConta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
-{ path: 'relatorio-pedido', component: AdministracaoRelatoriosRelatorioPedidoComponent },
+{ path: 'relatorio-pedido', component: AdministracaoRelatoriosRelatorioPedidoComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 ];
 
 @NgModule({

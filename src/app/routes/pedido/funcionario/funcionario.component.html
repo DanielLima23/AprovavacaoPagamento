@@ -1,442 +1,7 @@
-<!--
-
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>Adicionar pedido funcionário</mat-card-title>
-      </mat-card-header>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Dados pessoais
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-
-      <div class="row mt-2">
-        <div class="col-sm-12">
-          <mat-slide-toggle formControlName="contaCnpj"
-                            (change)="toggleCpfCnpj($event)">
-            CNPJ?
-          </mat-slide-toggle>
-        </div>
-        <div class="col-md-6 mt-2">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Funcionário</mat-label>
-            <mat-select name="funcionario" (selectionChange)="popularFuncionarioInput($event.value)"
-                        formControlName="funcionario">
-              <mat-option  *ngFor="let funcionario of listaFuncionario" [value]="funcionario.id">
-                {{ funcionario.nome }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6 mt-2" *ngIf="!userForm.get('contaCnpj')?.value">
-          <mat-form-field floatLabel="always" style="width: 100%;">
-            <mat-label>Cpf</mat-label>
-            <input formControlName="cpf" matInput #input maxlength="14"
-                   placeholder="Insira seu Cpf"
-                   id="cpf"
-                   mask="000.000.000-00">
-            <mat-hint align="end">{{input.value.length}}/14</mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6 mt-2" *ngIf="userForm.get('contaCnpj')?.value">
-          <mat-form-field floatLabel="always" style="width: 100%;">
-            <mat-label>Cnpj</mat-label>
-            <input formControlName="cnpj" matInput #input maxlength="18"
-                   placeholder="Insira seu cnpj"
-                   id="cnpj"
-                   mask="00.000.000/0000-00">
-            <mat-hint align="end">{{input.value.length}}/18</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-
-
-
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Dados bancários
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Selecione uma conta já cadastrada</mat-label>
-            <mat-select name="bancoCadastrado"
-                        (ngModelChange)="atualizaDadosInput()"
-                        formControlName="bancoCadastrado">
-              <mat-option *ngFor="let banco of listaContasUsuario"
-                          [value]="banco.id">
-                {{ banco.banco }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Conta</mat-label>
-            <input matInput
-                   #inputConta
-                   maxlength=""
-                   placeholder="" id="conta" formControlName="conta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Agência</mat-label>
-            <input matInput
-                   #inputAgencia
-                   maxlength=""
-                   placeholder="" id="agencia" formControlName="agencia"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Tipo conta</mat-label>
-            <input matInput
-                   #inputTipoConta
-                   maxlength=""
-                   placeholder="" id="tipoConta" formControlName="tipoConta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Pix</mat-label>
-            <input matInput
-                   #inputPix
-                   maxlength=""
-                   placeholder="" id="pix" formControlName="pix"
-                   type="text">
-          </mat-form-field>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Descrição pagamento
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Forma de pagamento</mat-label>
-            <mat-select name="formaPagamento"
-                        formControlName="formaPagamento">
-              <mat-option *ngFor="let formaPgto of listaFormaPagamento"
-                          [value]="formaPgto">
-                {{ formaPgto }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Data de pagamento</mat-label>
-            <input matInput
-                   #inputDataPagamento
-                   maxlength=""
-                   placeholder="" id="dataPagamento"
-                   formControlName="dataPagamento"
-                   type="date">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Data de vencimento</mat-label>
-            <input matInput
-                   #inputDataVencimento
-                   maxlength=""
-                   placeholder="" id="dataVencimento"
-                   formControlName="dataVencimento"
-                   type="date">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Valor total pagamento</mat-label>
-            <input matInput
-                   #inputValorTotalPagamento maxlength="50"
-                   placeholder="R$ 0,00" id="valorTotalPagamento"
-                   formControlName="valorTotalPagamento">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Centro de custo</mat-label>
-            <mat-select name="centroCusto"
-                        formControlName="centroCusto">
-              <mat-option *ngFor="let centro of listaCentroCusto"
-                          [value]="centro.id">
-                {{ centro.descricao }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-2">
-          <mat-slide-toggle formControlName="pedidoParcelado"
-                            (change)="tooglePedidoParcelado($event)">
-            Pedido parcelado?
-          </mat-slide-toggle>
-        </div>
-        <div class="col-sm-2">
-          <mat-slide-toggle formControlName="rateio"
-                            (change)="toogleRateio($event)">
-            Rateio?
-          </mat-slide-toggle>
-        </div>
-        <div class="col-sm-12 mt-2" *ngIf="userForm.get('pedidoParcelado')?.value">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Quantidade de parcelas</mat-label>
-            <mat-select name="qtdParcelas"
-                        formControlName="qtdParcelas">
-              <mat-option *ngFor="let parcela of listaParcelas"
-                          [value]="parcela">
-                {{ parcela }} {{ calcularValorParcela(parcela) }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div align="center" *ngIf="userForm.get('pedidoParcelado')?.value">
-          <button formControlName="gerarParcelas" mat-flat-button extended color="primary"
-                  class="col-sm-12"
-                  (click)="gerarParcelas()">
-            <mat-icon>refresh</mat-icon>
-            Gerar parcelas
-          </button>
-        </div>
-
-      </div>
-    </mat-card-content>
-  </mat-card>
-  <mat-card *ngIf="userForm.get('rateio')?.value">
-    <mat-card-content>
-      <div class="row">
-        <mat-card-header>
-          <mat-card-title>
-            Rateio
-          </mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-form-field style="width: 100%;" class="col-sm-12 mt-2">
-          <mat-label>Pessoa</mat-label>
-          <mat-select name="usuarioRateio" (selectionChange)="addPessoaListaRateio()"
-                      formControlName="usuarioRateio">
-            <mat-option *ngFor="let item of listaUsuarios" [value]="item.id">
-              {{ item.nome }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <table mat-table [dataSource]="dataSourceRateio">
-          <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef> Nome </th>
-            <td mat-cell *matCellDef="let item"> {{item.usuario.nome}}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="valor">
-            <th mat-header-cell *matHeaderCellDef> Valor </th>
-            <td mat-cell *matCellDef="let item"> {{item.valor | currency: 'BRL'}}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Ações </th>
-            <td mat-cell *matCellDef="let item">
-              <button mat-icon-button (click)="openDialogRateio(item)" matTooltip="Editar">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="openDialogDeleteRateio(item)" matTooltip="Deletar">
-                <mat-icon>delete</mat-icon>
-              </button>
-              <div class="modal" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                   aria-hidden="true">
-              </div>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsRateio"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsRateio;"></tr>
-        </table>
-      </div>
-    </mat-card-content>
-  </mat-card>
-  <mat-card *ngIf="userForm.get('exibirParcelas')?.value">
-    <mat-card-content>
-      <div class="row">
-        <mat-card-header>
-          <mat-card-title>
-            Parcelas
-          </mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <table mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="data">
-            <th mat-header-cell *matHeaderCellDef> Data vencimento </th>
-            <td mat-cell *matCellDef="let parcela"> {{parcela.dataVencimento |
-              date:'dd/MM/yyyy'}}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="valor">
-            <th mat-header-cell *matHeaderCellDef> Valor </th>
-            <td mat-cell *matCellDef="let parcela"> {{parcela.valor | currency: 'BRL'}}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Ações </th>
-            <td mat-cell *matCellDef="let parcela">
-              <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="openDialogDelete(parcela)" matTooltip="Deletar">
-                <mat-icon>delete</mat-icon>
-              </button>
-              <div class="modal" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                   aria-hidden="true">
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Anexos
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <table mat-table [dataSource]="dataSourceFile" *ngIf="filesDisplay" class="mt-2">
-        <ng-container matColumnDef="file">
-          <th mat-header-cell *matHeaderCellDef> Nome arquivo </th>
-          <td mat-cell *matCellDef="let arquivo"> {{arquivo.name}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Ações </th>
-          <td mat-cell *matCellDef="let file">
-            <button mat-icon-button (click)="openNewWindow(file)" matTooltip="Visualizar">
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button mat-icon-button (click)="removeFile(file)" matTooltip="Deletar">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsFiles"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsFiles;"></tr>
-      </table>
-      <button mat-flat-button extended color="warn" class="m-3"
-              (click)="openFileInput.click()">
-        <mat-icon>attach_file</mat-icon>
-        Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
-        <input #openFileInput type="file" style="display: none"
-               (change)="onFileSelected($event)" />
-      </button>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <div class="row">
-        <div class="col-sm-12">
-          <mat-form-field floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Descrição do pagamento</mat-label>
-            <input matInput
-                   #inputDescricaoPagamento maxlength="250"
-                   placeholder="Insira uma descrição para o pagamento"
-                   id="descricaoPagamento"
-                   formControlName="descricaoPagamento">
-            <mat-hint
-                      align="end">{{inputDescricaoPagamento.value.length}}/250</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-      <mat-card-footer align="end" class="mt-2">
-        <button [disabled]="userForm.invalid" (click)="validationSave()" mat-flat-button
-                extended
-                color="primary" class="m-3">
-          <mat-icon>save</mat-icon>
-          Salvar
-        </button>
-        <button mat-flat-button extended color="accent" class="m-3"
-                (click)="voltar()">
-          <mat-icon>reply</mat-icon>
-          Voltar
-        </button>
-      </mat-card-footer>
-    </mat-card-content>
-  </mat-card>
-</form> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <form [formGroup]="meuPedidoForm" class="row mt-2">
 
-  <mat-card>
+  <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title>Adicionar meu pedido</mat-card-title>
@@ -459,7 +24,7 @@
         </thead>
         <tbody >
           <tr class="text-center" >
-            <td class="color-table align-middle" style="width: 50%;">{{ultimoPedido.dataCadastro | date}}</td>
+            <td class="color-table align-middle" style="width: 50%;">{{dataUltimoPedido | date}}</td>
             <td style="width: 50%;" class="color-table align-middle">
                 <button mat-icon-button matTooltip="Usar este pedido" color="primary" (click)="usarUltimoPedido()" >
                   <mat-icon>check_circle</mat-icon>
@@ -474,7 +39,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Dados pessoais
         </mat-card-title>
       </mat-card-header>
@@ -532,7 +97,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Dados bancários
         </mat-card-title>
       </mat-card-header>
@@ -606,7 +171,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Descrição pagamento
         </mat-card-title>
       </mat-card-header>
@@ -730,7 +295,7 @@
     <mat-card-content>
       <div class="row">
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
             Rateio
           </mat-card-title>
         </mat-card-header>
@@ -779,7 +344,7 @@
   <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Parcelas
         </mat-card-title>
       </mat-card-header>
@@ -830,7 +395,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Anexos
         </mat-card-title>
       </mat-card-header>
@@ -875,7 +440,7 @@
 
     </mat-card-content>
   </mat-card>
-  <mat-card>
+  <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
         <button *ngIf="this.idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid"

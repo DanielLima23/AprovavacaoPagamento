@@ -147,6 +147,7 @@ export class AdministracaoTerceirosFuncionarioFuncionarioContaComponent implemen
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaTerceiro = new ContaTerceiro()
+          this.router.navigate(['/administracao/funcionario-adicionar/',this.idFuncionario])
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');
@@ -157,6 +158,8 @@ export class AdministracaoTerceirosFuncionarioFuncionarioContaComponent implemen
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaTerceiro = new ContaTerceiro()
+          this.router.navigate(['/administracao/funcionario-adicionar/',this.idFuncionario])
+
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');

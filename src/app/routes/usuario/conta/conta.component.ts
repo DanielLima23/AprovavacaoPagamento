@@ -153,6 +153,8 @@ export class UsuarioContaComponent implements OnInit {
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaUsuario = new ContaUsuario()
+          this.router.navigate(['/usuario/editar', this.idUsuario]);
+
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');
@@ -163,6 +165,8 @@ export class UsuarioContaComponent implements OnInit {
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaUsuario = new ContaUsuario()
+          this.router.navigate(['/usuario/editar', this.idUsuario]);
+
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');

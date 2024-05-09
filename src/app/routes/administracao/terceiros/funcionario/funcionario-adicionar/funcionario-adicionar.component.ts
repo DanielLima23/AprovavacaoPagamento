@@ -124,6 +124,8 @@ export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent impl
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.fornecedorForm.reset()
+          this.router.navigate(['/administracao/funcionario-consultar'])
+
         }
       )
     } if (this.fornecedorForm.value.id > 0) {
@@ -131,6 +133,8 @@ export class AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent impl
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.fornecedorForm.reset()
+          this.router.navigate(['/administracao/funcionario-consultar'])
+
         }
       )
     }

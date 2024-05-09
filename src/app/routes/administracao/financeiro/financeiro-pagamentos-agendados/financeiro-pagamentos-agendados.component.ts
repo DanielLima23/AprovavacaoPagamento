@@ -95,8 +95,12 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogParcelasNaoAprovadasComponent } from 'app/routes/dialog/parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
+import { DialogPedidosPorParcelaComponent } from 'app/routes/dialog/pedidos-por-parcela/pedidos-por-parcela.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { ToastrService } from 'ngx-toastr';
+import { Overlay } from '@angular/cdk/overlay';
+import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
+
 
 interface ParcelaPorDia {
   [key: string]: any[];
@@ -132,13 +136,64 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     private pedidoService: PedidoService,
     private toastr: ToastrService,
     private datePipe: DatePipe,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private overlay: Overlay
   ) { }
 
   ngOnInit() {
     this.preencheListaParcelasPendentes();
   }
 
+  retornaPedidoPorParcelaId(id: any) {
+    // this.pedidoService.getPedidoPorParcelaId(id).subscribe(
+    //   (data:any) => {
+    //     return data.id
+    //   }
+    // )
+  }
+
+  verPedidoDaParcela(id: any) {
+    this.pedidoService.getPedidoPorParcelaId(id).subscribe(
+      (data: any) => {
+        if(data.formaPagamento[0].terceiro == null){
+          this.openDialogPedidoPorParcelaUsuario(data.id)
+
+        }else if(data.formaPagamento[0].terceiro){
+          this.openDialogPedidoPorParcelaFuncionario(data.id)
+        }
+      }
+    )
+  }
+
+  openDialogPedidoPorParcelaUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+  openDialogPedidoPorParcelaFuncionario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFuncionarioComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
   ngAfterViewInit() {
     // Atualiza o estado dos painéis
     this.restorePanelStates();

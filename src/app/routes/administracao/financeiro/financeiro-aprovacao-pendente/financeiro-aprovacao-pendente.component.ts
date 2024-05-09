@@ -79,9 +79,13 @@ export class AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent impleme
         const requestAprovaPedido = new RequestAprovaPedido(pedido, this.idCentroDeCusto, "")
         if (pedido.responsavel == 0) {
           requestAprovaPedido.responsavel = 1
-        } else if (pedido.financeiro == 0) {
+          requestAprovaPedido.financeiro = 1
+        }else{
           requestAprovaPedido.financeiro = 1
         }
+        // else if (pedido.financeiro == 0) {
+        //   requestAprovaPedido.financeiro = 1
+        // }
         this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
           (data: any) => {
             this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')

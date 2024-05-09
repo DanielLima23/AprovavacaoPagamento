@@ -1,6 +1,6 @@
 <form [formGroup]="meuPedidoForm" class="row mt-2">
 
-  <mat-card>
+  <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title>Adicionar meu pedido</mat-card-title>
@@ -8,7 +8,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="this.idPedido <= 0">
+  <mat-card *ngIf="this.idPedido <= 0 && this.ultimoPedido != null">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title>Último pedido</mat-card-title>
@@ -23,7 +23,7 @@
         </thead>
         <tbody >
           <tr class="text-center" >
-            <!-- <td class="color-table align-middle" style="width: 50%;">{{ ultimoPedido.dataCadastro | date}}</td> -->
+            <td class="color-table align-middle" style="width: 50%;">{{ dataUltimoPedido | date}}</td>
             <!-- <td class="color-table align-middle">{{ pedido.valorParcela | currency: 'BRL' }}</td>
             <td class="color-table align-middle">{{ pedido.dataPagamento | date }}</td>
             <td class="color-table align-middle">{{ pedido.dataVencimento | date }}</td>
@@ -45,7 +45,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Dados pessoais
         </mat-card-title>
       </mat-card-header>
@@ -103,7 +103,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Dados bancários
         </mat-card-title>
       </mat-card-header>
@@ -177,7 +177,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Descrição pagamento
         </mat-card-title>
       </mat-card-header>
@@ -225,11 +225,9 @@
             <mat-label>Valor total pagamento</mat-label>
             <input matInput
                    #inputValorTotal maxlength="50"
-                   placeholder="R$ 0,00" id="valorTotal"
+                   placeholder="R$ 00,00" id="valorTotal"
                    formControlName="valorTotal"
-                   type="text"
-                   [allowNegativeNumbers]="true" mask="separator.2" thousandSeparator="."
-                   prefix="R$" separatorLimit="1000000">
+                   type="text" >
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -302,7 +300,7 @@
     <mat-card-content>
       <div class="row">
         <mat-card-header>
-          <mat-card-title>
+          <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
             Rateio
           </mat-card-title>
         </mat-card-header>
@@ -351,7 +349,7 @@
   <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Parcelas
         </mat-card-title>
       </mat-card-header>
@@ -402,7 +400,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Anexos
         </mat-card-title>
       </mat-card-header>
@@ -450,7 +448,7 @@
 
     </mat-card-content>
   </mat-card>
-  <mat-card>
+  <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
         <button *ngIf="this.idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid"
@@ -462,7 +460,7 @@
           <mat-icon>save</mat-icon>
           Enviar pedido
         </button>
-        <button mat-flat-button extended color="accent" class="m-3"
+        <button  mat-flat-button extended color="accent" class="m-3"
                 (click)="voltar()">
           <mat-icon>reply</mat-icon>
           Voltar

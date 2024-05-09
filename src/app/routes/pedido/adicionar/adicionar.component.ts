@@ -70,7 +70,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
   arquivosBase64: Arquivo[] = [];
-
+  @Input()isIdPedidoPorParcela = 0
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -96,11 +96,16 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
     parcelaArrqay.push(this.parcelaForm);
   }
-
+  dataUltimoPedido: any
   retornaUltimoPedido() {
     this.pedidoService.getUltimoPedidoUsuario().subscribe(
       (data: any) => {
         this.ultimoPedido = data
+        this.dataUltimoPedido = this.ultimoPedido.dataCadastro
+        if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
+          // this.ultimoPedido = new Object()
+          this.dataUltimoPedido = ""
+        }
       }
     )
   }
@@ -199,6 +204,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     // this.idPedido = this.activatedRoute.snapshot.params['id']
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
+    if(this.idPedido == null || this.idPedido == undefined){
+      this.idPedido = this.isIdPedidoPorParcela
+    }
 
     if (this.idPedido > 0) {
       this.formaPagamentoForm.disable();
@@ -459,6 +467,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
       this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value)
       this.parcelaForm.get('parcelaReferencia')?.setValue(1)
+
     }
 
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
@@ -479,6 +488,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     }
 
+    //this.formaPagamentoForm.get('valorTotal')?.setValue(parseFloat(this.formaPagamentoForm.get('valorTotal')?.value.replace('.', '').replace(',', '.')))
 
     this.salvar();
 
@@ -769,6 +779,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
           this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value)
           this.parcelaForm.get('parcelaReferencia')?.setValue(1)
+          this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(1)
 
           const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
           parcelaArrqay.push(this.parcelaForm);
@@ -786,7 +797,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     }
   }
   validarGeracaoDeParcela(): boolean {
-    const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value);
+    const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value)
     const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;
     const dataPagamentoStr = this.formaPagamentoForm.get('dataPagamento')?.value;
     const dataVencimentoStr = this.formaPagamentoForm.get('dataVencimento')?.value;
@@ -1041,4 +1052,28 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  // mascaraMoeda(event: any): void {
+  //   const onlyDigits: string = event.target.value
+  //     .split("")
+  //     .filter((s: string) => /\d/.test(s))
+  //     .join("")
+  //     .padStart(3, "0");
+  //   const digitsFloat: string = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2);
+  //   event.target.value = this.maskCurrency(parseFloat(digitsFloat));
+  //   this.formaPagamentoForm.get('valorTotal')?.setValue(event.target.value.replace('R$',''))
+  // }
+
+  // maskCurrency(valor: number, locale: string = 'pt-BR', currency: string = 'BRL'): string {
+  //   return new Intl.NumberFormat(locale, {
+  //     style: 'currency',
+  //     currency
+  //   }).format(valor);
+  // }
+
+  // formatCurrency(value: string): string {
+  //   if (!value) return '';
+  //   const numberValue = parseFloat(value.replace(',', '.'));
+  //   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
+  // }
 }

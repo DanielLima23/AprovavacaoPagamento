@@ -148,6 +148,8 @@ export class AdministracaoTerceirosFornecedorFornecedorContaComponent implements
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaTerceiro = new ContaTerceiro()
+          this.router.navigate(['/administracao/fornecedor-adicionar/',this.idFornecedor])
+
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');
@@ -158,6 +160,8 @@ export class AdministracaoTerceirosFornecedorFornecedorContaComponent implements
         (data: Conta) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.contaTerceiro = new ContaTerceiro()
+          this.router.navigate(['/administracao/fornecedor-adicionar/',this.idFornecedor])
+
         },
         (error: any) => {
           this.toastrService.error('Erro ao salvar: ' + error.message, 'Erro');

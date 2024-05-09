@@ -56,7 +56,7 @@
 <mat-card>
   <mat-card-content>
     <mat-card-header>
-      <mat-card-title>Pagamentos agendados</mat-card-title>
+      <mat-card-title>Pagamentos agendados <button (click)="this.preencheListaParcelasPendentes()" mat-icon-button matTooltip="Atualizar lista"><mat-icon class="pt-1">refresh</mat-icon></button></mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-accordion *ngIf="listaParcelasPorMes">
@@ -101,6 +101,9 @@
                       <td style="width: 16%;" class="color-table align-middle">
                         <button mat-icon-button matTooltip="Pagar" color="primary" (click)="pagarParcela(item.id)" [disabled]="getSelectedRows().length > 0">
                           <mat-icon>check_circle</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="Ver pedido dessa parcela" color="accent" (click)="verPedidoDaParcela(item.id)">
+                          <mat-icon>visibility</mat-icon>
                         </button>
                       </td>
                     </tr>

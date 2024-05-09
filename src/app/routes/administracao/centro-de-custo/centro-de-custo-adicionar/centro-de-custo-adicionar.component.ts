@@ -102,6 +102,8 @@ export class AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent implement
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.centroCustoForm.reset()
+          this.router.navigate(['/administracao/centro-de-custo-consultar']);
+
         }
       )
     }
@@ -111,6 +113,8 @@ export class AdministracaoCentroDeCustoCentroDeCustoAdicionarComponent implement
         (data: any) => {
           this.toastrService.success('Atualizado com sucesso!', 'Sucesso');
           this.centroCustoForm.reset()
+          this.router.navigate(['/administracao/centro-de-custo-consultar']);
+
         }
       )
     }

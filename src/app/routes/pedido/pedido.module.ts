@@ -22,6 +22,6 @@ const COMPONENTS_DYNAMIC: any[] = [];
     ...COMPONENTS_DYNAMIC
   ],
   providers:[DatePipe],
-  exports:[PedidoConsultarComponent]
+  exports:[PedidoConsultarComponent, PedidoAdicionarComponent,PedidoFuncionarioComponent]
 })
 export class PedidoModule { }

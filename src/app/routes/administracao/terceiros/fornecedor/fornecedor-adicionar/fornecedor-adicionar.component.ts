@@ -124,6 +124,8 @@ export class AdministracaoTerceirosFornecedorFornecedorAdicionarComponent implem
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.fornecedorForm.reset()
+          this.router.navigate(['/administracao/fornecedor-consultar'])
+
         }
       )
     } if (this.fornecedorForm.value.id > 0) {
@@ -131,6 +133,8 @@ export class AdministracaoTerceirosFornecedorFornecedorAdicionarComponent implem
         (data: any) => {
           this.toastrService.success('Salvo com sucesso!', 'Sucesso');
           this.fornecedorForm.reset()
+          this.router.navigate(['/administracao/fornecedor-consultar'])
+
         }
       )
     }

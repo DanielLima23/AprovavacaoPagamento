@@ -144,7 +144,7 @@ export class AdministracaoUsuariosEditarComponent implements OnInit {
       (data: any) => {
         if(data != null || data != undefined){
           this.toastr.success('Usuário atualizado com sucesso', 'Sucesso')
-          this.router.navigate(['/administracao/editar', this.idUsuario]);
+          this.router.navigate(['/administracao/lista']);
           this.preencheListaContasUsuario()
         }
         else{

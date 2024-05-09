@@ -42,9 +42,13 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
     if(this.pedido.responsavel == 0){
       requestAprovaPedido.responsavel = 1
-    }else if(this.pedido.financeiro == 0){
+      requestAprovaPedido.financeiro = 1
+    }else{
       requestAprovaPedido.financeiro = 1
     }
+    // else if(this.pedido.financeiro == 0){
+    //   requestAprovaPedido.financeiro = 1
+    // }
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
       (data:any) => {
         this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
@@ -243,7 +247,17 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
+            const contaSelecionada = this.listaContasUsuario.find(conta => {
+              if (pedido.formaPagamento[0].contaBancaria) {
+                return conta.id === pedido.formaPagamento[0].contaBancaria.id;
+              } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+                return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
+              } else {
+                return false; // Se nenhum dos dois estiver definido, retorna falso
+              }
+            })?.id;
+
+
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }

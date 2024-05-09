@@ -206,4 +206,18 @@ export class PedidoService {
   }
 
 
+  getPedidoPorParcelaId(parcelaID: any){
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      parcelaID: parcelaID
+    });
+
+    return this.http.get(this.url + 'api/pedido/RetornaPedidoPorParcelaId',{ headers })
+  }
+
+
 }
