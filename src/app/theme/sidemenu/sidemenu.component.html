@@ -3,6 +3,7 @@
 </ng-container>
 
 <ng-template #menuListTpl let-menuList="menuList" let-parentRoute="parentRoute" let-level="level">
+
   <ul navAccordion class="matero-sidemenu level-{{level}}" [class.submenu]="level>0">
     <ng-container *ngFor="let menuItem of menuList">
       <ng-template [ngxPermissionsOnly]="menuItem.permissions?.only"
@@ -18,19 +19,20 @@
                           [ngTemplateOutletContext]="{item: menuItem, level: level}">
             </ng-container>
           </a>
-
-          <a class="menu-heading" [href]="menuItem.route"
+          <!-- <mat-divider *ngIf="menuItem.children"></mat-divider> -->
+          <a class="menu-heading " [href]="menuItem.route"
              *ngIf="menuItem.type==='extLink'" matRipple [matRippleDisabled]="!ripple">
             <ng-container [ngTemplateOutlet]="linkTypeTpl"
                           [ngTemplateOutletContext]="{item: menuItem, level: level}">
             </ng-container>
           </a>
 
-          <a class="menu-heading" [href]="menuItem.route" target="_blank"
+          <a class="menu-heading " [href]="menuItem.route" target="_blank"
              *ngIf="menuItem.type==='extTabLink'" matRipple [matRippleDisabled]="!ripple">
             <ng-container [ngTemplateOutlet]="linkTypeTpl"
                           [ngTemplateOutletContext]="{item: menuItem, level: level}">
             </ng-container>
+
           </a>
 
           <button navAccordionToggle class="menu-heading menu-toggle"
@@ -46,9 +48,9 @@
                           parentRoute: parentRoute.concat([menuItem.route]),
                           level: level + 1
                         }">
+
           </ng-container>
         </li>
-
       </ng-template>
     </ng-container>
   </ul>

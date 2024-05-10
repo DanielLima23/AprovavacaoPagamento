@@ -21,6 +21,7 @@ import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-pedido-fornecedor',
@@ -431,6 +432,13 @@ export class PedidoFornecedorComponent implements OnInit {
   voltar() {
     this.router.navigate(['/pedido/consultar']);
 
+  }
+
+
+  filteredBancos: Observable<any[]> | undefined;
+  private _filterBancos(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.listaBancos.filter(banco => banco.toLowerCase().includes(filterValue));
   }
 
 }

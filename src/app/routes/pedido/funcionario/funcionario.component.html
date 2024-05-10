@@ -64,6 +64,26 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+
+<!--
+
+          <mat-form-field style="width: 100%;">
+            <mat-label>Selecione um funcionario</mat-label>
+            <input type="text" matInput formControlName="TerceiroID" [matAutocomplete]="auto"
+                   placeholder="Selecione um funcionario">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event)" [displayWith]="nomeFuncionario">
+              <mat-option *ngFor="let funcionario of filteredFuncionarios | async" [value]="funcionario.id">
+                {{ funcionario.nome }}
+              </mat-option>
+            </mat-autocomplete>
+
+          </mat-form-field>
+
+ -->
+
+
+
+
         </div>
         <div class="col-sm-6" *ngIf="!meuPedidoForm.get('contaCnpj')?.value">
           <mat-form-field floatLabel="always" style="width: 100%;">
@@ -280,14 +300,15 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <!-- <div *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value">
+        <div *ngIf="isDateParcelaInvalid" align="center">
           <button formControlName="gerarParcelas" mat-flat-button extended color="primary"
-                  class="col-sm-12"
+                  id="btnGerarParcela"
+                  class="col-sm-10 pulsating-button"
                   (click)="gerarParcelas()">
             <mat-icon>refresh</mat-icon>
             Gerar parcelas
           </button>
-        </div> -->
+        </div>
       </div>
     </mat-card-content>
   </mat-card>

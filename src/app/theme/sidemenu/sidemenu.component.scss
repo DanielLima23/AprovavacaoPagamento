@@ -32,6 +32,20 @@
     visibility: hidden;
     transition: transitions.fast-out-slow(max-height), transitions.fast-out-slow(visibility);
     transform: translateZ(0) !important;
+
+    &.level-1 {
+      background-color: #3b3b3b; // Defina a cor que você deseja
+    }
+
+    // Define a cor de fundo para o segundo nível de submenus
+    &.level-2 {
+      background-color: #292929; // Defina a cor que você deseja
+    }
+
+    // Define a cor de fundo para o terceiro nível de submenus
+    &.level-3 {
+      background-color: #151515; // Defina a cor que você deseja
+    }
   }
 
   .menu-heading {

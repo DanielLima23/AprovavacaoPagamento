@@ -30,6 +30,8 @@ import { ToastrService } from 'ngx-toastr';
 import { PedidoService } from '../pedido.service';
 import { TerceiroService } from 'app/routes/administracao/terceiros/terceiro.service';
 import { DialogAddContaFuncionarioComponent } from 'app/routes/dialog/add-conta-funcionario/add-conta-funcionario.component';
+import { map, Observable, startWith } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-pedido-funcionario',
@@ -72,7 +74,7 @@ export class PedidoFuncionarioComponent implements OnInit {
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
   arquivosBase64: Arquivo[] = [];
-  listaFuncionario: Terceiro[] = []
+  listaFuncionario: any[] = []
   @Input() isIdPedidoPorParcela = 0
 
   constructor(private formBuilder: FormBuilder,
@@ -89,6 +91,8 @@ export class PedidoFuncionarioComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private terceiroService: TerceiroService
   ) {
+    this.preencheListaFuncionario()
+
     this.meuPedidoForm.valueChanges.subscribe(s => {
       console.log(s);
     });
@@ -105,7 +109,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
     ID: new UntypedFormControl(0),
     TipoPedido: new UntypedFormControl(2),
-    TerceiroID: new UntypedFormControl(0),
+    TerceiroID: new UntypedFormControl(undefined),
     descricao: new UntypedFormControl(undefined),
     listaFormaPagamento: new UntypedFormArray([]),
     nome: new UntypedFormControl(undefined, Validators.required),
@@ -193,7 +197,7 @@ export class PedidoFuncionarioComponent implements OnInit {
     // this.idPedido = this.activatedRoute.snapshot.params['id']
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
-    if(this.idPedido == null || this.idPedido == undefined){
+    if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
 
@@ -204,7 +208,6 @@ export class PedidoFuncionarioComponent implements OnInit {
       return;
     }
     this.idPedido = 0
-
     this.desabilitarInputs()
     this.getCurrentDate();
     //this.preencheUsuario()
@@ -212,20 +215,20 @@ export class PedidoFuncionarioComponent implements OnInit {
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
 
     this.preencheQtdParcelas()
-    // this.preencheListaCentros()
-    this.preencheListaFuncionario()
+
+    //this.preencheListaFuncionario()
   }
 
 
 
 
   dataUltimoPedido: any
-  retornaUltimoPedido(id:any) {
+  retornaUltimoPedido(id: any) {
     this.pedidoService.getUltimoPedidoFuncionario(id).subscribe(
       (data: any) => {
         this.ultimoPedido = data
         this.dataUltimoPedido = this.ultimoPedido.dataCadastro
-        if(this.ultimoPedido == null || this.ultimoPedido == undefined){
+        if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
           this.ultimoPedido.dataCadastro = ""
           this.limparTela()
         }
@@ -365,6 +368,10 @@ export class PedidoFuncionarioComponent implements OnInit {
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
         this.listaFuncionario = data.filter((funcionario: any) => funcionario.tipoTerceiro === 0);
+        this.filteredFuncionarios = this.meuPedidoForm.controls['TerceiroID'].valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterFuncionarios(value))
+        );
       }
     )
   }
@@ -408,7 +415,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
   voltar() {
     if (this.isRelatorio) {
-      this.router.navigate(['/administracao/relatorio-pedido'], { state: {  relatorio: 'funcionario' } });
+      this.router.navigate(['/administracao/relatorio-pedido'], { state: { relatorio: 'funcionario' } });
     } else {
       this.router.navigate(['/pedido/funcionario-consultar']);
     }
@@ -484,12 +491,35 @@ export class PedidoFuncionarioComponent implements OnInit {
       this.parcelaForm.get('parcelaReferencia')?.setValue(1)
     }
 
+    if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
+      const listaParcelas = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+
+      if (listaParcelas.length > 0) {
+        const primeiroItem = listaParcelas.at(0);
+
+        const primeiroItemValues = primeiroItem.value;
+
+        if (primeiroItemValues.dataPagamento != this.formaPagamentoForm.get('dataPagamento')?.value) {
+          this.toastr.warning('A data de pagamento foi alterada, clique no botão "Gerar parcelas" para atualizar".', 'Atenção')
+          this.isDateParcelaInvalid = true
+          this.rolarParaSecaoDestino()
+          this.isSubmitting = false
+          return
+        }
+      }
+    }
 
     this.salvar();
 
   }
   dataVencimentoValidation: Date = new Date()
-
+  isDateParcelaInvalid: boolean = false;
+  rolarParaSecaoDestino() {
+    const elementoDestino = document.querySelector('#tipoPagamento');
+    if (elementoDestino) {
+      elementoDestino.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   salvar() {
 
@@ -736,7 +766,7 @@ export class PedidoFuncionarioComponent implements OnInit {
       this.dataSource.data = [...this.parcelas];
 
     }
-    console.log(this.parcelas);
+    this.isDateParcelaInvalid = false
   }
 
   formatarData(data: Date): string {
@@ -1088,6 +1118,25 @@ export class PedidoFuncionarioComponent implements OnInit {
   }
 
 
+  filteredFuncionarios: Observable<any[]> | undefined;
+  private _filterFuncionarios(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.listaFuncionario.filter(funcionario => funcionario.nome.toLowerCase().includes(filterValue));
+  }
 
+  onSelect(event: MatAutocompleteSelectedEvent) {
+    const funcionario = event.option.value;
+    this.meuPedidoForm.get('TerceiroID')!.setValue(funcionario);
+  }
+
+  get nomeFuncionario(): any {
+    const idFuncionario = this.meuPedidoForm.get('TerceiroID')?.value
+
+    const func = this.listaFuncionario.filter(funcionario => funcionario.id == idFuncionario)
+    console.log(func)
+    return func
+  }
 
 }
+
+
