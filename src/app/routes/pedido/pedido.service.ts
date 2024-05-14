@@ -192,7 +192,7 @@ export class PedidoService {
     return this.http.get(this.url + 'api/pedido/RetornaUltimoPedidoPorUsuario',{ headers })
   }
 
-  getUltimoPedidoFuncionario(terceiroID: any){
+  getUltimoPedidoTerceiro(terceiroID: any){
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 

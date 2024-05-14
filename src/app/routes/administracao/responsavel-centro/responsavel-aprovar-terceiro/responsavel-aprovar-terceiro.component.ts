@@ -27,29 +27,25 @@ import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
 import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.service';
+import { TerceiroService } from '../../terceiros/terceiro.service';
 
 @Component({
-  selector: 'app-administracao-ceo-ceo-aprovar',
-  templateUrl: './ceo-aprovar.component.html',
-  styleUrls: ['./ceo-aprovar.component.scss']
+  selector: 'app-administracao-responsavel-centro-responsavel-aprovar-terceiro',
+  templateUrl: './responsavel-aprovar-terceiro.component.html',
+  styleUrls: ['./responsavel-aprovar-terceiro.component.scss']
 })
-export class AdministracaoCeoCeoAprovarComponent implements OnInit {
+export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent implements OnInit {
 
   recusarPedido() {
     throw new Error('Method not implemented.');
   }
   aprovarPedido() {
-    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, "")
-    // requestAprovaPedido.ceo = 1;
-    if (this.pedido.responsavel == 0) {
-      requestAprovaPedido.responsavel = 1
-    } else if (this.pedido.ceo == 0) {
-      requestAprovaPedido.ceo = 1
-    }
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
+    requestAprovaPedido.responsavel = 1;
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
-      (data: any) => {
-        this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')
-        this.router.navigate(['/administracao/ceo-aprovacao-pendente'])
+      (data:any) => {
+        this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
+        this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
       }
     )
   }
@@ -100,7 +96,8 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
     private centroCustoService: CentroDeCustoService,
     private currencyPipe: CurrencyPipe,
     private pedidoService: PedidoService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private terceiroService: TerceiroService
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras.state) {
@@ -200,7 +197,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
 
-    if (!this.pedido.pedidoId) {
+    if(!this.pedido.pedidoId){
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
     }
 
@@ -226,27 +223,19 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
-        this.usuarioService.getById(pedido.usuario.id).subscribe(
-          (usuario: any) => {
-            this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
-            this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
-            this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
-            this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
-            this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+        this.terceiroService.getTerceiroById(pedido.formaPagamento[0].terceiro.id).subscribe(
+          (terceiro: any) => {
+            this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
+            this.meuPedidoForm.get('cpf')?.setValue(terceiro.cpf);
+            this.meuPedidoForm.get('cnpj')?.setValue(terceiro.cnpj);
+            this.meuPedidoForm.get('contaCnpj')?.setValue(terceiro.tipoCnpj);
+            this.formaPagamentoForm.get('idUsuario')?.setValue(terceiro.id);
           }
         )
-        this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
+        this.contaService.getListContasPorIdTerceiro(pedido.formaPagamento[0].terceiro.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            // const contaSelecionada = this.listaContasUsuario.find(conta => {
-            //   if (pedido.formaPagamento[0].contaBancaria) {
-            //     return conta.id === pedido.formaPagamento[0].contaBancaria.id;
-            //   } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
-            //     return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
-            //   } else {
-            //     return false; // Se nenhum dos dois estiver definido, retorna falso
-            //   }
-            // })?.id;
+
             let contaSelecionada = 0
 
             if(pedido.formaPagamento[0].contaBancaria){
@@ -254,8 +243,6 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
             } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
               contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
             }
-
-
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
@@ -347,7 +334,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
   }
 
   voltar() {
-    this.router.navigate(['/administracao/ceo-aprovacao-pendente']);
+    this.router.navigate(['/administracao/responsavel-aprovacao-pendente']);
 
   }
   validationSave() {
@@ -517,8 +504,8 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
 
   atualizarDadosBancariosInput() {
     const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    if(idConta > 0) {
-      this.contaService.getContaPorIdUsuario(idConta).subscribe(
+    if(idConta > 0){
+      this.contaService.getContaPorIdTerceiro(idConta).subscribe(
         (data: any) => {
           this.formaPagamentoForm.get('conta')?.setValue(data.conta);
           this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
@@ -657,7 +644,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
-          quantidadeParcelas: 0,
+          quantidadeParcelas:0,
           exclusao: false,
         };
         this.parcelas.push(parcela);

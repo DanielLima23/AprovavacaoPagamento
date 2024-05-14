@@ -39,19 +39,19 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
     throw new Error('Method not implemented.');
   }
   aprovarPedido() {
-    const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
-    if(this.pedido.responsavel == 0){
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, "")
+    if (this.pedido.responsavel == 0) {
       requestAprovaPedido.responsavel = 1
       requestAprovaPedido.financeiro = 1
-    }else{
+    } else {
       requestAprovaPedido.financeiro = 1
     }
     // else if(this.pedido.financeiro == 0){
     //   requestAprovaPedido.financeiro = 1
     // }
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
-      (data:any) => {
-        this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
+      (data: any) => {
+        this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')
         this.router.navigate(['/administracao/financeiro-aprovacao-pendente'])
       }
     )
@@ -208,7 +208,7 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
 
-    if(!this.pedido.pedidoId){
+    if (!this.pedido.pedidoId) {
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
     }
     //this.idPedido = this.activatedRoute.snapshot.params['id']
@@ -247,15 +247,22 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => {
-              if (pedido.formaPagamento[0].contaBancaria) {
-                return conta.id === pedido.formaPagamento[0].contaBancaria.id;
-              } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
-                return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
-              } else {
-                return false; // Se nenhum dos dois estiver definido, retorna falso
-              }
-            })?.id;
+            // const contaSelecionada = this.listaContasUsuario.find(conta => {
+            //   if (pedido.formaPagamento[0].contaBancaria) {
+            //     return conta.id === pedido.formaPagamento[0].contaBancaria.id;
+            //   } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+            //     return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
+            //   } else {
+            //     return false; // Se nenhum dos dois estiver definido, retorna falso
+            //   }
+            // })?.id;
+            let contaSelecionada = 0
+
+            if (pedido.formaPagamento[0].contaBancaria) {
+              contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
+            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+              contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
+            }
 
 
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
@@ -518,15 +525,18 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
   }
 
   atualizarDadosBancariosInput() {
-    const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    this.contaService.getContaPorIdUsuario(dado).subscribe(
-      (data: any) => {
-        this.formaPagamentoForm.get('conta')?.setValue(data.conta);
-        this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
-        this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
-        this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
-      }
-    )
+    const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
+    if (idConta > 0) {
+      this.contaService.getContaPorIdUsuario(idConta).subscribe(
+        (data: any) => {
+          this.formaPagamentoForm.get('conta')?.setValue(data.conta);
+          this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
+          this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
+          this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
+        }
+      )
+    }
+
   }
 
   desabilitarInputs() {
@@ -656,7 +666,7 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
-          quantidadeParcelas:0,
+          quantidadeParcelas: 0,
           exclusao: false,
         };
         this.parcelas.push(parcela);

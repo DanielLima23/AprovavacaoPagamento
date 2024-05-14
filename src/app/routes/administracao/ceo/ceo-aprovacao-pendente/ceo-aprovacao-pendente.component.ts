@@ -35,8 +35,11 @@ export class AdministracaoCeoCeoAprovacaoPendenteComponent implements OnInit {
       })
   }
   verDetalhesPedido(pedido: any) {
-    this.router.navigate(['/administracao/ceo-aprovar',pedido.pedidoId], { state: { pedido: pedido }});
-    //this.router.navigate(['/administracao/financeiro-aprovar'], { state: { pedido: pedido } });
+    if(pedido.terceiro){
+      this.router.navigate(['/administracao/ceo-aprovar-terceiro',pedido.pedidoId], { state: { pedido: pedido }});
+    }else {
+      this.router.navigate(['/administracao/ceo-aprovar',pedido.pedidoId], { state: { pedido: pedido }});
+    }
   }
 
   mensagemConfirmacao: string = "Deseja aprovar esse pedido?"

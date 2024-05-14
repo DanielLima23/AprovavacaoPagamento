@@ -27,6 +27,7 @@ import { PedidoService } from '../pedido.service';
 import { RequestPedido } from 'app/models/auxiliar/request-pedido';
 import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 
 
 @Component({
@@ -70,7 +71,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
   arquivosBase64: Arquivo[] = [];
-  @Input()isIdPedidoPorParcela = 0
+  @Input() isIdPedidoPorParcela = 0
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -101,10 +102,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.pedidoService.getUltimoPedidoUsuario().subscribe(
       (data: any) => {
         this.ultimoPedido = data
-        this.dataUltimoPedido = this.ultimoPedido.dataCadastro
         if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
-          // this.ultimoPedido = new Object()
           this.dataUltimoPedido = ""
+        } else {
+          this.dataUltimoPedido = this.ultimoPedido.dataCadastro
+
         }
       }
     )
@@ -204,7 +206,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     // this.idPedido = this.activatedRoute.snapshot.params['id']
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
-    if(this.idPedido == null || this.idPedido == undefined){
+    if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
 
@@ -431,18 +433,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const today = new Date();
     const formattedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    if (dataVencimento) {
-      const [day, month, year] = dataVencimento.split('/');
-      const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-
-      if (date < formattedDate) {
-        this.toastr.warning('A data de vencimento não pode ser anterior à data atual', 'Atenção');
-        this.isSubmitting = false;
-        return;
-      }
-    }
-
-    if (dataPagamento) {
+     if (dataPagamento) {
       const [day, month, year] = dataPagamento.split('/');
       const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
 
@@ -461,7 +452,33 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     }
 
+    if (dataVencimento) {
+      const [day, month, year] = dataVencimento.split('/');
+      const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+      const limiteDias = 5;
 
+      const dataLimite = new Date();
+      dataLimite.setDate(dataLimite.getDate() + limiteDias);
+
+      if (date < formattedDate) {
+        this.toastr.warning('A data de vencimento não pode ser anterior à data atual', 'Atenção');
+        this.isSubmitting = false;
+        return;
+      }
+
+      if (date < dataLimite) {
+        this.mensagemConfirmacao = 'A data de vencimento não pode ser menor que ' + limiteDias + ' dias a partir de hoje, CONFIRMA o envio do pedido?'
+        this.openDialogConfirmacao()
+      }
+    }
+
+
+
+
+
+  }
+
+  enviarDados(){
     if (!this.formaPagamentoForm.get('exibirParcela')?.value) {
       this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
       this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
@@ -488,11 +505,31 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     }
 
-    //this.formaPagamentoForm.get('valorTotal')?.setValue(parseFloat(this.formaPagamentoForm.get('valorTotal')?.value.replace('.', '').replace(',', '.')))
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1 && this.arquivosBase64.length <= 0) {
+      this.toastr.warning('Pagamentos em boleto exigem pelo menos um anexo.', 'Atenção')
+      this.isSubmitting = false
+      return
+    }
 
     this.salvar();
-
   }
+
+  mensagemConfirmacao: string = ""
+  openDialogConfirmacao(): void {
+    const dialogRef = this.dialog.open(DialogConfirmacaoComponent, {
+      data: { mensagemConfirmacao: this.mensagemConfirmacao }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.enviarDados()
+      }else{
+        this.isSubmitting = false
+        return
+      }
+    });
+  }
+
   dataVencimentoValidation: Date = new Date()
   isDateParcelaInvalid: boolean = false;
 
@@ -542,6 +579,12 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.pgtoParcelado = true;
     } else {
       this.pgtoParcelado = false;
+    }
+
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+      this.formaPagamentoForm.get('idContaBancaria')?.setValue(0)
+    } else {
+      this.formaPagamentoForm.get('idContaBancaria')?.setValue(undefined)
 
     }
   }
@@ -592,15 +635,18 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   atualizarDadosBancariosInput() {
-    const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    this.contaService.getContaPorIdUsuario(dado).subscribe(
-      (data: any) => {
-        this.formaPagamentoForm.get('conta')?.setValue(data.conta);
-        this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
-        this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
-        this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
-      }
-    )
+    const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
+    if (idConta > 0) {
+      this.contaService.getContaPorIdUsuario(idConta).subscribe(
+        (data: any) => {
+          this.formaPagamentoForm.get('conta')?.setValue(data.conta);
+          this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
+          this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
+          this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
+        }
+      )
+    }
+
   }
 
   desabilitarInputs() {

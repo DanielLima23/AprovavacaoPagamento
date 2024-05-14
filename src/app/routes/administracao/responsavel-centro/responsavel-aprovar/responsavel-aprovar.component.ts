@@ -232,15 +232,29 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => {
-              if (pedido.formaPagamento[0].contaBancaria) {
-                return conta.id === pedido.formaPagamento[0].contaBancaria.id;
-              } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
-                return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
-              } else {
-                return false; // Se nenhum dos dois estiver definido, retorna falso
-              }
-            })?.id;            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+
+
+            // const contaSelecionada = this.listaContasUsuario.find(conta => {
+            //   if (pedido.formaPagamento[0].contaBancaria) {
+            //     return conta.id === pedido.formaPagamento[0].contaBancaria.id;
+            //   } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+            //     return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
+            //   } else {
+            //     return false;
+            //   }
+            // })?.id;
+
+            let contaSelecionada = 0
+
+            if(pedido.formaPagamento[0].contaBancaria){
+              contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
+            } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
+              contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
+            }
+
+
+
+            this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
         )
@@ -500,15 +514,18 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
   }
 
   atualizarDadosBancariosInput() {
-    const dado = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    this.contaService.getContaPorIdUsuario(dado).subscribe(
-      (data: any) => {
-        this.formaPagamentoForm.get('conta')?.setValue(data.conta);
-        this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
-        this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
-        this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
-      }
-    )
+    const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
+    if(idConta > 0){
+      this.contaService.getContaPorIdUsuario(idConta).subscribe(
+        (data: any) => {
+          this.formaPagamentoForm.get('conta')?.setValue(data.conta);
+          this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
+          this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
+          this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
+        }
+      )
+    }
+
   }
 
   desabilitarInputs() {

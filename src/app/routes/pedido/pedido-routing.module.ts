@@ -13,8 +13,8 @@ const routes: Routes = [{ path: 'adicionar', component: PedidoAdicionarComponent
 { path: 'consultar', component: PedidoConsultarComponent ,canActivate: [authGuard],  data: { roles: [0,1,2,3,4] }},
 { path: 'funcionario/:id', component: PedidoFuncionarioComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4,6] } },
 { path: 'funcionario', component: PedidoFuncionarioComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4,6] } },
-{ path: 'fornecedor', component: PedidoFornecedorComponent, canActivate: [authGuard],  data: { roles: [1] } },
-{ path: 'fornecedor-consultar', component: PedidoFornecedorConsultarComponent, canActivate: [authGuard],  data: { roles: [1] } },
+{ path: 'fornecedor', component: PedidoFornecedorComponent, canActivate: [authGuard],  data: { roles: [0,1,2,3,4,6] } },
+{ path: 'fornecedor-consultar', component: PedidoFornecedorConsultarComponent, canActivate: [authGuard],  data: { roles: [0,1,2,3,4,6] } },
 { path: 'funcionario-consultar', component: PedidoFuncionarioConsultarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4,6] } }
 ];
 

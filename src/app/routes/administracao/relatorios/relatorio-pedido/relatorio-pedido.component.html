@@ -32,7 +32,7 @@
       <div class="col-sm-12">
         <mat-radio-group aria-label="Select an option" formControlName="tipoRelatorio">
           <mat-radio-button value="usuario" (change)="radioUsuario()">Usuários</mat-radio-button>
-          <mat-radio-button value="funcionario" (change)="radioFuncionario()">Funcionários</mat-radio-button>
+          <mat-radio-button value="fornecedor" (change)="radioFornecedor()">Fornecedores</mat-radio-button>
         </mat-radio-group>
       </div>
 
@@ -47,13 +47,13 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field *ngIf="consultarPedidoForm.get('tipoRelatorio')?.value === 'funcionario'" style="width: 100%;" class="col-sm-6 mt-2">
+      <mat-form-field *ngIf="consultarPedidoForm.get('tipoRelatorio')?.value === 'fornecedor'" style="width: 100%;" class="col-sm-6 mt-2">
         <mat-label>Selecione um funcionário</mat-label>
         <mat-select name="idTerceiro" formControlName="idTerceiro" (selectionChange)="setValorNullCentroDeCusto()"
                     matTooltip="Quando um funcionário é selecionado, o centro de custo previamente selecionado é automaticamente desselecionado.">
           <mat-option [value]="0">Todos</mat-option>
-          <mat-option *ngFor="let funcionario of listaFuncionarios" [value]="funcionario.id">
-            {{ funcionario.nome }}
+          <mat-option *ngFor="let fornecedor of listaFornecedores" [value]="fornecedor.id">
+            {{ fornecedor.nome }}
           </mat-option>
         </mat-select>
       </mat-form-field>

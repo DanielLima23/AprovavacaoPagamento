@@ -24,6 +24,10 @@ import { AdministracaoTerceirosFuncionarioFuncionarioContaComponent } from './te
 import { AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent } from './financeiro/financeiro-pagamentos-agendados/financeiro-pagamentos-agendados.component';
 import { authGuard } from '@core';
 import { AdministracaoRelatoriosRelatorioPedidoComponent } from './relatorios/relatorio-pedido/relatorio-pedido.component';
+import { AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent } from './responsavel-centro/responsavel-aprovar-terceiro/responsavel-aprovar-terceiro.component';
+import { AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent } from './financeiro/financeiro-aprovar-terceiro/financeiro-aprovar-terceiro.component';
+import { AdministracaoCeoCeoAprovarTerceiroComponent } from './ceo/ceo-aprovar-terceiro/ceo-aprovar-terceiro.component';
+import { AdministracaoDiretorDiretorAprovarTerceiroComponent } from './diretor/diretor-aprovar-terceiro/diretor-aprovar-terceiro.component';
 
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
@@ -36,19 +40,32 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'ceo-aprovacao-pendente', component: AdministracaoCeoCeoAprovacaoPendenteComponent, canActivate: [authGuard],  data: { roles: [3] } },
 { path: 'ceo-aprovar', component: AdministracaoCeoCeoAprovarComponent,canActivate: [authGuard],  data: { roles: [3] } },
 { path: 'ceo-aprovar/:id', component: AdministracaoCeoCeoAprovarComponent,canActivate: [authGuard],  data: { roles: [3] } },
+{ path: 'ceo-aprovar-terceiro', component: AdministracaoCeoCeoAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [3] } },
+{ path: 'ceo-aprovar-terceiro/:id', component: AdministracaoCeoCeoAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [3] } },
+
 
 { path: 'diretor-aprovacao-pendente', component: AdministracaoDiretorDiretorAprovacaoPendenteComponent,canActivate: [authGuard],  data: { roles: [4] } },
 { path: 'diretor-aprovar', component: AdministracaoDiretorDiretorAprovarComponent,canActivate: [authGuard],  data: { roles: [4] } },
 { path: 'diretor-aprovar/:id', component: AdministracaoDiretorDiretorAprovarComponent,canActivate: [authGuard],  data: { roles: [4] } },
+{ path: 'diretor-aprovar-terceiro', component: AdministracaoDiretorDiretorAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [4] }  },
+{ path: 'diretor-aprovar-terceiro/:id', component: AdministracaoDiretorDiretorAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [4] }  },
+
+
 {
   path: 'financeiro-aprovacao-pendente', component: AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent, canActivate: [authGuard],  data: { roles: [1] }},
 { path: 'financeiro-aprovar', component: AdministracaoFinanceiroFinanceiroAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'financeiro-aprovar/:id', component: AdministracaoFinanceiroFinanceiroAprovarComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'financeiro-pagamentos-agendados', component: AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent, canActivate: [authGuard],  data: { roles: [1] } },
+{ path: 'financeiro-aprovar-terceiro', component: AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent, canActivate: [authGuard],  data: { roles: [1] }},
+{ path: 'financeiro-aprovar-terceiro/:id', component: AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent, canActivate: [authGuard],  data: { roles: [1] }},
+
 
 { path: 'responsavel-aprovacao-pendente', component: AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent,canActivate: [authGuard],  data: { roles: [6] } },
 { path: 'responsavel-aprovar', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
 { path: 'responsavel-aprovar/:id', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
+{ path: 'responsavel-aprovar-terceiro', component: AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [6] }  },
+{ path: 'responsavel-aprovar-terceiro/:id', component: AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [6] }  },
+
 
 { path: 'funcionario-consultar', component: AdministracaoTerceirosFuncionarioFuncionarioConsultarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-adicionar', component: AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },

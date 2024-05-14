@@ -18,6 +18,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent
 
   pedidos: any = [];
   selectedDate: any;
+  idPedido:any
 
   constructor(private pedidoService: PedidoService,
     private router: Router,
@@ -35,10 +36,20 @@ export class AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent
       })
   }
   verDetalhesPedido(pedido: any) {
-    this.router.navigate(['/administracao/responsavel-aprovar',pedido.pedidoId], { state: { pedido: pedido }});
+    if(pedido.terceiro){
+      this.router.navigate(['/administracao/responsavel-aprovar-terceiro',pedido.pedidoId], { state: { pedido: pedido }});
+    }else {
+      this.router.navigate(['/administracao/responsavel-aprovar',pedido.pedidoId], { state: { pedido: pedido }});
+    }
+  }
 
-    //this.router.navigate(['/administracao/financeiro-aprovar'], { state: { pedido: pedido } });
-
+  verPedido(pedido: any) {
+    this.idPedido = pedido.pedidoId
+    if (pedido.terceiro) {
+      this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    } else if (pedido.usuario) {
+      this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    }
   }
 
   mensagemConfirmacao: string = "Deseja aprovar esse pedido?"

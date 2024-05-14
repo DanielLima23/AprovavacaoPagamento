@@ -224,13 +224,14 @@ export class PedidoFuncionarioComponent implements OnInit {
 
   dataUltimoPedido: any
   retornaUltimoPedido(id: any) {
-    this.pedidoService.getUltimoPedidoFuncionario(id).subscribe(
+    this.pedidoService.getUltimoPedidoTerceiro(id).subscribe(
       (data: any) => {
         this.ultimoPedido = data
-        this.dataUltimoPedido = this.ultimoPedido.dataCadastro
         if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
-          this.ultimoPedido.dataCadastro = ""
+          this.dataUltimoPedido = ""
           this.limparTela()
+        }else{
+          this.dataUltimoPedido = this.ultimoPedido.dataCadastro
         }
       }
     )

@@ -37,9 +37,12 @@ export class AdministracaoFinanceiroFinanceiroAprovacaoPendenteComponent impleme
       })
   }
   verDetalhesPedido(pedido: any) {
-    this.router.navigate(['/administracao/financeiro-aprovar', pedido.pedidoId], { state: { pedido: pedido } });
+    if(pedido.terceiro){
+      this.router.navigate(['/administracao/financeiro-aprovar-terceiro', pedido.pedidoId], { state: { pedido: pedido } });
+    }else {
+      this.router.navigate(['/administracao/financeiro-aprovar', pedido.pedidoId], { state: { pedido: pedido } });
+    }
 
-    // this.router.navigate(['/administracao/financeiro-aprovar', pedido.id]);
   }
 
   dateSelected(event: any) {

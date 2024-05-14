@@ -66,79 +66,7 @@
 
 <form [formGroup]="formaPagamentoForm" class="row mt-2">
 
-  <mat-card>
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title>
-          Dados bancários
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <!-- <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
-              color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
-        CONTA</button> -->
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Selecione uma conta já cadastrada</mat-label>
-            <mat-select name="responsavel"
-                        (ngModelChange)="changeContaBancaria()"
-                        formControlName="idContaBancaria">
-              <mat-option *ngFor="let banco of listaContasUsuario"
-                          [value]="banco.id">
-                {{ banco.banco }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
 
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Conta</mat-label>
-            <input matInput
-                   #inputConta
-                   maxlength=""
-                   placeholder="" id="conta" formControlName="conta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Agência</mat-label>
-            <input matInput
-                   #inputAgencia
-                   maxlength=""
-                   placeholder="" id="agencia" formControlName="agencia"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Tipo conta</mat-label>
-            <input matInput
-                   #inputTipoConta
-                   maxlength=""
-                   placeholder="" id="tipoConta" formControlName="tipoConta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Pix</mat-label>
-            <input matInput
-                   #inputPix
-                   maxlength=""
-                   placeholder="" id="pix" formControlName="pix"
-                   type="text">
-          </mat-form-field>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
 
   <mat-card>
     <mat-card-content>
@@ -263,6 +191,7 @@
       </div>
     </mat-card-content>
   </mat-card>
+
   <mat-card *ngIf="meuPedidoForm.get('rateio')?.value">
     <mat-card-content>
       <div class="row">
@@ -368,6 +297,79 @@
         </table>
       </mat-card-content>
 
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title>
+          Dados bancários
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <!-- <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
+              color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
+        CONTA</button> -->
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Selecione uma conta já cadastrada</mat-label>
+            <mat-select name="responsavel"
+                        (ngModelChange)="changeContaBancaria()"
+                        formControlName="idContaBancaria">
+              <mat-option *ngFor="let banco of listaContasUsuario"
+                          [value]="banco.id">
+                {{ banco.banco }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Conta</mat-label>
+            <input matInput
+                   #inputConta
+                   maxlength=""
+                   placeholder="" id="conta" formControlName="conta"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Agência</mat-label>
+            <input matInput
+                   #inputAgencia
+                   maxlength=""
+                   placeholder="" id="agencia" formControlName="agencia"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Tipo conta</mat-label>
+            <input matInput
+                   #inputTipoConta
+                   maxlength=""
+                   placeholder="" id="tipoConta" formControlName="tipoConta"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Pix</mat-label>
+            <input matInput
+                   #inputPix
+                   maxlength=""
+                   placeholder="" id="pix" formControlName="pix"
+                   type="text">
+          </mat-form-field>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
   <mat-card>
