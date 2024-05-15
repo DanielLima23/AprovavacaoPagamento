@@ -47,7 +47,8 @@
             <td *ngIf="pedido.terceiro" class="color-table align-middle">{{ pedido.terceiro
               }}
             </td>
-            <td class="color-table align-middle">{{
+            <td class="color-table align-middle"
+                [ngClass]="{ 'text-danger': pedido.solicitaAprovEstourado === true }">{{
               pedido.valorPedido | currency: 'BRL'
               }}
             </td>

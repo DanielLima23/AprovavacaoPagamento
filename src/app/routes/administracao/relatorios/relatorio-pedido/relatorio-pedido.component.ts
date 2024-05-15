@@ -94,7 +94,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   verPedido(pedido: any) {
     this.idPedido = pedido.pedidoId
     if (pedido.terceiro) {
-      this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+      this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
     } else if (pedido.usuario) {
       this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
     }

@@ -15,15 +15,16 @@
       </mat-card-header>
       <mat-divider></mat-divider>
       <table class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
-        <thead >
+        <thead>
           <tr>
             <th class="text-center color-table align-middle sticky-sm-top">Feito em</th>
             <th class="text-center color-table align-middle sticky-sm-top">Ações</th>
           </tr>
         </thead>
-        <tbody >
-          <tr class="text-center" >
-            <td class="color-table align-middle" style="width: 50%;">{{ dataUltimoPedido | date}}</td>
+        <tbody>
+          <tr class="text-center">
+            <td class="color-table align-middle" style="width: 50%;">{{ dataUltimoPedido | date}}
+            </td>
             <!-- <td class="color-table align-middle">{{ pedido.valorParcela | currency: 'BRL' }}</td>
             <td class="color-table align-middle">{{ pedido.dataPagamento | date }}</td>
             <td class="color-table align-middle">{{ pedido.dataVencimento | date }}</td>
@@ -32,10 +33,11 @@
               {{ pedido.statusPagamento === 0 ? 'Pendente' : 'Pago' }}
             </td> -->
             <td style="width: 50%;" class="color-table align-middle">
-                <button mat-icon-button matTooltip="Usar este pedido" color="primary" (click)="usarUltimoPedido()" >
-                  <mat-icon>check_circle</mat-icon>
-                </button>
-              </td>
+              <button mat-icon-button matTooltip="Usar este pedido" color="primary"
+                      (click)="usarUltimoPedido()">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -150,9 +152,11 @@
             <mat-label>Valor total pagamento</mat-label>
             <input matInput
                    #inputValorTotal maxlength="50"
-                   placeholder="R$ 00,00" id="valorTotal"
+                   placeholder="R$ 0,00" id="valorTotal"
                    formControlName="valorTotal"
-                   type="text" >
+                   type="text"
+                   (input)="mascaraMoeda($event)">
+
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -221,79 +225,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
-    <mat-card-content>
-      <mat-card-header>
-        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
-          Dados bancários
-        </mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
-              color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
-        CONTA</button>
-      <div class="row mt-2">
-        <div class="col-sm-6">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Selecione uma conta já cadastrada</mat-label>
-            <mat-select name="responsavel"
-                        (ngModelChange)="changeContaBancaria()"
-                        formControlName="idContaBancaria">
-              <mat-option *ngFor="let banco of listaContasUsuario"
-                          [value]="banco.id">
-                {{ banco.banco }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
 
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Conta</mat-label>
-            <input matInput
-                   #inputConta
-                   maxlength=""
-                   placeholder="" id="conta" formControlName="conta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Agência</mat-label>
-            <input matInput
-                   #inputAgencia
-                   maxlength=""
-                   placeholder="" id="agencia" formControlName="agencia"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-6">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Tipo conta</mat-label>
-            <input matInput
-                   #inputTipoConta
-                   maxlength=""
-                   placeholder="" id="tipoConta" formControlName="tipoConta"
-                   type="text">
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12">
-          <mat-form-field hintLabel="" floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Pix</mat-label>
-            <input matInput
-                   #inputPix
-                   maxlength=""
-                   placeholder="" id="pix" formControlName="pix"
-                   type="text">
-          </mat-form-field>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
   <mat-card *ngIf="meuPedidoForm.get('rateio')?.value">
     <mat-card-content>
       <div class="row">
@@ -374,8 +306,7 @@
                   date:'dd/MM/yyyy'}}</td>
                 <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataPagamento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela |
-                  currency: 'BRL' }}</td>
+                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela  }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
                   'text-warning': parcela.statusPagamento== 0,
                   'text-success': parcela.statusPagamento === 1,
@@ -393,6 +324,79 @@
         </table>
       </mat-card-content>
 
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
+          Dados bancários
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <button *ngIf="this.listaContasUsuario && this.listaContasUsuario.length <=0" class="mt-2"
+              color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
+        CONTA</button>
+      <div class="row mt-2">
+        <div class="col-sm-6">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Selecione uma conta já cadastrada</mat-label>
+            <mat-select name="responsavel"
+                        (ngModelChange)="changeContaBancaria()"
+                        formControlName="idContaBancaria">
+              <mat-option *ngFor="let banco of listaContasUsuario"
+                          [value]="banco.id">
+                {{ banco.banco }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Conta</mat-label>
+            <input matInput
+                   #inputConta
+                   maxlength=""
+                   placeholder="" id="conta" formControlName="conta"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Agência</mat-label>
+            <input matInput
+                   #inputAgencia
+                   maxlength=""
+                   placeholder="" id="agencia" formControlName="agencia"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Tipo conta</mat-label>
+            <input matInput
+                   #inputTipoConta
+                   maxlength=""
+                   placeholder="" id="tipoConta" formControlName="tipoConta"
+                   type="text">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <mat-form-field hintLabel="" floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Pix</mat-label>
+            <input matInput
+                   #inputPix
+                   maxlength=""
+                   placeholder="" id="pix" formControlName="pix"
+                   type="text">
+          </mat-form-field>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
   <mat-card>
@@ -458,7 +462,7 @@
           <mat-icon>save</mat-icon>
           Enviar pedido
         </button>
-        <button  mat-flat-button extended color="accent" class="m-3"
+        <button mat-flat-button extended color="accent" class="m-3"
                 (click)="voltar()">
           <mat-icon>reply</mat-icon>
           Voltar

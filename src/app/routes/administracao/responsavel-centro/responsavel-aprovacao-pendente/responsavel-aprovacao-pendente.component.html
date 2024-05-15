@@ -35,17 +35,18 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let pedido of pedidos">
-          <tr class="text-center ">
+          <tr class="text-center">
             <!-- <td class="color-table align-middle">{{ pedido.dataCadastro | date
               }}
             </td> -->
             <td *ngIf="!pedido.terceiro" class="color-table align-middle">{{ pedido.usuario
-            }}
-          </td>
-          <td *ngIf="pedido.terceiro" class="color-table align-middle">{{ pedido.terceiro
-            }}
-          </td>
-            <td class="color-table align-middle">{{
+              }}
+            </td>
+            <td *ngIf="pedido.terceiro" class="color-table align-middle">{{ pedido.terceiro
+              }}
+            </td>
+            <td class="color-table align-middle"
+                [ngClass]="{ 'text-danger': pedido.solicitaAprovEstourado === true }">{{
               pedido.valorPedido | currency: 'BRL'
               }}
             </td>

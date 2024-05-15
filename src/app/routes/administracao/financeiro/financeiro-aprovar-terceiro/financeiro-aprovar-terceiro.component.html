@@ -122,8 +122,7 @@
                    placeholder="R$ 0,00" id="valorTotal"
                    formControlName="valorTotal"
                    type="text"
-                   [allowNegativeNumbers]="true" mask="separator.2" thousandSeparator="."
-                   prefix="R$" separatorLimit="1000000">
+                   (input)="mascaraMoeda($event)">
           </mat-form-field>
         </div>
         <div class="col-sm-12">

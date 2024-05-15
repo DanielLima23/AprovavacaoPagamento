@@ -21,7 +21,7 @@ import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, of, startWith, switchMap } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { Rateio } from 'app/models/rateio';
@@ -30,6 +30,7 @@ import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-d
 import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
 import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { PedidoService } from '../pedido.service';
+import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 
 @Component({
   selector: 'app-pedido-fornecedor',
@@ -487,8 +488,10 @@ export class PedidoFornecedorComponent implements OnInit {
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
   arquivosBase64: Arquivo[] = [];
-  listaFuncionario: any[] = []
+  listaFornecedor: any[] = []
   @Input() isIdPedidoPorParcela = 0
+  filteredFornecedor: Observable<any[]> | undefined;
+
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -504,7 +507,7 @@ export class PedidoFornecedorComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private terceiroService: TerceiroService
   ) {
-    this.preencheListaFuncionario()
+
 
     this.meuPedidoForm.valueChanges.subscribe(s => {
       console.log(s);
@@ -530,6 +533,7 @@ export class PedidoFornecedorComponent implements OnInit {
     cnpj: new UntypedFormControl(undefined),
     contaCnpj: new UntypedFormControl(undefined),
     anexo: new UntypedFormArray([]),
+    valorTotalPedido: new UntypedFormControl(undefined)
   });
 
 
@@ -606,8 +610,11 @@ export class PedidoFornecedorComponent implements OnInit {
 
   @Input() idPedido: number = 0;
   isRelatorio: any
+
   ngOnInit() {
-    // this.idPedido = this.activatedRoute.snapshot.params['id']
+
+    this.preencheListaFornecedor()
+
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
     if (this.idPedido == null || this.idPedido == undefined) {
@@ -620,20 +627,14 @@ export class PedidoFornecedorComponent implements OnInit {
       this.findPedidoByCodigo()
       return;
     }
+
     this.idPedido = 0
     this.desabilitarInputs()
     this.getCurrentDate();
-    //this.preencheUsuario()
     this.listaTiposTerceiro = TipoTerceiroSelect.tiposTerceiro.map(terceiro => terceiro.descricao);
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
-
     this.preencheQtdParcelas()
-
-    //this.preencheListaFuncionario()
   }
-
-
-
 
   dataUltimoPedido: any
   retornaUltimoPedido(id: any) {
@@ -643,7 +644,7 @@ export class PedidoFornecedorComponent implements OnInit {
         if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
           this.dataUltimoPedido = ""
           this.limparTela()
-        }else{
+        } else {
           this.dataUltimoPedido = this.ultimoPedido.dataCadastro
         }
       }
@@ -655,7 +656,7 @@ export class PedidoFornecedorComponent implements OnInit {
   }
 
   setUltimoPedidoEmTela() {
-    this.preencheListaFuncionario()
+    this.preencheListaFornecedor()
     this.terceiroService.getTerceiroById(this.ultimoPedido.formaPagamento[0].terceiro.id).subscribe(
       (terceiro: any) => {
         this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
@@ -681,21 +682,29 @@ export class PedidoFornecedorComponent implements OnInit {
 
 
     this.formaPagamentoForm.get('tipoPagamento')?.setValue(this.ultimoPedido.formaPagamento[0].tipoPagamento)
-    this.pedidoService.getAnexoByIdPedido(this.ultimoPedido.id).subscribe(
-      (data: any[]) => {
-        this.arquivosBase64 = data;
-        this.arquivosBase64.map(arquivo => {
-          arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
-        })
-        this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
-      }
-    )
+    // this.pedidoService.getAnexoByIdPedido(this.ultimoPedido.id).subscribe(
+    //   (data: any[]) => {
+    //     this.arquivosBase64 = data;
+    //     this.arquivosBase64.map(arquivo => {
+    //       arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+    //     })
+    //     this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
+    //   }
+    // )
     const formatador = new FormatadorData();
     const hoje: Date = new Date();
     const dataAtual: string = hoje.toISOString().slice(0, 10);
     this.formaPagamentoForm.get('dataPagamento')?.setValue(dataAtual)
     this.formaPagamentoForm.get('dataVencimento')?.setValue(dataAtual)
-    this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
+    // this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
+    let valorTotal = this.ultimoPedido.formaPagamento[0].valorTotal.toFixed(2).toString();
+    const partes = valorTotal.split('.');
+    const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    let parteDecimal = partes[1] || '00';
+    parteDecimal = parteDecimal.padEnd(2, '0');
+    valorTotal = parteInteira + ',' + parteDecimal;
+    this.formaPagamentoForm.get('valorTotal')?.setValue(valorTotal)
+
     this.formaPagamentoForm.get('descricao')?.setValue(this.ultimoPedido.descricao)
     this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
     this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
@@ -712,7 +721,7 @@ export class PedidoFornecedorComponent implements OnInit {
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
-        this.preencheListaFuncionario()
+        this.preencheListaFornecedor()
         this.terceiroService.getTerceiroById(pedido.formaPagamento[0].terceiro.id).subscribe(
           (terceiro: any) => {
             this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
@@ -750,7 +759,16 @@ export class PedidoFornecedorComponent implements OnInit {
         const formatador = new FormatadorData();
         this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
         this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
-        this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+
+        // this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+        let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
+        const partes = valorTotal.split('.');
+        const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        let parteDecimal = partes[1] || '00';
+        parteDecimal = parteDecimal.padEnd(2, '0');
+        valorTotal = parteInteira + ',' + parteDecimal;
+        this.formaPagamentoForm.get('valorTotal')?.setValue(valorTotal)
+
         this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
         this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
         this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
@@ -778,14 +796,10 @@ export class PedidoFornecedorComponent implements OnInit {
   }
 
 
-  preencheListaFuncionario() {
+  preencheListaFornecedor() {
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
-        this.listaFuncionario = data.filter((funcionario: any) => funcionario.tipoTerceiro === 1);
-        this.filteredFuncionarios = this.meuPedidoForm.controls['TerceiroID'].valueChanges.pipe(
-          startWith(''),
-          map(value => this._filterFuncionarios(value))
-        );
+        this.listaFornecedor = data.filter((funcionario: any) => funcionario.tipoTerceiro === 1);
       }
     )
   }
@@ -867,17 +881,6 @@ export class PedidoFornecedorComponent implements OnInit {
     const today = new Date();
     const formattedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    if (dataVencimento) {
-      const [day, month, year] = dataVencimento.split('/');
-      const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-
-      if (date < formattedDate) {
-        this.toastr.warning('A data de vencimento não pode ser anterior à data atual', 'Atenção');
-        this.isSubmitting = false;
-        return;
-      }
-    }
-
     if (dataPagamento) {
       const [day, month, year] = dataPagamento.split('/');
       const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
@@ -897,11 +900,50 @@ export class PedidoFornecedorComponent implements OnInit {
       }
     }
 
+    if (dataVencimento) {
+      const [day, month, year] = dataVencimento.split('/');
+      const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+      const limiteDias = 5;
 
+      const dataLimite = new Date();
+      dataLimite.setDate(dataLimite.getDate() + limiteDias);
+
+      if (date < formattedDate) {
+        this.toastr.warning('A data de vencimento não pode ser anterior à data atual', 'Atenção');
+        this.isSubmitting = false;
+        return;
+      }
+
+      if (date < dataLimite) {
+        this.mensagemConfirmacao = 'Pedido em atraso! A data de vencimento não pode ser menor que ' + limiteDias + ' dias a partir de hoje, CONFIRMA o envio do pedido?'
+        this.openDialogConfirmacao()
+      } else {
+        this.enviarDados()
+      }
+    }
+  }
+
+  mensagemConfirmacao: string = ""
+  openDialogConfirmacao(): void {
+    const dialogRef = this.dialog.open(DialogConfirmacaoComponent, {
+      data: { mensagemConfirmacao: this.mensagemConfirmacao }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.enviarDados()
+      } else {
+        this.isSubmitting = false
+        return
+      }
+    });
+  }
+
+  enviarDados() {
     if (!this.formaPagamentoForm.get('exibirParcela')?.value) {
       this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
       this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
-      this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value)
+      this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value.toLocaleString().trim())
       this.parcelaForm.get('parcelaReferencia')?.setValue(1)
     }
 
@@ -926,17 +968,27 @@ export class PedidoFornecedorComponent implements OnInit {
     const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
 
 
-    if(parcelaArray.length <= 0){
+    if (parcelaArray.length <= 0) {
 
       const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
       parcelaArrqay.push(this.parcelaForm);
       this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(1)
     }
 
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1 && this.arquivosBase64.length <= 0) {
+      this.toastr.warning('Pagamentos em boleto exigem pelo menos um anexo.', 'Atenção')
+      this.isSubmitting = false
+      return
+    }
+
+    this.meuPedidoForm.get('valorTotalPedido')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value.trim())
+    this.formaPagamentoForm.get('valorTotal')?.setValue(0)
+
 
     this.salvar();
-
   }
+
+
   dataVencimentoValidation: Date = new Date()
   isDateParcelaInvalid: boolean = false;
   rolarParaSecaoDestino() {
@@ -980,12 +1032,18 @@ export class PedidoFornecedorComponent implements OnInit {
 
   retorno: string = ""
   validaFormaPagamento() {
-    // console.log('Selected Forma de pagamento: ', this.pedidoPagamento.formaPagamento);
     if (this.pedidoPagamento.formaPagamento == "Parcelado") {
       this.pgtoParcelado = true;
     } else {
       this.pgtoParcelado = false;
-
+    }
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+      this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(0)
+    } else {
+      this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(undefined)
+      this.formaPagamentoForm.get('conta')?.setValue('');
+      this.formaPagamentoForm.get('agencia')?.setValue('');
+      this.formaPagamentoForm.get('pix')?.setValue('');
     }
   }
   toggleCpfCnpj(event: MatSlideToggleChange) {
@@ -993,30 +1051,6 @@ export class PedidoFornecedorComponent implements OnInit {
 
     this.limparCpfCnpj();
   }
-
-  // preencheUsuario() {
-  //   this.usuarioService.getByToken().subscribe(
-  //     (data: Usuario) => {
-
-  //       this.formaPagamentoForm.get('idUsuario')?.setValue(data.id)
-  //       this.meuPedidoForm.get('UsuarioID')?.setValue(data.id);
-  //       this.meuPedidoForm.get('nome')?.setValue(data.nome);
-  //       this.idUsuario = data.id;
-  //       if (data.cpf != '') {
-  //         this.meuPedidoForm.get('cpf')?.setValue(data.cpf);
-  //         this.meuPedidoForm.get('contaCnpj')?.setValue(false);
-  //       } else {
-  //         this.meuPedidoForm.get('cnpj')?.setValue(data.cnpj);
-  //         this.meuPedidoForm.get('contaCnpj')?.setValue(true);
-  //       }
-  //       this.preencheDadosBancariosUsuario()
-  //       if (data.idCentroCusto > 0) {
-  //         this.preencheListaCentros(data.idCentroCusto)
-  //         this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(data.idCentroCusto)
-  //       }
-  //     }
-  //   )
-  // }
 
   preencheDadosBancariosTerceiro(id: number) {
     this.contaService.getListContasPorIdTerceiro(id).subscribe(
@@ -1036,14 +1070,17 @@ export class PedidoFornecedorComponent implements OnInit {
 
   atualizarDadosBancariosInput() {
     const idConta = this.formaPagamentoForm.get('idContaBancariaTerceiro')?.value;
-    this.contaService.getContaPorIdTerceiro(idConta).subscribe(
-      (data: any) => {
-        this.formaPagamentoForm.get('conta')?.setValue(data.conta);
-        this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
-        this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
-        this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
-      }
-    )
+    if(idConta > 0) {
+      this.contaService.getContaPorIdTerceiro(idConta).subscribe(
+        (data: any) => {
+          this.formaPagamentoForm.get('conta')?.setValue(data.conta);
+          this.formaPagamentoForm.get('agencia')?.setValue(data.agencia);
+          this.formaPagamentoForm.get('pix')?.setValue(data.chavePix);
+          this.formaPagamentoForm.get('tipoConta')?.setValue(this.mapeamentoEnumService.mapearTipoContaDescricao(data.tipoConta));
+        }
+      )
+    }
+
   }
 
   desabilitarInputs() {
@@ -1496,7 +1533,7 @@ export class PedidoFornecedorComponent implements OnInit {
   }
 
   popularFornecedorInput(userId: number) {
-    const funcionario: Terceiro | undefined = this.listaFuncionario.find(f => f.id === userId);
+    const funcionario: Terceiro | undefined = this.listaFornecedor.find(f => f.id === userId);
 
     if (funcionario) {
       this.meuPedidoForm.get('TerceiroID')?.setValue(funcionario.id)
@@ -1542,25 +1579,28 @@ export class PedidoFornecedorComponent implements OnInit {
     this.parcelas = []
   }
 
-
-  filteredFuncionarios: Observable<any[]> | undefined;
-  private _filterFuncionarios(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.listaFuncionario.filter(funcionario => funcionario.nome.toLowerCase().includes(filterValue));
+  mascaraMoeda(event: any): void {
+    const onlyDigits: string = event.target.value
+      .split("")
+      .filter((s: string) => /\d/.test(s))
+      .join("")
+      .padStart(3, "0");
+    const digitsFloat: string = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2);
+    event.target.value = this.maskCurrency(parseFloat(digitsFloat));
+    this.formaPagamentoForm.get('valorTotal')?.setValue(event.target.value.replace('R$', ''))
   }
 
-  onSelect(event: MatAutocompleteSelectedEvent) {
-    const funcionario = event.option.value;
-    this.meuPedidoForm.get('TerceiroID')!.setValue(funcionario);
+  maskCurrency(valor: number, locale: string = 'pt-BR', currency: string = 'BRL'): string {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    }).format(valor);
   }
 
-  get nomeFuncionario(): any {
-    const idFuncionario = this.meuPedidoForm.get('TerceiroID')?.value
-
-    const func = this.listaFuncionario.filter(funcionario => funcionario.id == idFuncionario)
-    console.log(func)
-    return func
+  formatCurrency(value: string): string {
+    if (!value) return '';
+    const numberValue = parseFloat(value.replace(',', '.'));
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
-
 
 }

@@ -379,20 +379,22 @@
       </mat-card-header>
       <mat-divider></mat-divider>
       <table class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
-        <thead >
+        <thead>
           <tr>
             <th class="text-center color-table align-middle sticky-sm-top">Feito em</th>
             <th class="text-center color-table align-middle sticky-sm-top">Ações</th>
           </tr>
         </thead>
-        <tbody >
-          <tr class="text-center" >
-            <td class="color-table align-middle" style="width: 50%;">{{dataUltimoPedido | date}}</td>
+        <tbody>
+          <tr class="text-center">
+            <td class="color-table align-middle" style="width: 50%;">{{dataUltimoPedido | date}}
+            </td>
             <td style="width: 50%;" class="color-table align-middle">
-                <button mat-icon-button matTooltip="Usar este pedido" color="primary" (click)="usarUltimoPedido()" >
-                  <mat-icon>check_circle</mat-icon>
-                </button>
-              </td>
+              <button mat-icon-button matTooltip="Usar este pedido" color="primary"
+                      (click)="usarUltimoPedido()">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -412,29 +414,26 @@
       <div class="row mt-2">
         <div class="col-sm-6">
           <mat-form-field style="width: 100%;">
-            <mat-label>Fornecedor</mat-label>
+            <mat-label>Selecione um fornecedor</mat-label>
             <mat-select name="TerceiroID" (selectionChange)="popularFornecedorInput($event.value)"
                         formControlName="TerceiroID">
-              <mat-option  *ngFor="let fornecedor of listaFuncionario" [value]="fornecedor.id">
+              <mat-option  *ngFor="let fornecedor of listaFornecedor" [value]="fornecedor.id">
                 {{ fornecedor.nome }}
               </mat-option>
             </mat-select>
           </mat-form-field>
-<!--
 
-          <mat-form-field style="width: 100%;">
-            <mat-label>Selecione um funcionario</mat-label>
-            <input type="text" matInput formControlName="TerceiroID" [matAutocomplete]="auto"
-                   placeholder="Selecione um funcionario">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event)" [displayWith]="nomeFuncionario">
-              <mat-option *ngFor="let funcionario of filteredFuncionarios | async" [value]="funcionario.id">
-                {{ funcionario.nome }}
+          <!-- <mat-form-field style="width: 100%;">
+            <input type="text" matInput formControlName="TerceiroID" [matAutocomplete]="auto" placeholder="Selecione um fornecedor">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="nomeFornecedor" (optionSelected)="onSelect($event)">
+              <mat-option *ngFor="let fornecedor of filteredFornecedor | async" [value]="fornecedor.id">
+                {{ fornecedor.nome }}
               </mat-option>
             </mat-autocomplete>
+          </mat-form-field> -->
 
-          </mat-form-field>
 
- -->
+
 
         </div>
         <div class="col-sm-6" *ngIf="!meuPedidoForm.get('contaCnpj')?.value">
@@ -465,9 +464,6 @@
 </form>
 
 <form [formGroup]="formaPagamentoForm" class="row mt-2">
-
-
-
   <mat-card>
     <mat-card-content>
       <mat-card-header>
@@ -522,8 +518,7 @@
                    placeholder="R$ 0,00" id="valorTotal"
                    formControlName="valorTotal"
                    type="text"
-                   [allowNegativeNumbers]="true" mask="separator.2" thousandSeparator="."
-                   prefix="R$" separatorLimit="1000000">
+                   (input)="mascaraMoeda($event)">
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -701,7 +696,8 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.listaContasTerceiro && this.listaContasTerceiro.length <=0 && this.meuPedidoForm.get('TerceiroID')?.value" class="mt-2"
+      <button *ngIf="this.listaContasTerceiro && this.listaContasTerceiro.length <=0 && this.meuPedidoForm.get('TerceiroID')?.value"
+              class="mt-2"
               color="accent" (click)="adicionarConta()" mat-raised-button>ADICIONAR UMA
         CONTA</button>
       <div class="row mt-2">
@@ -835,5 +831,3 @@
     </mat-card-content>
   </mat-card>
 </form>
-
-

@@ -238,15 +238,6 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            // const contaSelecionada = this.listaContasUsuario.find(conta => {
-            //   if (pedido.formaPagamento[0].contaBancaria) {
-            //     return conta.id === pedido.formaPagamento[0].contaBancaria.id;
-            //   } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
-            //     return conta.id === pedido.formaPagamento[0].contaBancariaTerceiro.id;
-            //   } else {
-            //     return false; // Se nenhum dos dois estiver definido, retorna falso
-            //   }
-            // })?.id;
             let contaSelecionada = 0
 
             if(pedido.formaPagamento[0].contaBancaria){
@@ -273,7 +264,15 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
         const formatador = new FormatadorData();
         this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
         this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
-        this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+        // this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+        let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
+        const partes = valorTotal.split('.');
+        const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        let parteDecimal = partes[1] || '00';
+        parteDecimal = parteDecimal.padEnd(2, '0');
+        valorTotal = parteInteira + ',' + parteDecimal;
+        this.formaPagamentoForm.get('valorTotal')?.setValue(valorTotal)
+
         this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
         this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
         this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
@@ -973,6 +972,30 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
         return;
       }
     });
+  }
+
+  mascaraMoeda(event: any): void {
+    const onlyDigits: string = event.target.value
+      .split("")
+      .filter((s: string) => /\d/.test(s))
+      .join("")
+      .padStart(3, "0");
+    const digitsFloat: string = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2);
+    event.target.value = this.maskCurrency(parseFloat(digitsFloat));
+    this.formaPagamentoForm.get('valorTotal')?.setValue(event.target.value.replace('R$', ''))
+  }
+
+  maskCurrency(valor: number, locale: string = 'pt-BR', currency: string = 'BRL'): string {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    }).format(valor);
+  }
+
+  formatCurrency(value: string): string {
+    if (!value) return '';
+    const numberValue = parseFloat(value.replace(',', '.'));
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
 
 }
