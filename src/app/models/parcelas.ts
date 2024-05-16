@@ -1,6 +1,6 @@
 export class Parcelas {
   id: number = 0
-  parcelaReferencia: number = 0
+  parcelaReferencia: any = 0
   dataVencimento: string = ""
   dataPagamento: string = ""
   valorParcela: any = 0

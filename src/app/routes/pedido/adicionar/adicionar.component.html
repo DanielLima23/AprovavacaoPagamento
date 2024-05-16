@@ -192,12 +192,12 @@
             Pedido parcelado?
           </mat-slide-toggle>
         </div>
-        <div class="col-sm-2">
-          <mat-slide-toggle formControlName="rateio"
-                            (change)="toogleRateio($event)">
-            Rateio?
+        <!-- <div class="col-sm-2">
+          <mat-slide-toggle formControlName="possuiEntrada"
+                            (change)="tooglePossuiEntrada($event)">
+            Possui entrada?
           </mat-slide-toggle>
-        </div>
+        </div> -->
         <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value || formaPagamentoForm.get('rateio')?.value"
                      class="mt-2"></mat-divider>
         <div class="col-sm-12 mt-2"
@@ -276,8 +276,8 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
-    <mat-card-content>
+  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value && this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
+    <mat-card-content class="table-responsive">
       <mat-card-header>
         <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Parcelas
@@ -306,7 +306,8 @@
                   date:'dd/MM/yyyy'}}</td>
                 <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataPagamento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela  }}</td>
+                <td style="width: 20%;" class="color-table align-middle">{{
+                  formatarParcela(parcela.valorParcela) }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
                   'text-warning': parcela.statusPagamento== 0,
                   'text-success': parcela.statusPagamento === 1,

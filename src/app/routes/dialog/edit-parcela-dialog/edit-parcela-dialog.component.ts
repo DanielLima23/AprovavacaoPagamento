@@ -58,10 +58,35 @@ export class DialogEditParcelaDialogComponent implements OnInit {
       }
     }
 
+    this.parcela.valorParcela = this.parcela.valorParcela.trim()
     this.dialogRef.close(this.parcela);
   }
 
   delete() {
     this.dialogRef.close(this.parcela.id);
+  }
+
+  mascaraMoeda(event: any): void {
+    const onlyDigits: string = event.target.value
+      .split("")
+      .filter((s: string) => /\d/.test(s))
+      .join("")
+      .padStart(3, "0");
+    const digitsFloat: string = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2);
+    event.target.value = this.maskCurrency(parseFloat(digitsFloat));
+    this.parcela.valorParcela = event.target.value.replace('R$', '')
+  }
+
+  maskCurrency(valor: number, locale: string = 'pt-BR', currency: string = 'BRL'): string {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    }).format(valor);
+  }
+
+  formatCurrency(value: string): string {
+    if (!value) return '';
+    const numberValue = parseFloat(value.replace(',', '.'));
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
 }

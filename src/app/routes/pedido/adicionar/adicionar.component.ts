@@ -157,7 +157,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
     exibirParcelas: new UntypedFormControl(false),
     tipoTerceiro: new UntypedFormControl(this.listaTiposTerceiro[0]),
-    rateio: new UntypedFormControl(false),
+    // rateio: new UntypedFormControl(false),
+    possuiEntrada: new UntypedFormControl(false),
     usuarioRateio: new UntypedFormControl(undefined),
     valorRateioPessoa: new UntypedFormControl(undefined)
   });
@@ -165,6 +166,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   public parcelaForm = new UntypedFormGroup({
     id: new UntypedFormControl(0),
     parcelaReferencia: new UntypedFormControl(1),
+    quantidadeParcelas: new UntypedFormControl(1),
+
     valorParcela: new UntypedFormControl(undefined),
     dataPagamento: new UntypedFormControl(undefined),
     dataVencimento: new UntypedFormControl(undefined)
@@ -341,8 +344,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     // this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
 
     this.formaPagamentoForm.get('descricao')?.setValue(this.ultimoPedido.descricao)
-    this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
-    this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+    // this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
+    // this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
 
     if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
       this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
@@ -352,7 +355,15 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       // this.ultimoPedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
       //   this.parcelas.push(parcela);
       // })
-      this.gerarParcelas()
+      // this.gerarParcelas()
+      if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
+        this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+        this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+
+        this.ultimoPedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
+          this.parcelas.push(parcela);
+        })
+      }
     }
   }
 
@@ -438,7 +449,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           return;
         }
       }
-      if (valorTotal !== parcelas) {
+      if (valorTotal != parcelas.toFixed(2)) {
         this.toastr.warning('O valor total das parcelas deve ser igual ao valor total do pedido', 'Atenção');
         this.isSubmitting = false;
         return;
@@ -491,12 +502,19 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     }
   }
 
+  adicionarUmaParcela() {
+    this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
+    this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
+    this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value.toString().trim())
+    this.parcelaForm.get('parcelaReferencia')?.setValue(1)
+    this.parcelaForm.get('quantidadeParcelas')?.setValue(1)
+    const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    parcelaArrqay.push(this.parcelaForm);
+  }
+
   enviarDados() {
-    if (!this.formaPagamentoForm.get('exibirParcela')?.value) {
-      this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
-      this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
-      this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value.toLocaleString().trim())
-      this.parcelaForm.get('parcelaReferencia')?.setValue(1)
+    if (!this.formaPagamentoForm.get('pedidoParcelado')?.value) {
+      this.adicionarUmaParcela()
     }
 
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
@@ -504,6 +522,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
       if (listaParcelas.length > 0) {
+        this.aplicarIdZeroNasParcelas()
+        this.retirarPontosDaParcela()
+
         const primeiroItem = listaParcelas.at(0);
 
         const primeiroItemValues = primeiroItem.value;
@@ -545,6 +566,28 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  aplicarIdZeroNasParcelas() {
+    let parcelas = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray
+    for (let i = 0; i < parcelas.length; i++) {
+      const parcela = parcelas.at(i);
+      parcela.value.id = 0
+    }
+  }
+
+  retirarPontosDaParcela() {
+    let parcelas = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray;
+
+    for (let i = 0; i < parcelas.length; i++) {
+      const parcela = parcelas.at(i);
+      const valorParcela = parcela.get('valor')?.value;
+      if (typeof valorParcela === 'string') {
+        const valorFormatado = valorParcela.replace(/\./g, '').replace(',', '.');
+        parcela.get('valor')?.setValue(parseFloat(valorFormatado));
+      }
+    }
+  }
+
 
   dataVencimentoValidation: Date = new Date()
   isDateParcelaInvalid: boolean = false;
@@ -596,12 +639,38 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     }
 
     if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
+      this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
+    } else {
+      this.formaPagamentoForm.get('pedidoParcelado')?.enable();
+    }
+
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+
+
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
+      // this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
+
+
       this.formaPagamentoForm.get('idContaBancaria')?.setValue(0)
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false)
+      this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(1)
+      const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+      if (listaParcelasArray) {
+        listaParcelasArray.clear();
+      }
+      // this.adicionarUmaParcela()
+
     } else {
       this.formaPagamentoForm.get('idContaBancaria')?.setValue(undefined)
       this.formaPagamentoForm.get('conta')?.setValue('');
       this.formaPagamentoForm.get('agencia')?.setValue('');
       this.formaPagamentoForm.get('pix')?.setValue('');
+      this.formaPagamentoForm.get('pedidoParcelado')?.enable();
+      // this.formaPagamentoForm.get('exibirParcelas')?.setValue(true);
     }
   }
   toggleCpfCnpj(event: MatSlideToggleChange) {
@@ -758,20 +827,86 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
 
+  // gerarParcelas() {
+  //   const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+  //   if (listaParcelasArray) {
+  //     listaParcelasArray.clear();
+  //   }
+  //   // const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value);
+  //   const valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
+  //   const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
+
+
+  //   const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;
+  //   const dataPagamentoStr = this.formaPagamentoForm.get('dataPagamento')?.value;
+  //   const dataVencimentoStr = this.formaPagamentoForm.get('dataVencimento')?.value;
+
+
+  //   if (qtdParcelas == 0) {
+  //     this.toastr.warning('Selecione a quantidade de parcelas!', 'Atenção');
+  //     return;
+  //   }
+
+  //   this.formaPagamentoForm.get('exibirParcelas')?.setValue(true);
+
+  //   if (valorTotal && qtdParcelas && dataPagamentoStr) {
+  //     this.parcelas = [];
+  //     let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00Z');
+  //     let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00Z');
+
+  //     // Calcula o valor das parcelas (sem centavos)
+  //     const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
+  //     const centavosRestantes = valorTotal % qtdParcelas;
+
+  //     for (let i = 0; i < qtdParcelas; i++) {
+  //       const valorParcela = (i === 0) ? valorParcelaSemCentavos + centavosRestantes : valorParcelaSemCentavos;
+  //       const parcela: Parcelas = {
+  //         id: i + 1,
+  //         parcelaReferencia: i + 1,
+  //         dataVencimento: this.formatarData(dataVencimento),
+  //         dataPagamento: this.formatarData(dataPagamento),
+  //         valorParcela: valorParcela.toFixed(2).toString(),
+  //         statusPagamento: 0,
+  //         quantidadeParcelas: qtdParcelas,
+  //         exclusao: false,
+  //       };
+
+  //       this.parcelas.push(parcela);
+
+  //       let valorTotal = parcela.valorParcela
+  //       const partes = valorTotal.split('.');
+  //       const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  //       let parteDecimal = partes[1] || '00';
+  //       parteDecimal = parteDecimal.padEnd(2, '0');
+  //       valorTotal = parteInteira + ',' + parteDecimal;
+
+  //       parcela.valorParcela = valorTotal;
+
+  //       (this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray).push(new UntypedFormControl(parcela));
+
+  //       dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
+  //       dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
+
+  //     }
+
+  //     this.dataSource.data = [...this.parcelas];
+
+  //   }
+  //   this.isDateParcelaInvalid = false
+  // }
+
+
   gerarParcelas() {
     const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
     if (listaParcelasArray) {
       listaParcelasArray.clear();
     }
-    // const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value);
     const valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
     const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
-
 
     const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;
     const dataPagamentoStr = this.formaPagamentoForm.get('dataPagamento')?.value;
     const dataVencimentoStr = this.formaPagamentoForm.get('dataVencimento')?.value;
-
 
     if (qtdParcelas == 0) {
       this.toastr.warning('Selecione a quantidade de parcelas!', 'Atenção');
@@ -787,10 +922,15 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
       // Calcula o valor das parcelas (sem centavos)
       const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
-      const centavosRestantes = valorTotal % qtdParcelas;
+      const centavosRestantes = valorTotal - (valorParcelaSemCentavos * qtdParcelas);
 
       for (let i = 0; i < qtdParcelas; i++) {
-        const valorParcela = (i === 0) ? valorParcelaSemCentavos + centavosRestantes : valorParcelaSemCentavos;
+        let valorParcela = valorParcelaSemCentavos;
+        if (i === qtdParcelas - 1) {
+          valorParcela += centavosRestantes;
+        }
+
+
         const parcela: Parcelas = {
           id: i + 1,
           parcelaReferencia: i + 1,
@@ -817,14 +957,13 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
         dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
         dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
-
       }
 
       this.dataSource.data = [...this.parcelas];
-
     }
     this.isDateParcelaInvalid = false
   }
+
 
   formatarData(data: Date): string {
     const year = data.getUTCFullYear();
@@ -833,7 +972,22 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     return `${year}-${month}-${day}`;
   }
 
+  formatarParcela(parcela: any): string {
+    if (typeof parcela === 'number') {
+      return parcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    } else {
+      return parcela;
+    }
+  }
+
   tooglePedidoParcelado(event: MatSlideToggleChange) {
+
+    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+      this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
+      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
+      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
+    }
+
     if (this.validarGeracaoDeParcela()) {
       const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
       if (listaParcelasArray) {
@@ -847,12 +1001,14 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
         this.formaPagamentoForm.get('rateio')?.enable()
         this.parcelas = []
+        this.formaPagamentoForm.get('possuiEntrada')?.setValue(false)
+
         // this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(0)
 
         if (!this.formaPagamentoForm.get('pedidoParcelado')?.value) {
           this.parcelaForm.get('dataPagamento')?.setValue(this.formaPagamentoForm.get('dataPagamento')?.value)
           this.parcelaForm.get('dataVencimento')?.setValue(this.formaPagamentoForm.get('dataVencimento')?.value)
-          this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value)
+          this.parcelaForm.get('valorParcela')?.setValue(this.formaPagamentoForm.get('valorTotal')?.value.trim())
           this.parcelaForm.get('parcelaReferencia')?.setValue(1)
           this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(1)
 
@@ -863,6 +1019,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
     } else {
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(!event.checked)
+
       if (!event.checked) {
         this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
         this.formaPagamentoForm.get('rateio')?.enable()
@@ -872,6 +1029,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     }
   }
   validarGeracaoDeParcela(): boolean {
+
     const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value)
     const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;
     const dataPagamentoStr = this.formaPagamentoForm.get('dataPagamento')?.value;
@@ -887,15 +1045,26 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
 
-  toogleRateio(event: MatSlideToggleChange) {
-    this.formaPagamentoForm.get('pedidoParcelado')?.disable()
-    if (!event.checked) {
-      this.formaPagamentoForm.get('pedidoParcelado')?.enable()
-      this.formaPagamentoForm.get('usuarioRateio')?.setValue('')
-      this.rateio = []
-      this.dataSourceRateio.data = [...this.rateio];
+  // toogleRateio(event: MatSlideToggleChange) {
+  //   this.formaPagamentoForm.get('pedidoParcelado')?.disable()
+  //   if (!event.checked) {
+  //     this.formaPagamentoForm.get('pedidoParcelado')?.enable()
+  //     this.formaPagamentoForm.get('usuarioRateio')?.setValue('')
+  //     this.rateio = []
+  //     this.dataSourceRateio.data = [...this.rateio];
+  //   }
+  // }
+
+  tooglePossuiEntrada(event: MatSlideToggleChange) {
+    const pedidoParcelado = this.formaPagamentoForm.get('pedidoParcelado')?.value;
+    if (!pedidoParcelado) {
+      this.toastr.warning('Recurso exclusivo para pedidos parcelados', 'Atenção');
+      this.formaPagamentoForm.get('possuiEntrada')?.setValue(false);
+    } else {
+      this.formaPagamentoForm.get('possuiEntrada')?.setValue(event.checked);
     }
   }
+
 
   openDialog(parcela: Parcelas): void {
     parcela.exclusao = false;
@@ -953,6 +1122,26 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // atualizarParcela(id: any, parcela: Parcelas) {
+  //   const index = this.parcelas.findIndex(objeto => objeto.id === id);
+  //   if (parcela.exclusao && parcela.id > 0) {
+  //     this.deletarParcela(parcela.id)
+  //     return;
+  //   }
+  //   if (index !== -1) {
+  //     const listaParcelasArray = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray;
+  //     const parcelaControl = listaParcelasArray.at(index);
+  //     parcelaControl.patchValue(parcela);
+  //     this.parcelas[index] = { ...parcela };
+  //     this.dataSource.data = [...this.parcelas];
+  //   }
+  //   if(index ==0){
+  //     alert('primeira parcela editada')
+  //   }
+  // }
+
+
+
   atualizarParcela(id: any, parcela: Parcelas) {
     const index = this.parcelas.findIndex(objeto => objeto.id === id);
     if (parcela.exclusao && parcela.id > 0) {
@@ -964,8 +1153,81 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       const parcelaControl = listaParcelasArray.at(index);
       parcelaControl.patchValue(parcela);
       this.parcelas[index] = { ...parcela };
-      this.dataSource.data = [...this.parcelas];
+      if (index == 0) {
+        const valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
+        const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
+        const novaPrimeiraParcela = parseFloat(parcela.valorParcela.replace(/\./g, '').replace(',', '.'));
+        const valorRestante = valorTotal - novaPrimeiraParcela;
+        const qtdParcelas = this.formaPagamentoForm.get('quantidadeParcelas')?.value;
+        const dataPagamentoStr = this.formaPagamentoForm.get('dataPagamento')?.value;
+        const dataVencimentoStr = this.formaPagamentoForm.get('dataVencimento')?.value;
+
+        // Remove as parcelas antigas da lista
+        while (listaParcelasArray.length > 1) {
+          listaParcelasArray.removeAt(1);
+        }
+
+        this.parcelas = [parcela];
+
+        // Gera as novas parcelas
+        if (qtdParcelas > 1) {
+          this.gerarParcelasComValorTotal(valorRestante, qtdParcelas - 1, dataPagamentoStr, dataVencimentoStr);
+        }
+      }
     }
+  }
+
+
+
+
+
+  private gerarParcelasComValorTotal(valorTotal: number, qtdParcelas: number, dataPagamentoStr: string, dataVencimentoStr: string) {
+    let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00Z');
+    let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00Z');
+
+    // Calcula o valor das parcelas (sem centavos)
+    const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
+    const centavosRestantes = valorTotal - (valorParcelaSemCentavos * qtdParcelas);
+
+    for (let i = 0; i < qtdParcelas; i++) {
+      let valorParcela = valorParcelaSemCentavos;
+      if (i === qtdParcelas - 1) {
+        valorParcela += centavosRestantes;
+      }
+
+      if (i == 0) {
+        dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
+        dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
+      }
+      const parcela: Parcelas = {
+        id: i + 2,
+        parcelaReferencia: i + 2,
+        dataVencimento: this.formatarData(dataVencimento),
+        dataPagamento: this.formatarData(dataPagamento),
+        valorParcela: valorParcela.toFixed(2).toString(),
+        statusPagamento: 0,
+        quantidadeParcelas: qtdParcelas + 1,
+        exclusao: false,
+      };
+
+      this.parcelas.push(parcela);
+
+      let valorTotal = parcela.valorParcela
+      const partes = valorTotal.split('.');
+      const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      let parteDecimal = partes[1] || '00';
+      parteDecimal = parteDecimal.padEnd(2, '0');
+      valorTotal = parteInteira + ',' + parteDecimal;
+
+      parcela.valorParcela = valorTotal;
+
+      (this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray).push(new UntypedFormControl(parcela));
+
+      dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
+      dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
+    }
+
+    this.dataSource.data = [...this.parcelas];
   }
 
   atualizarRateio(id: any, rateio: Rateio) {
@@ -1007,11 +1269,13 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
 
     if (valorTotal && qtdParcelas) {
-      const valorParcela = valorTotal / qtdParcelas;
-      return `x R$${valorParcela.toFixed(0)}`;
+      const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
+      const formattedValue = valorParcelaSemCentavos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      return `x ${formattedValue}`;
     }
     return '';
   }
+
 
   openNewWindow(arquivo: Arquivo): void {
     const fileType = arquivo.descricao.substring(arquivo.descricao.lastIndexOf('.') + 1);

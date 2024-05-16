@@ -40,7 +40,8 @@
                maxlength=""
                placeholder="" id="dataPagamento"
                type="date"
-               [(ngModel)]="parcela.dataPagamento">
+               [(ngModel)]="parcela.dataPagamento"
+               >
       </mat-form-field>
     </div>
     <div class="col-sm-12">
@@ -51,8 +52,9 @@
                #inputValorParcela
                maxlength=""
                placeholder="" id="valorParcela"
-               type="number"
-               [(ngModel)]="parcela.valorParcela">
+               type="text"
+               [(ngModel)]="parcela.valorParcela"
+               (input)="mascaraMoeda($event)">
       </mat-form-field>
     </div>
     <mat-card-footer align="end" class="mt-2">
