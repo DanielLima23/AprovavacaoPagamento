@@ -473,16 +473,17 @@
       </mat-card-header>
       <mat-divider></mat-divider>
       <div class="row mt-2">
+
         <div class="col-sm-6">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Forma de pagamento</mat-label>
-            <mat-select (ngModelChange)="validaFormaPagamento()"
-                        name="tipoPagamento"
-                        formControlName="tipoPagamento">
-              <mat-option *ngFor="let formaPgto of listaFormaPagamento" [value]="formaPgto.id">
-                {{ formaPgto.descricao }}
-              </mat-option>
-            </mat-select>
+          <mat-form-field floatLabel="always"
+                          style="width: 100%;">
+            <mat-label>Valor total pagamento</mat-label>
+            <input matInput
+                   #inputValorTotal maxlength="50"
+                   placeholder="R$ 0,00" id="valorTotal"
+                   formControlName="valorTotal"
+                   type="text"
+                   (input)="mascaraMoeda($event)">
           </mat-form-field>
         </div>
         <div class="col-sm-6">
@@ -510,15 +511,15 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <mat-form-field floatLabel="always"
-                          style="width: 100%;">
-            <mat-label>Valor total pagamento</mat-label>
-            <input matInput
-                   #inputValorTotal maxlength="50"
-                   placeholder="R$ 0,00" id="valorTotal"
-                   formControlName="valorTotal"
-                   type="text"
-                   (input)="mascaraMoeda($event)">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Forma de pagamento</mat-label>
+            <mat-select (ngModelChange)="validaFormaPagamento()"
+                        name="tipoPagamento"
+                        formControlName="tipoPagamento">
+              <mat-option *ngFor="let formaPgto of listaFormaPagamento" [value]="formaPgto.id">
+                {{ formaPgto.descricao }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
         <div class="col-sm-12">
@@ -637,7 +638,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
+  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value && this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
@@ -667,8 +668,8 @@
                   date:'dd/MM/yyyy'}}</td>
                 <td style="width: 20%;" class="color-table align-middle">{{ parcela.dataPagamento |
                   date:'dd/MM/yyyy'}}</td>
-                <td style="width: 20%;" class="color-table align-middle">{{ parcela.valorParcela |
-                  currency: 'BRL' }}</td>
+                <td style="width: 20%;" class="color-table align-middle">{{
+                  formatarParcela(parcela.valorParcela) }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
                   'text-warning': parcela.statusPagamento== 0,
                   'text-success': parcela.statusPagamento === 1,

@@ -86,7 +86,7 @@
     <mat-divider class="mt-2"></mat-divider>
 
 
-    <table #tabela
+    <table #tabela *ngIf="pedidos.length > 0"
            class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
       <thead>
         <tr>
@@ -167,3 +167,8 @@
   </mat-card-content>
 </mat-card>
 
+<mat-card *ngIf="pedidos.length === 0">
+  <mat-card-content class="text-center">
+    Você não possui pedidos com esse status em andamento.
+  </mat-card-content>
+</mat-card>

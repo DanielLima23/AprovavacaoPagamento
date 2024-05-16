@@ -83,13 +83,17 @@
     "PedidoPagamento.MeuPedido":"Meu pedido",
     "PedidoPagamento.Usuário":"Usuário",
     "PedidoPagamento.Fornecedor":"Fornecedor",
+    "PedidoPagamento.Funcionario":"Funcionário",
+
     "CentroDeCusto": "Centro de custo",
     "Terceiro": "Terceiro",
     "Administracao": "Administração",
     "Administracao.Financeiro": "Financeiro",
 
     "Administracao.Financeiro.PedidosDePagamento": "Pedidos pendentes",
-    "Administracao.Financeiro.PagamentosAgendados": "Pagamentos agendados",
+    "Administracao.Financeiro.PagamentosAgendados": "Pagamentos pendentes de agendamento",
+    "Administracao.Financeiro.PagamentosPagos": "Pagamentos pendentes",
+
     "Administracao.Usuarios.Convidar": "Convidar",
     "Administracao.CEO": "CEO",
     "Administracao.CEO.PedidosDePagamento": "Pedidos de pagamento",

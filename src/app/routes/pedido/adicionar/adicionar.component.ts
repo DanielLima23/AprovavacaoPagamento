@@ -435,7 +435,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   validationSave() {
     this.isSubmitting = true;
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
-      // const parcelas = parseFloat(this.parcelas.reduce((total, parcela) => total + parcela.valorParcela, 0));
       const parcelas = this.parcelas.reduce((total, parcela) => {
         const valorParcelaString = parcela.valorParcela.toString().replace(/\./g, '').replace(',', '.');
         return total + parseFloat(valorParcelaString);
@@ -513,10 +512,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   enviarDados() {
-    if (!this.formaPagamentoForm.get('pedidoParcelado')?.value) {
-      this.adicionarUmaParcela()
-    }
-
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
       const listaParcelas = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
 
@@ -537,6 +532,14 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           return
         }
       }
+    }else{
+      const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+      if (listaParcelasArray) {
+        listaParcelasArray.clear();
+      }
+      this.adicionarUmaParcela()
+      this.aplicarIdZeroNasParcelas()
+      this.retirarPontosDaParcela()
     }
 
     if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1 && this.arquivosBase64.length <= 0) {
@@ -632,6 +635,16 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   retorno: string = ""
   validaFormaPagamento() {
+    // const valorTotal = this.formaPagamentoForm.get('valorTotal')?.value;
+    // const tipoPagamento = this.formaPagamentoForm.get('tipoPagamento')?.value;
+
+    // if (!valorTotal) {
+    //   this.toastr.warning('Informe o valor total do pedido primeiro', 'Atenção');
+    //   this.formaPagamentoForm.get('tipoPagamento')?.setValue(0);
+    // } else {
+    //   // this.valorTotalAnterior = tipoPagamento;
+    // }
+
     if (this.pedidoPagamento.formaPagamento == "Parcelado") {
       this.pgtoParcelado = true;
     } else {
@@ -640,20 +653,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
     if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
+      this.formaPagamentoForm.get('pedidoParcelado')?.disable()
       this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
-      this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
-    } else {
-      this.formaPagamentoForm.get('pedidoParcelado')?.enable();
-    }
-
-    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
-
-
-      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
-      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
-      // this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
-
-
       this.formaPagamentoForm.get('idContaBancaria')?.setValue(0)
       this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false)
@@ -670,7 +671,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.formaPagamentoForm.get('agencia')?.setValue('');
       this.formaPagamentoForm.get('pix')?.setValue('');
       this.formaPagamentoForm.get('pedidoParcelado')?.enable();
-      // this.formaPagamentoForm.get('exibirParcelas')?.setValue(true);
     }
   }
   toggleCpfCnpj(event: MatSlideToggleChange) {
@@ -982,11 +982,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   tooglePedidoParcelado(event: MatSlideToggleChange) {
 
-    if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
-      this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
-      this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
-      this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
-    }
+    // if (this.formaPagamentoForm.get('tipoPagamento')?.value == 1) {
+    //   this.toastr.warning('Pagamento em boleto não pode ser parcelado', 'Atenção');
+    //   this.formaPagamentoForm.get('exibirParcelas')?.setValue(false);
+    //   this.formaPagamentoForm.get('pedidoParcelado')?.setValue(false);
+    // }
 
     if (this.validarGeracaoDeParcela()) {
       const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
