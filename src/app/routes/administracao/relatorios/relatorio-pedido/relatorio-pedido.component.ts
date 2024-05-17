@@ -26,7 +26,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   listaUsuarios: Usuario[] = []
   listaFornecedores: Terceiro[] = []
   listaCentroCusto: CentroDeCusto[] = []
-
+  listaFuncionarios: any[] = []
   constructor(private router: Router,
     private pedidoService: PedidoService,
     private datePipe: DatePipe,
@@ -50,22 +50,25 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   isRadio: any
   ngOnInit() {
     this.isRadio = history.state.relatorio;
-    if(this.isRadio != undefined || this.isRadio != null){
-      if(this.isRadio == 'usuario'){
+    if (this.isRadio != undefined || this.isRadio != null) {
+      if (this.isRadio == 'usuario') {
         this.radioUsuario()
       }
-      if(this.isRadio == 'fornecedor'){
+      if (this.isRadio == 'fornecedor') {
         this.radioFornecedor()
+      }
+      if (this.isRadio == 'funcionario') {
+        this.radioFuncionario()
       }
       this.consultarPedidoForm.get('tipoRelatorio')?.setValue(this.isRadio)
     }
 
-     this.listaTipoStatusPagamento = TipoStatusPagamento.statusPagamento
+    this.listaTipoStatusPagamento = TipoStatusPagamento.statusPagamento
     this.getCurrentDate()
     this.preencheListaCentros()
     this.preencheListaUsuarios()
+    this.preencheListaFornecedoresEFuncionarios()
     this.consultarPedidos()
-    this.preencheListaFornecedores()
 
   }
 
@@ -75,10 +78,12 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     this.consultarPedidoForm.get('idTerceiro')?.setValue(0)
   }
 
-  // radioFuncionario() {
-  //   this.consultarPedidoForm.get('terceiro')?.setValue(true);
-  //   this.consultarPedidoForm.get('idUsuario')?.setValue(0)
-  // }
+  radioFuncionario() {
+    this.consultarPedidoForm.get('terceiro')?.setValue(true);
+    this.consultarPedidoForm.get('idUsuario')?.setValue(0)
+    this.consultarPedidoForm.get('tipoTerceiro')?.setValue(0)
+
+  }
 
   radioFornecedor() {
     this.consultarPedidoForm.get('terceiro')?.setValue(true);
@@ -93,6 +98,17 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
 
   verPedido(pedido: any) {
     this.idPedido = pedido.pedidoId
+    switch (pedido) {
+      case "funcionario":
+        break;
+      case "fornecedor":
+        break;
+      case "ussuario":
+        break;
+      default:
+        break;
+    }
+
     if (pedido.terceiro) {
       this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
     } else if (pedido.usuario) {
@@ -116,10 +132,11 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     )
   }
 
-  preencheListaFornecedores() {
+  preencheListaFornecedoresEFuncionarios() {
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
         this.listaFornecedores = data.filter(terceiro => terceiro.tipoTerceiro == 1)
+        this.listaFuncionarios = data.filter(terceiro => terceiro.tipoTerceiro == 0)
       }
     )
   }

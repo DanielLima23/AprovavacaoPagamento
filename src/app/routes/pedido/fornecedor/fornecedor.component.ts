@@ -491,7 +491,7 @@ export class PedidoFornecedorComponent implements OnInit {
   listaFornecedor: any[] = []
   @Input() isIdPedidoPorParcela = 0
   filteredFornecedor: Observable<any[]> | undefined;
-
+  isUltimoPedido: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -508,7 +508,10 @@ export class PedidoFornecedorComponent implements OnInit {
     private terceiroService: TerceiroService
   ) {
 
-
+    const formatador = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     this.meuPedidoForm.valueChanges.subscribe(s => {
       console.log(s);
     });
@@ -520,6 +523,7 @@ export class PedidoFornecedorComponent implements OnInit {
     const parcelaArrqay = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
     parcelaArrqay.push(this.parcelaForm);
   }
+
 
   public meuPedidoForm: UntypedFormGroup = new UntypedFormGroup({
 
@@ -562,7 +566,7 @@ export class PedidoFornecedorComponent implements OnInit {
     gerarParcelas: new UntypedFormControl(false),
 
     exibirParcelas: new UntypedFormControl(false),
-    tipoTerceiro: new UntypedFormControl(this.listaTiposTerceiro[0]),
+    tipoTerceiro: new UntypedFormControl(this.listaTiposTerceiro[1]),
     rateio: new UntypedFormControl(false),
     usuarioRateio: new UntypedFormControl(undefined),
     valorRateioPessoa: new UntypedFormControl(undefined)
@@ -716,6 +720,8 @@ export class PedidoFornecedorComponent implements OnInit {
     //   this.gerarParcelas()
     // }
 
+
+
     if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
       this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
@@ -724,7 +730,24 @@ export class PedidoFornecedorComponent implements OnInit {
       this.ultimoPedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
         this.parcelas.push(parcela);
       })
+
+      const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+      parcelaArray.clear()
+      this.parcelas.forEach(parcela => {
+        parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
+        parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
+        //parcela.valorParcela = parcela.valorParcela.toString()
+
+        const novoGrupo = new UntypedFormGroup({});
+        Object.keys(parcela).forEach(key => {
+          novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
+        });
+        parcelaArray.push(novoGrupo);
+      });
+
     }
+
+    this.isUltimoPedido = true
 
   }
 
@@ -857,8 +880,12 @@ export class PedidoFornecedorComponent implements OnInit {
     } else {
       this.router.navigate(['/pedido/fornecedor-consultar']);
     }
+  }
+
+  converterValorParcelaEmString() {
 
   }
+
   validationSave() {
     this.isSubmitting = true;
     // if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
@@ -880,10 +907,27 @@ export class PedidoFornecedorComponent implements OnInit {
     // }
 
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
-      const parcelas = this.parcelas.reduce((total, parcela) => {
-        const valorParcelaString = parcela.valorParcela.toString().replace(/\./g, '').replace(',', '.');
-        return total + parseFloat(valorParcelaString);
-      }, 0);
+
+      // const parcelas = this.parcelas.reduce((total, parcela) => {
+      //   const valorParcelaString = parcela.valorParcela.toString().replace(/\./g, '').replace(',', '.');
+      //   return total + parseFloat(valorParcelaString);
+      // }, 0);
+
+      //const parcelas = this.parcelas.map(parcela => parseFloat(parcela.valorParcela));
+      // const parcelas = this.parcelas.map(parcela => parseFloat(parcela.valorParcela.replace(/\./g, '').replace(',', '.')))
+      const parcelas = this.parcelas.map(parcela => {
+        const valor = parcela.valorParcela;
+        if (typeof valor === 'string') {
+          return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+        } else if (typeof valor === 'number') {
+          return valor;
+        }
+        // Caso não seja nem string nem número, você pode decidir o que fazer
+        return 0; // ou lançar um erro, ou outra lógica de fallback
+      });
+
+      const somaParcelas = parcelas.reduce((total, valor) => total + valor, 0);
+
       const valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
       const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
       if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
@@ -893,11 +937,29 @@ export class PedidoFornecedorComponent implements OnInit {
           return;
         }
       }
-      if (valorTotal != parcelas.toFixed(2)) {
+      if (valorTotal.toFixed(2) != somaParcelas.toFixed(2)) {
         this.toastr.warning('O valor total das parcelas deve ser igual ao valor total do pedido', 'Atenção');
         this.isSubmitting = false;
         return;
       }
+      const formatador = new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      // if(this.isUltimoPedido){
+      //   const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+      //   parcelaArray.clear()
+      //   this.parcelas.forEach(parcela => {
+      //   parcela.valorParcela = formatador.format(parcela.valorParcela)
+
+      //     const novoGrupo = new UntypedFormGroup({});
+      //     Object.keys(parcela).forEach(key => {
+      //       novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
+      //     });
+      //     parcelaArray.push(novoGrupo);
+      //   });
+      // }
+
     }
 
     const dataVencimento = this.datePipe.transform(this.formaPagamentoForm.get('dataVencimento')?.value, 'dd/MM/yyyy');
@@ -1023,13 +1085,13 @@ export class PedidoFornecedorComponent implements OnInit {
 
         const primeiroItemValues = primeiroItem.value;
 
-        if (primeiroItemValues.dataPagamento != this.formaPagamentoForm.get('dataPagamento')?.value) {
-          this.toastr.warning('A data de pagamento foi alterada, clique no botão "Gerar parcelas" para atualizar".', 'Atenção')
-          this.isDateParcelaInvalid = true
-          this.rolarParaSecaoDestino()
-          this.isSubmitting = false
-          return
-        }
+        // if (primeiroItemValues.dataPagamento != this.formaPagamentoForm.get('dataPagamento')?.value) {
+        //   this.toastr.warning('A data de pagamento foi alterada, clique no botão "Gerar parcelas" para atualizar".', 'Atenção')
+        //   this.isDateParcelaInvalid = true
+        //   this.rolarParaSecaoDestino()
+        //   this.isSubmitting = false
+        //   return
+        // }
       }
     } else {
       const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
@@ -1754,10 +1816,6 @@ export class PedidoFornecedorComponent implements OnInit {
     }
 
     this.retornaUltimoPedido(funcionario?.id)
-    //this.setUltimoPedidoEmTela()
-
-
-
   }
 
   limparTela() {
@@ -1827,8 +1885,8 @@ export class PedidoFornecedorComponent implements OnInit {
         dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
         dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
       }
-      const parcela: Parcelas = {
-        id: i + 2,
+      const parcela: any = {
+        id: 0,
         parcelaReferencia: i + 2,
         dataVencimento: this.formatarData(dataVencimento),
         dataPagamento: this.formatarData(dataPagamento),
@@ -1869,7 +1927,7 @@ export class PedidoFornecedorComponent implements OnInit {
     this.formaPagamentoForm.get('idContaBancariaTerceiro')?.disable()
   }
 
-  habilitarCamposDepoisDeSelecionarTerceiro(){
+  habilitarCamposDepoisDeSelecionarTerceiro() {
     this.formaPagamentoForm.get('valorTotal')?.enable()
     this.formaPagamentoForm.get('dataPagamento')?.enable()
     this.formaPagamentoForm.get('dataVencimento')?.enable()
@@ -1879,5 +1937,7 @@ export class PedidoFornecedorComponent implements OnInit {
     this.formaPagamentoForm.get('pedidoParcelado')?.enable()
     this.formaPagamentoForm.get('idContaBancariaTerceiro')?.enable()
   }
+
+
 
 }
