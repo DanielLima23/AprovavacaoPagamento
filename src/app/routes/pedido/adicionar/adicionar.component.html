@@ -453,6 +453,23 @@
 
     </mat-card-content>
   </mat-card>
+  <mat-card *ngIf="this.listaObservacoes.length > 0">
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
+          Observações
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <ng-container *ngFor="let obs of listaObservacoes" class="mt-4">
+        <strong>
+          <span [ngClass]="{'text-light': isIdPedidoPorParcela }">{{ obs.usuario.nome }}: </span>
+        </strong>
+        <span [ngClass]="{'text-light': isIdPedidoPorParcela }">{{ obs?.observacao }}</span>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
   <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">

@@ -165,7 +165,7 @@ export class RegisterComponent {
         this.contaUsuario = []
       }
     )
-    this.router.navigate(['/'])
+    this.router.navigate(['/auth/login'])
 
 
   }

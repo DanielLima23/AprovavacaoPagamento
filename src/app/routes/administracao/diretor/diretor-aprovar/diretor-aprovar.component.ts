@@ -27,6 +27,8 @@ import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
 import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.service';
+import { Observacao } from 'app/models/observacao';
+import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observacao.component';
 
 @Component({
   selector: 'app-administracao-diretor-diretor-aprovar',
@@ -39,7 +41,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
   aprovarPedido() {
-    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, "")
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
     // requestAprovaPedido.diretor = 1;
     if (this.pedido.responsavel == 0) {
       requestAprovaPedido.responsavel = 1
@@ -141,6 +143,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     dataVencimento: new UntypedFormControl(undefined, Validators.required),
     descricao: new UntypedFormControl(undefined),
     listaParcelas: new UntypedFormArray([]),
+    Observacao: new UntypedFormControl(undefined),
 
     tipoConta: new UntypedFormControl(undefined),
     agencia: new UntypedFormControl(undefined),
@@ -283,6 +286,12 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
             this.parcelas.push(parcela);
           })
         }
+
+        this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
+          (obs:any) => {
+            this.listaObservacoes = obs
+          }
+        )
       }
     )
   }
@@ -994,5 +1003,28 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     const numberValue = parseFloat(value.replace(',', '.'));
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
+
+  adicionarObservacao() {
+    this.formaPagamentoForm.get('Observacao')?.setValue('')
+    this.openDialogObservacao()
+  }
+
+  mensagemConfirmacao: string = "Adicionar observação ao pedido"
+  openDialogObservacao(): void {
+    const dialogRef = this.dialog.open(DialogObservacaoComponent, {
+      data: { mensagemConfirmacao: this.mensagemConfirmacao }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.formaPagamentoForm.get('Observacao')?.setValue(result)
+        this.observacao.pessoa = "Eu"
+        this.observacao.observacao = this.formaPagamentoForm.get('Observacao')?.value
+      }
+    });
+  }
+
+  listaObservacoes: any[]=[]
+  observacao: Observacao = new Observacao()
 
 }

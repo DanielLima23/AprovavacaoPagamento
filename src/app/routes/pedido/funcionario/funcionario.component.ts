@@ -1191,6 +1191,7 @@ export class PedidoFuncionarioComponent implements OnInit {
   @Input() isIdPedidoPorParcela = 0
   filteredFornecedor: Observable<any[]> | undefined;
   isUltimoPedido:boolean = false;
+  listaObservacoes: any[]=[]
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -1504,6 +1505,12 @@ export class PedidoFuncionarioComponent implements OnInit {
             this.parcelas.push(parcela);
           })
         }
+
+        this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
+          (obs:any) => {
+            this.listaObservacoes = obs
+          }
+        )
       }
     )
   }

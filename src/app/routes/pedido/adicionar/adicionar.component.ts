@@ -73,6 +73,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   arquivosBase64: Arquivo[] = [];
   @Input() isIdPedidoPorParcela = 0
   isUltimoPedido: boolean = false
+  listaObservacoes: any[]=[]
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -292,6 +293,11 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
             this.parcelas.push(parcela);
           })
         }
+        this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
+          (obs:any) => {
+            this.listaObservacoes = obs
+          }
+        )
       }
     )
   }

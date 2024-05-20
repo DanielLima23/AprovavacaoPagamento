@@ -10,6 +10,7 @@ import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { RequestAprovaPedido } from 'app/models/auxiliar/request-aprova-pedido';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
+import { Observacao } from 'app/models/observacao';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
 import { Rateio } from 'app/models/rateio';
@@ -19,6 +20,7 @@ import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/c
 import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
+import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observacao.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
@@ -27,6 +29,7 @@ import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
 import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-administracao-responsavel-centro-responsavel-aprovar',
@@ -38,11 +41,12 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
     throw new Error('Method not implemented.');
   }
   aprovarPedido() {
-    const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,"")
+
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
     requestAprovaPedido.responsavel = 1;
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
-      (data:any) => {
-        this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
+      (data: any) => {
+        this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')
         this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
       }
     )
@@ -81,7 +85,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
   listaTipoRateio: { id: number; descricao: string }[] = [];
   listaUsuarios: Usuario[] = []
   arquivosBase64: Arquivo[] = [];
-
+  observacoes: any
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -135,6 +139,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
     dataVencimento: new UntypedFormControl(undefined, Validators.required),
     descricao: new UntypedFormControl(undefined),
     listaParcelas: new UntypedFormArray([]),
+    Observacao: new UntypedFormControl(undefined),
 
     tipoConta: new UntypedFormControl(undefined),
     agencia: new UntypedFormControl(undefined),
@@ -194,7 +199,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
 
-    if(!this.pedido.pedidoId){
+    if (!this.pedido.pedidoId) {
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
     }
 
@@ -218,6 +223,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
   }
 
   findPedidoByCodigo() {
+
     this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
         this.usuarioService.getById(pedido.usuario.id).subscribe(
@@ -233,9 +239,9 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
           (data: any[]) => {
             this.listaContasUsuario = data
             let contaSelecionada = 0
-            if(pedido.formaPagamento[0].contaBancaria){
+            if (pedido.formaPagamento[0].contaBancaria) {
               contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
-            } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
+            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
               contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
             }
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
@@ -507,7 +513,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
 
   atualizarDadosBancariosInput() {
     const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    if(idConta > 0){
+    if (idConta > 0) {
       this.contaService.getContaPorIdUsuario(idConta).subscribe(
         (data: any) => {
           this.formaPagamentoForm.get('conta')?.setValue(data.conta);
@@ -647,7 +653,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
-          quantidadeParcelas:0,
+          quantidadeParcelas: 0,
           exclusao: false,
         };
         this.parcelas.push(parcela);
@@ -988,5 +994,28 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
     const numberValue = parseFloat(value.replace(',', '.'));
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
+
+  adicionarObservacao() {
+    this.formaPagamentoForm.get('Observacao')?.setValue('')
+    this.openDialogObservacao()
+  }
+
+  mensagemConfirmacao: string = "Adicionar observação ao pedido"
+  openDialogObservacao(): void {
+    const dialogRef = this.dialog.open(DialogObservacaoComponent, {
+      data: { mensagemConfirmacao: this.mensagemConfirmacao }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.formaPagamentoForm.get('Observacao')?.setValue(result)
+        this.observacao.pessoa = "Eu"
+        this.observacao.observacao = this.formaPagamentoForm.get('Observacao')?.value
+      }
+    });
+  }
+
+  listaObservacoes: any[]=[]
+  observacao: Observacao = new Observacao()
 
 }

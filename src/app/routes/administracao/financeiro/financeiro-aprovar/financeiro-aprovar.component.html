@@ -3,7 +3,7 @@
   <mat-card>
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>Adicionar meu pedido</mat-card-title>
+        <mat-card-title>Aprovação</mat-card-title>
       </mat-card-header>
     </mat-card-content>
   </mat-card>
@@ -419,6 +419,37 @@
         </tbody>
       </table>
 
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title>
+          Observações
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <button mat-flat-button extended color="primary"
+              class="m-3 mt-2"
+              (click)="adicionarObservacao()">
+        <mat-icon>note</mat-icon>
+        Adicionar observação
+      </button>
+      <br>
+      <ng-container *ngFor="let obs of listaObservacoes">
+        <strong>
+          <span>{{ obs.usuario.nome }}: </span>
+        </strong>
+        <span>{{ obs?.observacao }}</span>
+        <mat-divider></mat-divider>
+      </ng-container>
+      <!-- <br> -->
+      <!-- <mat-divider *ngIf="observacao != null"></mat-divider> -->
+      <strong>
+        <span *ngIf="observacao?.observacao">{{ observacao.pessoa }}: </span>
+        <span *ngIf="!observacao?.observacao">{{ observacao.pessoa }}</span>
+      </strong>
+      <span>{{ observacao?.observacao }}</span>
     </mat-card-content>
   </mat-card>
   <mat-card>

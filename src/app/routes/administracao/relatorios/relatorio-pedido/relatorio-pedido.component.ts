@@ -98,19 +98,14 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
 
   verPedido(pedido: any) {
     this.idPedido = pedido.pedidoId
-    switch (pedido) {
-      case "funcionario":
-        break;
-      case "fornecedor":
-        break;
-      case "ussuario":
-        break;
-      default:
-        break;
-    }
 
     if (pedido.terceiro) {
-      this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+      if (pedido.tipoTerceiro == 0) {
+        this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+      }
+      if (pedido.tipoTerceiro == 1) {
+        this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+      }
     } else if (pedido.usuario) {
       this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
     }
