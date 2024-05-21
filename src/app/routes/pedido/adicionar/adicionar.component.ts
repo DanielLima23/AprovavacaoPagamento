@@ -73,7 +73,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   arquivosBase64: Arquivo[] = [];
   @Input() isIdPedidoPorParcela = 0
   isUltimoPedido: boolean = false
-  listaObservacoes: any[]=[]
+  listaObservacoes: any[] = []
 
   constructor(private formBuilder: FormBuilder,
     private router: Router,
@@ -294,7 +294,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           })
         }
         this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
-          (obs:any) => {
+          (obs: any) => {
             this.listaObservacoes = obs
           }
         )
@@ -376,7 +376,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.parcelas.forEach(parcela => {
           parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
           parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
-          // parcela.valorParcela = parcela.valorParcela.toString()
+          parcela.statusPagamento = 0
 
           const novoGrupo = new UntypedFormGroup({});
           Object.keys(parcela).forEach(key => {
@@ -495,7 +495,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
-      if(this.isUltimoPedido){
+      if (this.isUltimoPedido) {
         // const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
         // parcelaArray.clear()
         // this.parcelas.forEach(parcela => {
@@ -570,22 +570,18 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     if (this.formaPagamentoForm.get('pedidoParcelado')?.value) {
       const listaParcelas = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
 
-
       if (listaParcelas.length > 0) {
         this.aplicarIdZeroNasParcelas()
+
+        if (this.isUltimoPedido) {
+          let parcelas = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray;
+          const parcela = parcelas.at(0);
+          let valorTotal = parcela.value.valorParcela;
+          if (typeof valorTotal != 'string') {
+            this.converterValorParcelasEmString()
+          }
+        }
         this.retirarPontosDaParcela()
-
-        const primeiroItem = listaParcelas.at(0);
-
-        const primeiroItemValues = primeiroItem.value;
-
-        // if (primeiroItemValues.dataPagamento != this.formaPagamentoForm.get('dataPagamento')?.value) {
-        //   this.toastr.warning('A data de pagamento foi alterada, clique no botão "Gerar parcelas" para atualizar".', 'Atenção')
-        //   this.isDateParcelaInvalid = true
-        //   this.rolarParaSecaoDestino()
-        //   this.isSubmitting = false
-        //   return
-        // }
       }
     } else {
       const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
@@ -609,6 +605,33 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.salvar();
   }
 
+  converterValorParcelasEmString() {
+    let parcelas = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray;
+    for (let i = 0; i < parcelas.length; i++) {
+      const parcela = parcelas.at(i);
+      let valorTotal = parcela.value.valorParcela;
+
+      // Converte o número para string com duas casas decimais
+      let valorStr = valorTotal.toFixed(2).toString();
+
+      // Divide a parte inteira e a parte decimal
+      const partes = valorStr.split('.');
+
+      // Formata a parte inteira com pontos como separadores de milhar
+      const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+      // A parte decimal já está formatada com duas casas decimais
+      const parteDecimal = partes[1];
+
+      // Junta a parte inteira e a parte decimal com vírgula
+      valorTotal = parteInteira + ',' + parteDecimal;
+
+      // Atualiza o valor da parcela com a string formatada
+      parcela.patchValue({ id: 0, valorParcela: valorTotal.trim() });
+    }
+  }
+
+
   mensagemConfirmacao: string = ""
   openDialogConfirmacao(): void {
     const dialogRef = this.dialog.open(DialogConfirmacaoComponent, {
@@ -627,6 +650,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   aplicarIdZeroNasParcelas() {
     let parcelas = this.formaPagamentoForm.controls.listaParcelas as UntypedFormArray
+
     for (let i = 0; i < parcelas.length; i++) {
       const parcela = parcelas.at(i);
       parcela.value.id = 0
