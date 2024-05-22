@@ -111,7 +111,9 @@
     "Administracao.Cadastros.Usuarios.Lista": "Todos",
 
     "Administracao.Relatorios": "Relatórios",
-    "Administracao.Relatorios.Pedidos": "Pedidos"
+    "Administracao.Relatorios.Pedidos": "Pedidos",
+    "Administracao.Relatorios.Pagamentos": "Pagamentos"
+
 
   },
   "validations": {

@@ -28,6 +28,7 @@ import { AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent } fro
 import { AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent } from './financeiro/financeiro-aprovar-terceiro/financeiro-aprovar-terceiro.component';
 import { AdministracaoCeoCeoAprovarTerceiroComponent } from './ceo/ceo-aprovar-terceiro/ceo-aprovar-terceiro.component';
 import { AdministracaoDiretorDiretorAprovarTerceiroComponent } from './diretor/diretor-aprovar-terceiro/diretor-aprovar-terceiro.component';
+import { AdministracaoRelatoriosRelatorioPagamentoComponent } from './relatorios/relatorio-pagamento/relatorio-pagamento.component';
 
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
@@ -87,6 +88,7 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'funcionario-conta/:id', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id/:idConta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'relatorio-pedido', component: AdministracaoRelatoriosRelatorioPedidoComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
+{ path: 'relatorio-pagamento', component: AdministracaoRelatoriosRelatorioPagamentoComponent },
 ];
 
 @NgModule({

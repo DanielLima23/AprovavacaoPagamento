@@ -22,6 +22,7 @@ import { DisableControlDirective } from './directives/disable-control.directive'
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ToObservablePipe } from './pipes/to-observable.pipe';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -42,6 +43,7 @@ const MODULES: any[] = [
   TranslateModule,
   NgxMaskDirective,
   NgxMaskPipe,
+  NgxChartsModule
 
 ];
 const COMPONENTS: any[] = [BreadcrumbComponent, PageHeaderComponent, ErrorCodeComponent];

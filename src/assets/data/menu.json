@@ -172,6 +172,12 @@
               "name": "Pedidos",
               "type": "link",
               "permissions": [0,1,3,4]
+            },
+            {
+              "route": "administracao/relatorio-pagamento",
+              "name": "Pagamentos",
+              "type": "link",
+              "permissions": [0,1,3,4]
             }
           ]
         }
