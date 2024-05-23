@@ -20,7 +20,12 @@
           "type": "link",
           "permissions": [0,1,2,3,4]
         },
-
+        {
+          "route": "pedido/usuario-consultar",
+          "name": "Usuario",
+          "type": "link",
+          "permissions": [0,1,2,3,4]
+        },
         {
           "route": "pedido/funcionario-consultar",
           "name": "Funcionario",

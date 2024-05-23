@@ -156,7 +156,9 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     this.pedidoService.getPedidoPorParcelaId(id).subscribe(
       (data: any) => {
         if(data.formaPagamento[0].terceiro == null){
-          this.openDialogPedidoPorParcelaUsuario(data.id)
+          if(data.usuario.id == data.usuarioSolicitou.id ){
+            this.openDialogPedidoPorParcelaUsuario(data.id)
+          }
 
         }else if(data.formaPagamento[0].terceiro){
           this.openDialogPedidoPorParcelaFuncionario(data.id)

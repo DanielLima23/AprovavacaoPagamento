@@ -1,0 +1,129 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Consultar pedidos para usuários</mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-header>
+    <button (click)="adicionar()" color="primary" mat-raised-button>Criar pedido</button>
+  </mat-card-header>
+  <mat-card-content class="mt-2 table-responsive">
+    <form [formGroup]="consultarPedidoForm">
+      <mat-divider></mat-divider>
+      <mat-form-field class="col-sm-4 mt-2" hintLabel="" floatLabel="always" style="width: 100%;">
+        <mat-label>Data início</mat-label>
+        <input matInput #inputDataVencimento maxlength="" placeholder="" id="dataInicio"
+               formControlName="dataInicio" type="date">
+      </mat-form-field>
+      <mat-form-field class="col-sm-4 mt-2" hintLabel="" floatLabel="always" style="width: 100%;">
+        <mat-label>Data final</mat-label>
+        <input matInput #inputDataVencimento maxlength="" placeholder="" id="dataFim"
+               formControlName="dataFim" type="date">
+      </mat-form-field>
+      <mat-form-field style="width: 100%;" class="col-sm-4 mt-2">
+        <mat-label>Selecione o status de pagamento</mat-label>
+        <mat-select name="statusPagamento" formControlName="statusPagamento"
+                    (selectionChange)="filtraStatusPagamento()">
+          <mat-option [value]="99">Todos</mat-option>
+          <mat-option *ngFor="let status of listaTipoStatusPagamento" [value]="status.id">
+            {{ status.descricao }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button (click)="consultarPedidos()" class="col-sm-12" matTooltip="Consultar" color="primary"
+              mat-raised-button
+              style="width: 100%;">Consultar
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
+
+    <mat-divider class="mt-2"></mat-divider>
+
+
+    <table #tabela *ngIf="pedidos.length > 0"
+           class="table table-sm table_custom table-striped table-hover table-bordered mt-2">
+      <thead>
+        <tr>
+          <!-- <th class="text-center color-table align-middle">Mês do pedido</th> -->
+          <th class="text-center color-table align-middle">Usuário</th>
+          <th class="text-center color-table align-middle">Valor total do pedido</th>
+          <th class="text-center color-table align-middle">Parcelado</th>
+          <th class="text-center color-table align-middle">Responsável</th>
+          <th class="text-center color-table align-middle">Financeiro</th>
+          <th class="text-center color-table align-middle">CEO</th>
+          <th class="text-center color-table align-middle">Diretor</th>
+          <th class="text-center color-table align-middle">Pagamento</th>
+          <th class="text-center color-table align-middle">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pedido of pedidos">
+          <tr class="text-center "
+              [ngClass]="{'borda-vermelha-claro': pedido.dataCadastro <= pedido.dataVencimento }">
+            <!-- <td class="color-table align-middle">{{ pedido.dataCadastro | date
+              }}
+            </td> -->
+            <td class="color-table align-middle">{{ pedido.usuario
+              }}
+            </td>
+            <td class="color-table align-middle">{{
+              pedido.valorPedido | currency: 'BRL'
+              }}
+            </td>
+            <td class="color-table align-middle">{{
+              pedido.quantidadeParcelas > 1 ? "Sim" : "Não"
+              }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+            'text-warning': pedido.responsavel === 0,
+            'text-success': pedido.responsavel === 1,
+            'text-danger': pedido.responsavel === 2,
+            'bg-success': pedido.dataCadastro <= pedido.dataVencimento
+          }">{{ pedido.responsavel == 0 ? "Pendente" : pedido.responsavel == 1 ? "Aprovado" :
+              "Recusado" }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+         'text-warning': pedido.financeiro === 0,
+            'text-success': pedido.financeiro === 1,
+            'text-danger': pedido.financeiro === 2
+          }">{{ pedido.financeiro == 0 ? "Pendente" : pedido.financeiro == 1 ? "Aprovado" :
+              "Recusado"
+              }}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+             'text-warning': pedido.ceo === 0,
+            'text-success': pedido.ceo === 1,
+            'text-danger': pedido.ceo === 2
+          }">{{ pedido.ceo == 0 ? "Pendente" : pedido.ceo == 1 ? "Aprovado" : "Recusado"}}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+               'text-warning': pedido.diretor === 0,
+            'text-success': pedido.diretor === 1,
+            'text-danger': pedido.diretor === 2
+          }">{{ pedido.diretor == 0 ? "Pendente" : pedido.diretor == 1 ? "Aprovado" :
+              "Recusado"}}
+            </td>
+            <td class="color-table align-middle" [ngClass]="{
+              'text-warning': pedido.statusPagamento === 0,
+              'text-success': pedido.statusPagamento === 1,
+            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Pago" }}
+            </td>
+            <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
+                      matTooltip="Ver detalhes do pedido"
+                      color="accent"
+                      (click)="verPedido(pedido.pedidoId)"><mat-icon>visibility</mat-icon> </button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="pedidos.length === 0">
+  <mat-card-content class="text-center">
+    Você não possui pedidos com esse status em andamento.
+  </mat-card-content>
+</mat-card>

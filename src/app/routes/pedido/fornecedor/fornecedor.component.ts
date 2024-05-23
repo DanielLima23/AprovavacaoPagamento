@@ -576,6 +576,8 @@ export class PedidoFornecedorComponent implements OnInit {
   public parcelaForm = new UntypedFormGroup({
     id: new UntypedFormControl(0),
     parcelaReferencia: new UntypedFormControl(1),
+    quantidadeParcelas: new UntypedFormControl(1),
+
     valorParcela: new UntypedFormControl(undefined),
     dataPagamento: new UntypedFormControl(undefined),
     dataVencimento: new UntypedFormControl(undefined)

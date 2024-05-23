@@ -161,11 +161,10 @@ export class RegisterComponent {
         //   )
         // })
         this.toastr.success('Cadastro realizado com sucesso.', 'Sucesso')
-        this.registerForm.reset()
-        this.contaUsuario = []
+        this.router.navigate(['/auth/login'])
+
       }
     )
-    this.router.navigate(['/auth/login'])
 
 
   }

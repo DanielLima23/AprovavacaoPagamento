@@ -11,6 +11,7 @@ import { TipoStatusPagamento } from 'app/util/classes/select-tipo-status-pagamen
 import { ToastrService } from 'ngx-toastr';
 import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.service';
 import { TerceiroService } from '../../terceiros/terceiro.service';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 
 @Component({
   selector: 'app-administracao-relatorios-relatorio-pagamento',
@@ -38,13 +39,14 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Country';
+  xAxisLabel = 'Períodos';
   showYAxisLabel = true;
-  yAxisLabel = 'Population';
+  yAxisLabel = 'Valor';
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#ffffff'] // Cor branca para o texto
   };
+
   single: any[] | undefined;
   multi: any[] | undefined;
 
@@ -61,14 +63,14 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     private toastr: ToastrService,
     private centroService: CentroDeCustoService,
     private terceiroService: TerceiroService) {
-     // Object.assign(this, { single })
+    // Object.assign(this, { single })
 
-    }
+  }
 
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
     dataFim: new UntypedFormControl(undefined),
-    statusPagamento: new UntypedFormControl(99),
+    statusPagamento: new UntypedFormControl(1),
     idCentroDeCusto: new UntypedFormControl(0),
     idUsuario: new UntypedFormControl(0),
     filtraStatusPagamento: new UntypedFormControl(false),
@@ -80,6 +82,7 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
 
   isRadio: any
   ngOnInit() {
+    this.setChartDimensions()
     this.isRadio = history.state.relatorio;
     if (this.isRadio != undefined || this.isRadio != null) {
       if (this.isRadio == 'usuario') {
@@ -100,7 +103,6 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     this.preencheListaUsuarios()
     this.preencheListaFornecedoresEFuncionarios()
     this.consultarPedidos()
-    this.setChartDimensions()
   }
 
   setChartDimensions() {
@@ -182,7 +184,7 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     this.consultarPedidoForm.get('dataInicio')?.setValue(dataInicio);
     this.consultarPedidoForm.get('dataFim')?.setValue(dataFim);
   }
-
+  valorTotal: any
   consultarPedidos() {
     const requestRelatorioPedido = new RequestRelatorioPedidos()
     requestRelatorioPedido.dataInicio = this.consultarPedidoForm.get('dataInicio')?.value
@@ -197,15 +199,37 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     this.pedidoService.getPagamentosPorDataAdm(requestRelatorioPedido).subscribe(
       (data: any) => {
         this.pagamentos = data;
-        this.dataGrafico = data.dadosGrafico;
+        if (this.pagamentos.dadosGrafico != undefined && this.pagamentos.dadosGrafico != null) {
+          this.dataGrafico = this.pagamentos.dadosGrafico.map((item: any) => ({
+            name: this.formatarData(item.x),
+            value: parseFloat(item.y.replace(',', '.'))
+          }));
+          this.valorTotal = this.pagamentos.dadosGrafico.reduce((total: number, item: { y: string; }) => {
+            const valorNumerico = parseFloat(item.y.replace(',', '.'));
+            return total + valorNumerico;
+          }, 0);
+        } else {
+          this.dataGrafico = [];
+          this.valorTotal = 0;
+        }
+
         if (!this.isPrimeiraConsulta) {
           if (this.pagamentos.length === 0) {
-            this.toastr.warning('Nenhum pedido encontrado', 'Atenção')
+            this.toastr.warning('Nenhum pagamento encontrado', 'Atenção')
           }
         }
         this.isPrimeiraConsulta = false;
       }
     )
+  }
+
+  private formatarData(date: string): string {
+    const dataAtual = new Date(date);
+    const dia = String(dataAtual.getDate()).padStart(2, '0');
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+    const ano = dataAtual.getFullYear();
+
+    return `${dia}-${mes}-${ano}`;
   }
 
   filtraStatusPagamento() {
