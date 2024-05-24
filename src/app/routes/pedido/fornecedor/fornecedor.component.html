@@ -292,11 +292,10 @@
                   date:'dd/MM/yyyy'}}</td>
                 <td style="width: 20%;" class="color-table align-middle">{{
                   formatarParcela(parcela.valorParcela) }}</td>
-                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'text-warning': parcela.statusPagamento== 0,
+                <td style="width: 20%;" class="color-table align-middle"[ngClass]="{
+                  'text-warning': parcela.statusPagamento === 0,
                   'text-success': parcela.statusPagamento === 1,
-                }">{{ parcela.statusPagamento
-                  === 0? "Pendente" : "Pago"}}</td>
+                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 ? "Pendente de agendamento" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
                 <td style="width: 20%;" class="color-table align-middle" *ngIf="this.idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">
@@ -432,16 +431,16 @@
   <mat-card *ngIf="this.listaObservacoes.length > 0">
     <mat-card-content>
       <mat-card-header>
-        <mat-card-title>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
           Observações
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
       <ng-container *ngFor="let obs of listaObservacoes" class="mt-4">
         <strong>
-          <span>{{ obs.usuario.nome }}: </span>
+          <span [ngClass]="{'text-light': isIdPedidoPorParcela }">{{ obs.usuario.nome }}: </span>
         </strong>
-        <span>{{ obs?.observacao }}</span>
+        <span [ngClass]="{'text-light': isIdPedidoPorParcela }">{{ obs?.observacao }}</span>
         <mat-divider></mat-divider>
       </ng-container>
     </mat-card-content>

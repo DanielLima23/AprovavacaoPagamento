@@ -19,6 +19,7 @@ import { DialogParcelasNaoAprovadasComponent } from './parcelas-nao-aprovadas/pa
 import { DialogPedidosPorParcelaComponent } from './pedidos-por-parcela/pedidos-por-parcela.component';
 import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { DialogObservacaoComponent } from './observacao/observacao.component';
+import { DialogPedidosPorParcelaFornecedorComponent } from './pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -38,7 +39,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'parcelas-nao-aprovadas', component: DialogParcelasNaoAprovadasComponent },
 { path: 'pedidos-por-parcela', component: DialogPedidosPorParcelaComponent },
 { path: 'pedidos-por-parcela-funcionario', component: DialogPedidosPorParcelaFuncionarioComponent },
-{ path: 'observacao', component: DialogObservacaoComponent }
+{ path: 'observacao', component: DialogObservacaoComponent },
+{ path: 'pedidos-por-parcela-fornecedor', component: DialogPedidosPorParcelaFornecedorComponent }
 ];
 
 @NgModule({

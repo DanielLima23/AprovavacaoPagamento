@@ -322,18 +322,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.atualizarDadosBancariosInput()
       }
     )
-
-
     this.formaPagamentoForm.get('tipoPagamento')?.setValue(this.ultimoPedido.formaPagamento[0].tipoPagamento)
-    // this.pedidoService.getAnexoByIdPedido(this.ultimoPedido.id).subscribe(
-    //   (data: any[]) => {
-    //     this.arquivosBase64 = data;
-    //     this.arquivosBase64.map(arquivo => {
-    //       arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
-    //     })
-    //     this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
-    //   }
-    // )
+
     const formatador = new FormatadorData();
     const hoje: Date = new Date();
     const dataAtual: string = hoje.toISOString().slice(0, 10);
@@ -348,11 +338,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     valorTotal = parteInteira + ',' + parteDecimal;
     this.formaPagamentoForm.get('valorTotal')?.setValue(valorTotal)
 
-    // this.formaPagamentoForm.get('valorTotal')?.setValue(this.ultimoPedido.formaPagamento[0].valorTotal)
-
     this.formaPagamentoForm.get('descricao')?.setValue(this.ultimoPedido.descricao)
-    // this.preencheListaCentros(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
-    // this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(this.ultimoPedido.formaPagamento[0].centroDeCusto.id)
 
     if (this.ultimoPedido.formaPagamento[0].parcelas.length > 1) {
       this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
@@ -370,25 +356,19 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         this.ultimoPedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
           this.parcelas.push(parcela);
         })
-
-        const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
-        parcelaArray.clear()
-        this.parcelas.forEach(parcela => {
-          parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
-          parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
-          parcela.statusPagamento = 0
-
-          const novoGrupo = new UntypedFormGroup({});
-          Object.keys(parcela).forEach(key => {
-            novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
-          });
-          parcelaArray.push(novoGrupo);
-        });
+        this.limparParcelas()
+        this.gerarParcelas()
       }
     }
 
     this.isUltimoPedido = true
   }
+
+  limparParcelas(){
+    const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    parcelaArray.clear()
+  }
+
 
   base64toFile(base64: string, filename: string): File {
     const byteCharacters = atob(base64);
@@ -397,7 +377,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    return new File([byteArray], filename, { type: 'application/pdf' }); // Altere o tipo MIME conforme necessário
+    return new File([byteArray], filename, { type: 'application/pdf' });
   }
 
 

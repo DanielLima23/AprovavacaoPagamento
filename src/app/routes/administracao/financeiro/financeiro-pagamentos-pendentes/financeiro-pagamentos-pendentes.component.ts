@@ -1,16 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { RequestStatusPagamento } from 'app/models/auxiliar/request-status-pagamento';
 import { DialogParcelasNaoAprovadasComponent } from 'app/routes/dialog/parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
+import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { DialogPedidosPorParcelaComponent } from 'app/routes/dialog/pedidos-por-parcela/pedidos-por-parcela.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
-import { ToastrService } from 'ngx-toastr';
-import { Overlay } from '@angular/cdk/overlay';
-import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
-import { RequestStatusPagamento } from 'app/models/auxiliar/request-status-pagamento';
-import { DialogPedidosPorParcelaFornecedorComponent } from 'app/routes/dialog/pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
-
-
+import { ToastrService, Overlay } from 'ngx-toastr';
 interface ParcelaPorDia {
   [key: string]: any[];
 }
@@ -31,11 +27,12 @@ interface PainelState {
 }
 
 @Component({
-  selector: 'app-administracao-financeiro-financeiro-pagamentos-agendados',
-  templateUrl: './financeiro-pagamentos-agendados.component.html',
-  styleUrls: ['./financeiro-pagamentos-agendados.component.scss']
+  selector: 'app-administracao-financeiro-financeiro-pagamentos-pendentes',
+  templateUrl: './financeiro-pagamentos-pendentes.component.html',
+  styleUrls: ['./financeiro-pagamentos-pendentes.component.scss']
 })
-export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent implements OnInit {
+export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent implements OnInit {
+
   listaParcelasPorMes: ListaParcelasPorMes[] = [];
   panelStates: PainelState[] = [];
   selectedRowIds: Set<number> = new Set<number>();
@@ -70,12 +67,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
             this.openDialogPedidoPorParcelaUsuario(data.id)
           }
         }else if(data.formaPagamento[0].terceiro){
-          if(data.formaPagamento[0].terceiro.tipoTerceiro == 0){
-            this.openDialogPedidoPorParcelaFuncionario(data.id)
-          }
-          if(data.formaPagamento[0].terceiro.tipoTerceiro == 1){
-            this.openDialogPedidoPorParcelaFornecedor(data.id)
-          }
+          this.openDialogPedidoPorParcelaFuncionario(data.id)
         }
       }
     )
@@ -86,7 +78,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       data: id,
       width: '50%',
       maxHeight: '90vh',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -101,7 +93,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       data: id,
       width: '50%',
       maxHeight: '90vh',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -110,29 +102,13 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       }
     });
   }
-
-  openDialogPedidoPorParcelaFornecedor(id: any): void {
-    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFornecedorComponent, {
-      data: id,
-      width: '50%',
-      maxHeight: '90vh',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
-
   ngAfterViewInit() {
     // Atualiza o estado dos painéis
     this.restorePanelStates();
   }
 
   preencheListaParcelasPendentes() {
-    this.pedidoService.getListParcelasPendentes(0).subscribe(data => {
+    this.pedidoService.getListParcelasPendentes(2).subscribe(data => {
       const parcelasPorDia: ParcelaPorDia =  {};
 
       // Agrupando as parcelas por dia
@@ -198,7 +174,23 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     return meses[mes];
   }
   parcelasId: number[] = []
-
+  agendarParcela(id: number) {
+    this.parcelasId.push(id)
+    const parcela = new RequestStatusPagamento()
+    parcela.idParcela = id
+    parcela.status = 1
+    this.requestStatusPagamento.push(parcela)
+    this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => { // Adicione (data: any) =>
+      if (data != null && data.length > 0) {
+        this.openDialogParcelasNaoAprovadas(data)
+      } else {
+        this.preencheListaParcelasPendentes();
+        this.toastr.success('Parcelas pagas', 'Sucesso');
+      }
+    });
+    this.parcelasId = [];
+    this.selectedRowIds.clear();
+  }
 
 
   savePanelStates() {
@@ -254,7 +246,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       this.selectedRowIds.add(id);
       const parcela = new RequestStatusPagamento()
       parcela.idParcela = id
-      parcela.status = 2
+      parcela.status = 1
       this.requestStatusPagamento.push(parcela)
     }
   }
@@ -276,42 +268,19 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     return this.getSelectedRows()
   }
 
-  agendarParcela(id: number) {
-    this.parcelasId.push(id)
-    const parcela = new RequestStatusPagamento()
-    parcela.idParcela = id
-    parcela.status = 2
-    this.requestStatusPagamento.push(parcela)
-    this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => { // Adicione (data: any) =>
-      if (data != null && data.length > 0) {
-        // this.openDialogParcelasNaoAprovadas(data)
-        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
-
-      } else {
-        this.preencheListaParcelasPendentes();
-        this.toastr.success('Parcelas agendadas', 'Sucesso');
-      }
-    });
-    this.parcelasId = [];
-    this.selectedRowIds.clear();
-    this.requestStatusPagamento = [];
-  }
-
   aprovarSelecionados() {
     this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => {
       this.preencheListaParcelasPendentes();
-      // this.selectedRowIds.clear()
+      this.selectedRowIds.clear()
       if (data != null && data.length > 0) {
         this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
+
         //this.openDialogParcelasNaoAprovadas(data)
       } else {
-        this.toastr.success('Parcelas agendadas', 'Sucesso');
+        this.toastr.success('Parcelas pagas', 'Sucesso');
       }
 
     });
-    this.parcelasId = [];
-    this.selectedRowIds.clear();
-    this.requestStatusPagamento = [];
   }
 
   openDialogParcelasNaoAprovadas(data: any): void {
@@ -332,14 +301,4 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     this.parcelasId = []
     this.requestStatusPagamento = []
   }
-  // async aprovarSelecionados() {
-  //   for (const id of this.idsSelecionados) {
-  //     await this.aprovarParcela(id, true);
-  //   }
-  //   this.preencheListaParcelasPendentes();
-  //   this.selectedRowIds.clear()
-  //     this.toastr.success('Parcelas paga', 'Sucesso');
-  // }
-
-
 }

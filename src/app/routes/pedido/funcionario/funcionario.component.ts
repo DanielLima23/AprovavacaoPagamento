@@ -1429,17 +1429,18 @@ export class PedidoFuncionarioComponent implements OnInit {
 
       const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
       parcelaArray.clear()
-      this.parcelas.forEach(parcela => {
-        parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
-        parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
-        parcela.statusPagamento = 0
+      // this.parcelas.forEach(parcela => {
+      //   parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
+      //   parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
+      //   parcela.statusPagamento = 0
 
-        const novoGrupo = new UntypedFormGroup({});
-        Object.keys(parcela).forEach(key => {
-          novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
-        });
-        parcelaArray.push(novoGrupo);
-      });
+      //   const novoGrupo = new UntypedFormGroup({});
+      //   Object.keys(parcela).forEach(key => {
+      //     novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
+      //   });
+      //   parcelaArray.push(novoGrupo);
+      // });
+      this.gerarParcelas()
     }
     this.isUltimoPedido = true;
   }

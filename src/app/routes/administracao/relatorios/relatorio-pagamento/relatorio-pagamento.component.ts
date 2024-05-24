@@ -70,10 +70,10 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
     dataFim: new UntypedFormControl(undefined),
-    statusPagamento: new UntypedFormControl(1),
+    statusPagamento: new UntypedFormControl(0),
     idCentroDeCusto: new UntypedFormControl(0),
     idUsuario: new UntypedFormControl(0),
-    filtraStatusPagamento: new UntypedFormControl(false),
+    filtraStatusPagamento: new UntypedFormControl(true),
     tipoTerceiro: new UntypedFormControl(0),
     terceiro: new UntypedFormControl(false),
     tipoRelatorio: new UntypedFormControl('usuario'),

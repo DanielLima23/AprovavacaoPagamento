@@ -22,8 +22,9 @@ import { DialogPedidosPorParcelaComponent } from './pedidos-por-parcela/pedidos-
 import { PedidoModule } from '../pedido/pedido.module';
 import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { DialogObservacaoComponent } from './observacao/observacao.component';
+import { DialogPedidosPorParcelaFornecedorComponent } from './pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent, DialogPedidosPorParcelaComponent, DialogPedidosPorParcelaFuncionarioComponent, DialogObservacaoComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent, DialogPedidosPorParcelaComponent, DialogPedidosPorParcelaFuncionarioComponent, DialogObservacaoComponent, DialogPedidosPorParcelaFornecedorComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({

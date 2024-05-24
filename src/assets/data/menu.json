@@ -54,23 +54,32 @@
           "permissions": [1],
           "children": [
             {
-              "route": "administracao/financeiro-aprovacao-pendente",
+              "route": "",
               "name": "PedidosDePagamento",
-              "type": "link",
-              "permissions": [1]
-            },
-            {
-              "route": "administracao/financeiro-pagamentos-agendados",
-              "name": "PagamentosAgendados",
-              "type": "link",
-              "permissions": [1]
-            },
-            {
-              "route": "administracao/financeiro-pagamentos-agendados",
-              "name": "PagamentosPagos",
-              "type": "link",
-              "permissions": [1]
+              "type": "sub",
+              "permissions": [1],
+              "children": [
+                {
+                  "route": "administracao/financeiro-aprovacao-pendente",
+                  "name": "AguardandoAprovacao",
+                  "type": "link",
+                  "permissions": [1]
+                },
+                {
+                  "route": "administracao/financeiro-pagamentos-agendados",
+                  "name": "AguardandoAgendamento",
+                  "type": "link",
+                  "permissions": [1]
+                },
+                {
+                  "route": "administracao/financeiro-pagamentos-pendentes",
+                  "name": "AguardandoPagamento",
+                  "type": "link",
+                  "permissions": [1]
+                }
+              ]
             }
+
 
           ]
         },

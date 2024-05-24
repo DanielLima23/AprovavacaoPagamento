@@ -162,7 +162,9 @@
             <td class="color-table align-middle" [ngClass]="{
               'text-warning': pagamento.statusPagamento === 0,
               'text-success': pagamento.statusPagamento === 1,
-            }">{{ pagamento.statusPagamento == 0 ? "Pendente" : "Aprovado" }}
+              'text-info': pagamento.statusPagamento === 2,
+
+            }">{{ pagamento.statusPagamento == 0 ? "Pendente de agendamento" : pagamento.statusPagamento == 1 ? "Pago"  : pagamento.statusPagamento == 2 ?"Agendado" : ""}}
             </td>
             <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
                       matTooltip="Ver detalhes do pedido"

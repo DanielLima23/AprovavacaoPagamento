@@ -29,6 +29,7 @@ import { AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent } from './fin
 import { AdministracaoCeoCeoAprovarTerceiroComponent } from './ceo/ceo-aprovar-terceiro/ceo-aprovar-terceiro.component';
 import { AdministracaoDiretorDiretorAprovarTerceiroComponent } from './diretor/diretor-aprovar-terceiro/diretor-aprovar-terceiro.component';
 import { AdministracaoRelatoriosRelatorioPagamentoComponent } from './relatorios/relatorio-pagamento/relatorio-pagamento.component';
+import { AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent } from './financeiro/financeiro-pagamentos-pendentes/financeiro-pagamentos-pendentes.component';
 
 const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'convidar', component: AdministracaoUsuariosConvidarComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
@@ -59,14 +60,13 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'financeiro-pagamentos-agendados', component: AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent, canActivate: [authGuard],  data: { roles: [1] } },
 { path: 'financeiro-aprovar-terceiro', component: AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent, canActivate: [authGuard],  data: { roles: [1] }},
 { path: 'financeiro-aprovar-terceiro/:id', component: AdministracaoFinanceiroFinanceiroAprovarTerceiroComponent, canActivate: [authGuard],  data: { roles: [1] }},
-
+{ path: 'financeiro-pagamentos-pendentes', component: AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent, canActivate: [authGuard],  data: { roles: [1] }  },
 
 { path: 'responsavel-aprovacao-pendente', component: AdministracaoResponsavelCentroResponsavelAprovacaoPendenteComponent,canActivate: [authGuard],  data: { roles: [6] } },
 { path: 'responsavel-aprovar', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
 { path: 'responsavel-aprovar/:id', component: AdministracaoResponsavelCentroResponsavelAprovarComponent,canActivate: [authGuard],  data: { roles: [6] } },
 { path: 'responsavel-aprovar-terceiro', component: AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [6] }  },
 { path: 'responsavel-aprovar-terceiro/:id', component: AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent,canActivate: [authGuard],  data: { roles: [6] }  },
-
 
 { path: 'funcionario-consultar', component: AdministracaoTerceirosFuncionarioFuncionarioConsultarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-adicionar', component: AdministracaoTerceirosFuncionarioFuncionarioAdicionarComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
@@ -88,7 +88,7 @@ const routes: Routes = [{ path: 'lista', component: AdministracaoUsuariosListaCo
 { path: 'funcionario-conta/:id', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'funcionario-conta/:id/:idConta', component: AdministracaoTerceirosFuncionarioFuncionarioContaComponent,canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
 { path: 'relatorio-pedido', component: AdministracaoRelatoriosRelatorioPedidoComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] } },
-{ path: 'relatorio-pagamento', component: AdministracaoRelatoriosRelatorioPagamentoComponent },
+{ path: 'relatorio-pagamento', component: AdministracaoRelatoriosRelatorioPagamentoComponent, canActivate: [authGuard],  data: { roles: [0,1,3,4] }  },
 ];
 
 @NgModule({

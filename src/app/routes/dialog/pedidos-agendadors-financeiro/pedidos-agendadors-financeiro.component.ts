@@ -34,10 +34,10 @@ export class DialogPedidosAgendadorsFinanceiroComponent implements OnInit {
   }
 
   aprovarParcela(id: number) {
-    this.pedidoService.pagarParcela(id).subscribe(data => {
-      this.toastr.success('Parcela paga', 'Sucesso')
-      this.preencheListaPedidos()
-    })
+    // this.pedidoService.pagarParcela(id).subscribe(data => {
+    //   this.toastr.success('Parcela paga', 'Sucesso')
+    //   this.preencheListaPedidos()
+    // })
     //this.dialogRef.close()
   }
 

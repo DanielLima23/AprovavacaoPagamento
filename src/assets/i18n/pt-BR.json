@@ -89,10 +89,11 @@
     "Terceiro": "Terceiro",
     "Administracao": "Administração",
     "Administracao.Financeiro": "Financeiro",
+    "Administracao.Financeiro.PedidosDePagamento": "Pedidos",
 
-    "Administracao.Financeiro.PedidosDePagamento": "Pedidos pendentes",
-    "Administracao.Financeiro.PagamentosAgendados": "Pagamentos pendentes de agendamento",
-    "Administracao.Financeiro.PagamentosPagos": "Pagamentos pendentes",
+    "Administracao.Financeiro.PedidosDePagamento.AguardandoAprovacao": "Aguardando aprovação",
+    "Administracao.Financeiro.PedidosDePagamento.AguardandoAgendamento": "Aguardando agendamento",
+    "Administracao.Financeiro.PedidosDePagamento.AguardandoPagamento": "Aguardando pagamento",
 
     "Administracao.Usuarios.Convidar": "Convidar",
     "Administracao.CEO": "CEO",

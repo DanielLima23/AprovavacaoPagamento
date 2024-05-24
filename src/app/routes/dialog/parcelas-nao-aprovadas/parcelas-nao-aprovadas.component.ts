@@ -251,6 +251,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { RequestStatusPagamento } from 'app/models/auxiliar/request-status-pagamento';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -265,6 +266,9 @@ export class DialogParcelasNaoAprovadasComponent implements OnInit {
   parcelasId: number[] = []
 
   parcelasNaoAprovadas: any
+
+  requestStatusPagamento : RequestStatusPagamento[] =[]
+
   constructor(private router: Router,
     private datePipe: DatePipe,
     private toastr: ToastrService,
@@ -283,6 +287,7 @@ export class DialogParcelasNaoAprovadasComponent implements OnInit {
   onRowClick(id: number, idParcela: number) {
     if (this.selectedRowIds.has(id)) {
       this.selectedRowIds.delete(id);
+      this.requestStatusPagamento = this.requestStatusPagamento.filter(parcela => parcela.idParcela !== id);
       this.deselectFollowingParcelas(id, idParcela);
     }
     else {
@@ -291,6 +296,10 @@ export class DialogParcelasNaoAprovadasComponent implements OnInit {
       const index = parcelasAtrasadas.findIndex((parcela: any) => parcela.id === id);
       if (index === 0 || parcelasAtrasadas.slice(0, index).every((parcela: any) => this.selectedRowIds.has(parcela.id))) {
         this.selectedRowIds.add(id);
+        const parcela = new RequestStatusPagamento()
+        parcela.idParcela = id
+        parcela.status = 2
+        this.requestStatusPagamento.push(parcela)
       } else {
         this.toastr.warning('Selecione as parcelas pendentes anteriores a essa primeiro.', 'Atenção');
       }
@@ -337,7 +346,7 @@ export class DialogParcelasNaoAprovadasComponent implements OnInit {
 
   pagarParcela(id: number) {
     this.parcelasId.push(id)
-    this.pedidoService.pagarParcela(this.parcelasId).subscribe((data: any) => { // Adicione (data: any) =>
+    this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => { // Adicione (data: any) =>
       if (data != null && data.length > 0) {
         this.openDialogParcelasNaoAprovadas(data)
       } else {
@@ -362,10 +371,14 @@ export class DialogParcelasNaoAprovadasComponent implements OnInit {
   }
 
   aprovarSelecionados() {
-    this.pedidoService.pagarParcela(this.idsSelecionados).subscribe((data: any) => {
+    this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => {
       this.selectedRowIds.clear()
+      this.requestStatusPagamento = []
       if (data != null && data.length > 0) {
-        this.openDialogParcelasNaoAprovadas(data)
+        //this.openDialogParcelasNaoAprovadas(data)
+        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
+        this.dialogRef.close(false);
+
       } else {
         this.dialogRef.close(true);
 

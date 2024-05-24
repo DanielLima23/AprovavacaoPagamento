@@ -750,10 +750,9 @@
                 <td style="width: 20%;" class="color-table align-middle">{{
                   formatarParcela(parcela.valorParcela) }}</td>
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
-                  'text-warning': parcela.statusPagamento== 0,
+                  'text-warning': parcela.statusPagamento === 0,
                   'text-success': parcela.statusPagamento === 1,
-                }">{{ parcela.statusPagamento
-                  === 0? "Pendente" : "Pago"}}</td>
+                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 ? "Pendente de agendamento" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
                 <td style="width: 20%;" class="color-table align-middle" *ngIf="this.idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">
