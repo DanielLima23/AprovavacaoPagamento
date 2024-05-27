@@ -6,6 +6,7 @@ import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-p
 import { TipoStatusPagamento } from 'app/util/classes/select-tipo-status-pagamento';
 import { ToastrService } from 'ngx-toastr';
 import { PedidoService } from '../pedido.service';
+import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
 
 @Component({
   selector: 'app-pedido-usuario-consultar',
@@ -33,7 +34,7 @@ export class PedidoUsuarioConsultarComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.listaTipoStatusPagamento = TipoStatusPagamento.statusPagamento
+    this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido
     this.getCurrentDate()
    this.consultarPedidos()
   }

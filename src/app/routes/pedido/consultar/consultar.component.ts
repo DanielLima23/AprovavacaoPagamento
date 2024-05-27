@@ -6,6 +6,7 @@ import { UntypedFormGroup, UntypedFormControl, UntypedFormArray, Validators } fr
 import { ToastrService } from 'ngx-toastr';
 import { TipoStatusPagamento } from 'app/util/classes/select-tipo-status-pagamento';
 import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
+import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
 
 @Component({
   selector: 'app-pedido-consultar',
@@ -35,7 +36,7 @@ export class PedidoConsultarComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.listaTipoStatusPagamento = TipoStatusPagamento.statusPagamento
+    this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido
     this.getCurrentDate()
     this.consultarPedidos()
   }

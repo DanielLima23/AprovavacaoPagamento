@@ -156,7 +156,7 @@
             <td class="color-table align-middle" [ngClass]="{
               'text-warning': pedido.statusPagamento === 0,
               'text-success': pedido.statusPagamento === 1,
-            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Aprovado" }}
+            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Pago" }}
             </td>
             <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
                       matTooltip="Ver detalhes do pedido"

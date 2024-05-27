@@ -322,10 +322,12 @@ export class PedidoUsuarioComponent implements OnInit {
     }
     this.isUltimoPedido = true;
   }
+  isAprovadoDiretor: any = false;
 
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
+        this.isAprovadoDiretor = pedido.diretorAprovacao
         this.preencheListaUsuario()
         this.usuarioService.getById(pedido.formaPagamento[0].terceiro.id).subscribe(
           (terceiro: any) => {

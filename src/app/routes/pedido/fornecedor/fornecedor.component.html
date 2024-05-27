@@ -295,7 +295,7 @@
                 <td style="width: 20%;" class="color-table align-middle"[ngClass]="{
                   'text-warning': parcela.statusPagamento === 0,
                   'text-success': parcela.statusPagamento === 1,
-                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 ? "Pendente de agendamento" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
+                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 && isAprovadoDiretor == 1 ? "Pendente de agendamento" : parcela.statusPagamento == 0 && isAprovadoDiretor == 0 ? "Pendente de aprovacao" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
                 <td style="width: 20%;" class="color-table align-middle" *ngIf="this.idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">

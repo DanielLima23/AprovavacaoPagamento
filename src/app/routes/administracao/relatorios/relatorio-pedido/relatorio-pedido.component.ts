@@ -11,6 +11,7 @@ import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
 import { Terceiro } from 'app/models/terceiro';
 import { TerceiroService } from '../../terceiros/terceiro.service';
+import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
 
 @Component({
   selector: 'app-administracao-relatorios-relatorio-pedido',
@@ -63,7 +64,7 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
       this.consultarPedidoForm.get('tipoRelatorio')?.setValue(this.isRadio)
     }
 
-    this.listaTipoStatusPagamento = TipoStatusPagamento.statusPagamento
+    this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido
     this.getCurrentDate()
     this.preencheListaCentros()
     this.preencheListaUsuarios()
