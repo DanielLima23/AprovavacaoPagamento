@@ -1312,12 +1312,14 @@ export class PedidoFuncionarioComponent implements OnInit {
 
   @Input() idPedido: number = 0;
   isRelatorio: any
+  isRelatorioPagamento: any
 
   ngOnInit() {
     this.preencheListaFuncionario()
 
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
+    this.isRelatorioPagamento = history.state.relatorioPagamento
     if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
@@ -1577,7 +1579,10 @@ export class PedidoFuncionarioComponent implements OnInit {
   }
 
   voltar() {
-    if (this.isRelatorio) {
+    if(this.isRelatorioPagamento){
+      this.router.navigate(['/administracao/relatorio-pagamento'], { state: { relatorioPagamento: 'funcionario' } });
+
+    }else if (this.isRelatorio) {
       this.router.navigate(['/administracao/relatorio-pedido'], { state: { relatorio: 'funcionario' } });
     } else {
       this.router.navigate(['/pedido/funcionario-consultar']);

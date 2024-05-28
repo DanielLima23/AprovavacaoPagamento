@@ -112,7 +112,7 @@ export class PedidoUsuarioComponent implements OnInit {
     ID: new UntypedFormControl(0),
     TipoPedido: new UntypedFormControl(0),
     // TerceiroID: new UntypedFormControl(0),
-    UsuarioID:new  UntypedFormControl(undefined),
+    UsuarioID: new UntypedFormControl(undefined),
     descricao: new UntypedFormControl(undefined),
     listaFormaPagamento: new UntypedFormArray([]),
     nome: new UntypedFormControl(undefined, Validators.required),
@@ -199,12 +199,15 @@ export class PedidoUsuarioComponent implements OnInit {
 
   @Input() idPedido: number = 0;
   isRelatorio: any
+  isRelatorioPagamento: any
 
   ngOnInit() {
     this.preencheListaUsuario()
 
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
+    this.isRelatorioPagamento = history.state.relatorioPagamento
+
     if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
@@ -227,7 +230,7 @@ export class PedidoUsuarioComponent implements OnInit {
 
   dataUltimoPedido: any
   retornaUltimoPedido(id: any) {
-    this.pedidoService.getUltimoPedidoTerceiro(id).subscribe(
+    this.pedidoService.getUltimoPedidoUsuarioId(id).subscribe(
       (data: any) => {
         this.ultimoPedido = data
         if (this.ultimoPedido == null || this.ultimoPedido == undefined) {
@@ -246,24 +249,24 @@ export class PedidoUsuarioComponent implements OnInit {
 
   setUltimoPedidoEmTela() {
     this.preencheListaUsuario()
-    this.usuarioService.getById(this.ultimoPedido.formaPagamento[0].terceiro.id).subscribe(
-      (terceiro: any) => {
-        this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
-        if (terceiro.cpf) {
-          this.meuPedidoForm.get('cpf')?.setValue(terceiro.cpf);
+    this.usuarioService.getById(this.ultimoPedido.usuario.id).subscribe(
+      (usuario: any) => {
+        this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+        if (usuario.cpf) {
+          this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
           this.meuPedidoForm.get('contaCnpj')?.setValue(false);
         } else {
-          this.meuPedidoForm.get('cnpj')?.setValue(terceiro.cnpj);
+          this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
           this.meuPedidoForm.get('contaCnpj')?.setValue(true);
         }
-        this.meuPedidoForm.get('TerceiroID')?.setValue(terceiro.id);
+        this.meuPedidoForm.get('UsuarioID')?.setValue(usuario.id);
       }
     )
 
     this.contaService.getListContasPorIdUsuario(this.ultimoPedido.usuario.id).subscribe(
       (data: any[]) => {
         this.listaContasUsuario = data
-        const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === this.ultimoPedido.formaPagamento[0].contaBancaria ? this.ultimoPedido.formaPagamento[0].contaBancaria.id : this.ultimoPedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
+        const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === this.ultimoPedido.formaPagamento[0].contaBancaria ? this.ultimoPedido.formaPagamento[0].contaBancaria.id : this.ultimoPedido.formaPagamento[0].contaBancaria.id)?.id
         this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
         this.atualizarDadosBancariosInput()
       }
@@ -308,17 +311,18 @@ export class PedidoUsuarioComponent implements OnInit {
 
       const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
       parcelaArray.clear()
-      this.parcelas.forEach(parcela => {
-        parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
-        parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
-        parcela.statusPagamento = 0
+      // this.parcelas.forEach(parcela => {
+      //   parcela.dataPagamento = parcela.dataPagamento.split("T")[0]
+      //   parcela.dataVencimento = parcela.dataVencimento.split("T")[0]
+      //   parcela.statusPagamento = 0
 
-        const novoGrupo = new UntypedFormGroup({});
-        Object.keys(parcela).forEach(key => {
-          novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
-        });
-        parcelaArray.push(novoGrupo);
-      });
+      //   const novoGrupo = new UntypedFormGroup({});
+      //   Object.keys(parcela).forEach(key => {
+      //     novoGrupo.addControl(key, new UntypedFormControl(parcela[key]));
+      //   });
+      //   parcelaArray.push(novoGrupo);
+      // });
+      this.gerarParcelas()
     }
     this.isUltimoPedido = true;
   }
@@ -329,24 +333,24 @@ export class PedidoUsuarioComponent implements OnInit {
       (pedido: any) => {
         this.isAprovadoDiretor = pedido.diretorAprovacao
         this.preencheListaUsuario()
-        this.usuarioService.getById(pedido.formaPagamento[0].terceiro.id).subscribe(
-          (terceiro: any) => {
-            this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);
-            if (terceiro.cpf) {
-              this.meuPedidoForm.get('cpf')?.setValue(terceiro.cpf);
+        this.usuarioService.getById(pedido.usuario.id).subscribe(
+          (usuario: any) => {
+            this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+            if (usuario.cpf) {
+              this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
               this.meuPedidoForm.get('contaCnpj')?.setValue(false);
             } else {
-              this.meuPedidoForm.get('cnpj')?.setValue(terceiro.cnpj);
+              this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
               this.meuPedidoForm.get('contaCnpj')?.setValue(true);
             }
-            this.meuPedidoForm.get('TerceiroID')?.setValue(terceiro.id);
+            this.meuPedidoForm.get('UsuarioID')?.setValue(usuario.id);
           }
         )
 
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancariaTerceiro.id)?.id
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria ? pedido.formaPagamento[0].contaBancaria.id : pedido.formaPagamento[0].contaBancaria.id)?.id
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
@@ -455,10 +459,13 @@ export class PedidoUsuarioComponent implements OnInit {
   }
 
   voltar() {
-    if (this.isRelatorio) {
-      this.router.navigate(['/administracao/relatorio-pedido'], { state: { relatorio: 'funcionario' } });
+    if(this.isRelatorioPagamento){
+      this.router.navigate(['/administracao/relatorio-pagamento'], { state: { relatorioPagamento: 'usuario' } });
+
+    }else if (this.isRelatorio) {
+      this.router.navigate(['/administracao/relatorio-pedido'], { state: { relatorio: 'usuario' } });
     } else {
-      this.router.navigate(['/pedido/funcionario-consultar']);
+      this.router.navigate(['/pedido/usuario-consultar']);
     }
 
   }

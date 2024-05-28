@@ -84,6 +84,10 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
   ngOnInit() {
     this.setChartDimensions()
     this.isRadio = history.state.relatorio;
+    if(!this.isRadio){
+      this.isRadio = history.state.relatorioPagamento;
+    }
+
     if (this.isRadio != undefined || this.isRadio != null) {
       if (this.isRadio == 'usuario') {
         this.radioUsuario()
@@ -150,6 +154,28 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
       this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
     }
   }
+
+  verPedidoDaParcela(parcela: any) {
+    this.pedidoService.getPedidoPorParcelaId(parcela.id).subscribe(
+      (pedido: any) => {
+        if (pedido.formaPagamento[0].terceiro == null) {
+          if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
+            this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+          }else{
+            this.router.navigate(['/pedido/usuario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+          }
+        } else if (pedido.formaPagamento[0].terceiro) {
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
+            this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+          }
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
+            this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+          }
+        }
+      }
+    )
+  }
+
 
   preencheListaUsuarios() {
     this.centroService.getListaResponsaveis().subscribe(

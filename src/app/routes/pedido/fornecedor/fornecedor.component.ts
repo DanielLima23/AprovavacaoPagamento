@@ -201,12 +201,15 @@ export class PedidoFornecedorComponent implements OnInit {
 
   @Input() idPedido: number = 0;
   isRelatorio: any
+  isRelatorioPagamento: any
 
   ngOnInit() {
     this.preencheListaFornecedor()
 
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
+    this.isRelatorioPagamento = history.state.relatorioPagamento
+
     if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
@@ -471,7 +474,10 @@ export class PedidoFornecedorComponent implements OnInit {
   }
 
   voltar() {
-    if (this.isRelatorio) {
+    if(this.isRelatorioPagamento){
+      this.router.navigate(['/administracao/relatorio-pagamento'], { state: { relatorioPagamento: 'fornecedor' } });
+
+    }else if (this.isRelatorio) {
       this.router.navigate(['/administracao/relatorio-pedido'], { state: { relatorio: 'fornecedor' } });
     } else {
       this.router.navigate(['/pedido/fornecedor-consultar']);

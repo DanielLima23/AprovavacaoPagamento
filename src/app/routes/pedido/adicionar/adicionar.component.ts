@@ -209,10 +209,14 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   @Input() idPedido: number = 0;
   isRelatorio: any
+  isRelatorioPagamento: any
+
   ngOnInit() {
     // this.idPedido = this.activatedRoute.snapshot.params['id']
     this.idPedido = history.state.id;
     this.isRelatorio = history.state.relatorio
+    this.isRelatorioPagamento = history.state.relatorioPagamento
+
     if (this.idPedido == null || this.idPedido == undefined) {
       this.idPedido = this.isIdPedidoPorParcela
     }
@@ -429,7 +433,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   voltar() {
-    if (this.isRelatorio) {
+    if(this.isRelatorioPagamento){
+      this.router.navigate(['/administracao/relatorio-pagamento'], { state: { relatorioPagamento: 'usuario' } });
+
+    }else if (this.isRelatorio) {
       this.router.navigate(['/administracao/relatorio-pedido']);
     } else {
       this.router.navigate(['/pedido/consultar']);

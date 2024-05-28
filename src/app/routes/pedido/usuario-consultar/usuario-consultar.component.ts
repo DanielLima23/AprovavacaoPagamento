@@ -45,7 +45,7 @@ export class PedidoUsuarioConsultarComponent implements OnInit {
 
   verPedido(id: number) {
     this.idPedido = id
-    this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
+    this.router.navigate(['/pedido/usuario'], { state: { id: id } });
   }
 
   // preencheListaPedidos() {

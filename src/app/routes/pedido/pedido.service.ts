@@ -167,7 +167,7 @@ export class PedidoService {
       tokenCliente: pTokenCliente ?? ''
     });
 
-    return this.http.post(this.url + 'api/pedido/RelatorioPedidosUsuario',requestRelatorioPedido, { headers })
+    return this.http.post(this.url + 'api/pedido/RelatorioPedidosOutrosUsuarios',requestRelatorioPedido, { headers })
   }
 
   getPedidosUsuarioPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
@@ -204,6 +204,19 @@ export class PedidoService {
     });
 
     return this.http.get(this.url + 'api/pedido/RetornaUltimoPedidoPorUsuario',{ headers })
+  }
+
+  getUltimoPedidoUsuarioId(id: any){
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? '',
+      id: id
+    });
+
+    return this.http.get(this.url + 'api/pedido/RetornaUltimoPedidoPorUsuarioID',{ headers })
   }
 
   getUltimoPedidoTerceiro(terceiroID: any){
