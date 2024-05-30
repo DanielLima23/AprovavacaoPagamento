@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 export class DialogEditParcelaDialogComponent implements OnInit {
 
   parcela: Parcelas = new Parcelas()
-
+  dataVencimentoBackup: string = ""
 
   constructor(public dialogRef: MatDialogRef<DialogEditParcelaDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private toastr: ToastrService, private datePipe: DatePipe) {
@@ -25,13 +25,15 @@ export class DialogEditParcelaDialogComponent implements OnInit {
   cancel(): void {
     this.dialogRef.close();
   }
-
+  dataBackup(){
+    this.dataVencimentoBackup = this.parcela.dataVencimento
+  }
   salvar() {
     const today = new Date();
     const formattedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    const dataVencimento = this.datePipe.transform(this.parcela.dataVencimento, 'dd/MM/yyyy');
-    const dataPagamento = this.datePipe.transform(this.parcela.dataPagamento, 'dd/MM/yyyy');
+    const dataVencimento = this.datePipe.transform(this.parcela.dataVencimento, 'yyyy-MM-dd');
+    const dataPagamento = this.datePipe.transform(this.parcela.dataPagamento, 'yyyy-MM-dd');
 
     if (dataPagamento) {
       const [day, month, year] = dataPagamento.split('/');
@@ -57,6 +59,7 @@ export class DialogEditParcelaDialogComponent implements OnInit {
         return;
       }
     }
+
 
     this.parcela.valorParcela = this.parcela.valorParcela.trim()
     this.dialogRef.close(this.parcela);

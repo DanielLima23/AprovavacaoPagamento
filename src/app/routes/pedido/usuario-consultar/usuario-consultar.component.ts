@@ -73,7 +73,7 @@ export class PedidoUsuarioConsultarComponent implements OnInit {
     requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value
     requestRelatorioPedido.terceiro = false;
 
-    this.pedidoService.getPedidosUsuarioPorData(requestRelatorioPedido).subscribe(
+    this.pedidoService.getPedidosOutrosUsuarioPorData(requestRelatorioPedido).subscribe(
       (data: any[]) => {
         this.pedidos = data;
         if (!this.isPrimeiraConsulta) {

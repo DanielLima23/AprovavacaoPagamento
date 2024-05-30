@@ -121,7 +121,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   public meuPedidoForm: UntypedFormGroup = new UntypedFormGroup({
 
-    ID: new UntypedFormControl(0),
+    id: new UntypedFormControl(0),
     TipoPedido: new UntypedFormControl(0),
     descricao: new UntypedFormControl(undefined),
     listaFormaPagamento: new UntypedFormArray([]),
@@ -184,19 +184,32 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     formaPagamento.get(propriedade)?.setValue(valor);
   }
 
-  adicionarParcela() {
-    const novaParcela = new UntypedFormGroup({
-      id: new UntypedFormControl(),
-      parcelaReferencia: new UntypedFormControl(),
-      valorParcela: new UntypedFormControl(),
-      dataPagamento: new UntypedFormControl(),
-      dataVencimento: new UntypedFormControl()
-    });
+  // adicionarParcela() {
+  //   const novaParcela = new UntypedFormGroup({
+  //     id: new UntypedFormControl(),
+  //     parcelaReferencia: new UntypedFormControl(),
+  //     valorParcela: new UntypedFormControl(),
+  //     dataPagamento: new UntypedFormControl(),
+  //     dataVencimento: new UntypedFormControl()
+  //   });
 
-    const listaFormaPagamento = this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray;
-    const ultimaFormaPagamento = listaFormaPagamento.at(listaFormaPagamento.length - 1) as UntypedFormGroup;
-    const listaParcelas = ultimaFormaPagamento.get('listaParcelas') as UntypedFormArray;
-    listaParcelas.push(novaParcela);
+  //   const listaFormaPagamento = this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray;
+  //   const ultimaFormaPagamento = listaFormaPagamento.at(listaFormaPagamento.length - 1) as UntypedFormGroup;
+  //   const listaParcelas = ultimaFormaPagamento.get('listaParcelas') as UntypedFormArray;
+  //   listaParcelas.push(novaParcela);
+  // }
+
+  addParcela(parcela: Parcelas) {
+    const parcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    const parcelaGroup = new UntypedFormGroup({
+      id: new UntypedFormControl(parcela.id),
+      parcelaReferencia: new UntypedFormControl(parcela.parcelaReferencia),
+      quantidadeParcelas: new UntypedFormControl(parcela.quantidadeParcelas),
+      valorParcela: new UntypedFormControl(parcela.valorParcela),
+      dataPagamento: new UntypedFormControl(parcela.dataPagamento),
+      dataVencimento: new UntypedFormControl(parcela.dataVencimento)
+    });
+    parcelasArray.push(parcelaGroup);
   }
 
   removerParcela(indexFormaPagamento: number, indexParcela: number) {
@@ -224,6 +237,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     if (this.idPedido > 0) {
       this.formaPagamentoForm.disable();
       this.meuPedidoForm.disable()
+      this.preencheQtdParcelas()
       this.findPedidoByCodigo()
       return;
     }
@@ -240,11 +254,36 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.preencheListaFuncionario()
   }
 
+  aprovacoes: any[] = []
+  isPedidoRecusado: boolean = false
+  isPedidoRecusadoMetodo(pedido: any): boolean {
+    this.aprovacoes.push(pedido.responsavelAprovacao)
+    this.aprovacoes.push(pedido.financeiroAprovacao)
+    this.aprovacoes.push(pedido.ceoAprovacao)
+    this.aprovacoes.push(pedido.diretorAprovacao)
+
+    if (this.aprovacoes.includes(2)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   isAprovadoDiretor: any = false;
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
         this.isAprovadoDiretor = pedido.diretorAprovacao
+        if (this.isPedidoRecusadoMetodo(pedido)) {
+          this.isPedidoRecusado = true
+          this.formaPagamentoForm.enable()
+
+          this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+          this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+          this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(pedido.formaPagamento[0].quantidadeParcelas)
+        } else {
+          this.isPedidoRecusado = false
+        }
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {
             this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
@@ -252,6 +291,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
             this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
             this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
             this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+            this.meuPedidoForm.get('id')?.setValue(pedido.id);
+
           }
         )
 
@@ -294,9 +335,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         if (pedido.formaPagamento[0].parcelas.length > 1) {
           this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
           this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
-
+          this.limparParcelas()
           pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
             this.parcelas.push(parcela);
+            this.addParcela(parcela)
           })
         }
         this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
@@ -370,7 +412,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     this.isUltimoPedido = true
   }
 
-  limparParcelas(){
+  limparParcelas() {
     const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
     parcelaArray.clear()
   }
@@ -433,10 +475,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   voltar() {
-    if(this.isRelatorioPagamento){
+    if (this.isRelatorioPagamento) {
       this.router.navigate(['/administracao/relatorio-pagamento'], { state: { relatorioPagamento: 'usuario' } });
 
-    }else if (this.isRelatorio) {
+    } else if (this.isRelatorio) {
       this.router.navigate(['/administracao/relatorio-pedido']);
     } else {
       this.router.navigate(['/pedido/consultar']);
@@ -1066,6 +1108,15 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   openDialog(parcela: Parcelas): void {
     parcela.exclusao = false;
+    if (parcela.dataPagamento.includes('T')) {
+      parcela.dataPagamento = parcela.dataPagamento.slice(0, 10);
+    }
+    if (parcela.dataVencimento.includes('T')) {
+      parcela.dataVencimento = parcela.dataVencimento.slice(0, 10);
+    }
+    if (typeof parcela.valorParcela === 'number') {
+      parcela.valorParcela = this.setValorParcelaString(parcela.valorParcela);
+    }
     const dialogRef = this.dialog.open(DialogEditParcelaDialogComponent, {
       data: { ...parcela },
     });
@@ -1078,8 +1129,20 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     });
   }
 
+  setValorParcelaString(valor: any): string {
+    let valorTotal = valor.toFixed(2).toString();
+    const partes = valorTotal.split('.');
+    const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    let parteDecimal = partes[1] || '00';
+    parteDecimal = parteDecimal.padEnd(2, '0');
+    valorTotal = parteInteira + ',' + parteDecimal;
+    return valorTotal
+  }
+
+
   openDialogDelete(parcela: Parcelas): void {
     parcela.exclusao = true;
+
     const dialogRef = this.dialog.open(DialogEditParcelaDialogComponent, {
       width: '350px',
       data: { ...parcela },
@@ -1174,8 +1237,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
-
 
 
 

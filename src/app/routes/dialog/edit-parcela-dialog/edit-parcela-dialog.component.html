@@ -1,3 +1,4 @@
+
 <mat-card *ngIf="!parcela.exclusao">
   <mat-card-content>
     <mat-card-header>
@@ -28,7 +29,7 @@
                maxlength=""
                placeholder="" id="dataVencimento"
                type="date"
-               [(ngModel)]="parcela.dataVencimento">
+               [(ngModel)]="this.parcela.dataVencimento" (change)="dataBackup()">
       </mat-form-field>
     </div>
     <div class="col-sm-12 mt-2">
@@ -40,7 +41,7 @@
                maxlength=""
                placeholder="" id="dataPagamento"
                type="date"
-               [(ngModel)]="parcela.dataPagamento"
+               [(ngModel)]="this.parcela.dataPagamento"
                >
       </mat-form-field>
     </div>
