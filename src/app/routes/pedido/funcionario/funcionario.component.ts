@@ -1825,7 +1825,7 @@ export class PedidoFuncionarioComponent implements OnInit {
       valorTotal = parteInteira + ',' + parteDecimal;
 
       // Atualiza o valor da parcela com a string formatada
-      parcela.patchValue({ id: 0, valorParcela: valorTotal.trim() });
+      parcela.patchValue({ valorParcela: valorTotal.trim() });
     }
   }
 
@@ -2280,7 +2280,7 @@ export class PedidoFuncionarioComponent implements OnInit {
 
 
           const parcela: Parcelas = {
-            id: i + 1,
+            id: 0,
             parcelaReferencia: i + 1,
             dataVencimento: this.formatarData(dataVencimento),
             dataPagamento: this.formatarData(dataPagamento),
