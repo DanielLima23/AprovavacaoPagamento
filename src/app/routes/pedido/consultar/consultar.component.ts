@@ -1,8 +1,146 @@
+// import { Component, OnInit } from '@angular/core';
+// import { Router } from '@angular/router';
+// import { PedidoService } from '../pedido.service';
+// import { DatePipe } from '@angular/common';
+// import { UntypedFormGroup, UntypedFormControl, UntypedFormArray, Validators } from '@angular/forms';
+// import { ToastrService } from 'ngx-toastr';
+// import { TipoStatusPagamento } from 'app/util/classes/select-tipo-status-pagamento';
+// import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
+// import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
+
+// @Component({
+//   selector: 'app-pedido-consultar',
+//   templateUrl: './consultar.component.html',
+//   styleUrls: ['./consultar.component.scss']
+// })
+// export class PedidoConsultarComponent implements OnInit {
+
+
+//   displayedColumns: string[] = ['descricao', 'responsavel', 'actions'];
+//   pedidos: any = [];
+//   idPedido: number = 0
+//   listaTipoStatusPagamento: any
+//   isPrimeiraConsulta: boolean = true;
+
+//   constructor(private router: Router,
+//     private pedidoService: PedidoService,
+//     private datePipe: DatePipe,
+//     private toastr: ToastrService
+//   ) { }
+
+//   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
+//     dataInicio: new UntypedFormControl(undefined),
+//     dataFim: new UntypedFormControl(undefined),
+//     statusPagamento: new UntypedFormControl(0),
+//     filtraStatusPagamento: new UntypedFormControl(true)
+//   });
+
+//   ngOnInit() {
+//     this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido
+//     this.getCurrentDate()
+//     this.consultarPedidos()
+//   }
+
+//   adicionar() {
+//     this.router.navigate(['/pedido/adicionar']);
+//   }
+
+//   verPedido(id: number) {
+//     this.idPedido = id
+//     this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
+//   }
+
+//   // preencheListaPedidos() {
+//   //   this.pedidoService.getListPedidosUsuario().subscribe(data => {
+//   //     this.pedidos = data
+//   //   })
+//   // }
+
+
+//   getCurrentDate(): void {
+//     const dataFim = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+
+//     const startDate = new Date();
+//     startDate.setDate(startDate.getDate() - 30);
+//     const dataInicio = this.datePipe.transform(startDate, 'yyyy-MM-dd');
+//     this.consultarPedidoForm.get('dataInicio')?.setValue(dataInicio);
+//     this.consultarPedidoForm.get('dataFim')?.setValue(dataFim);
+//   }
+
+//   consultarPedidos() {
+//     const requestRelatorioPedido = new RequestRelatorioPedidos()
+//     requestRelatorioPedido.dataInicio= this.consultarPedidoForm.get('dataInicio')?.value
+//     requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59'
+//     requestRelatorioPedido.statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value
+//     requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value
+//     requestRelatorioPedido.terceiro = false;
+
+//     this.pedidoService.getPedidosUsuarioPorDataa(requestRelatorioPedido,this.currentPage, this.itemsPerPage).subscribe(
+//       (data: any[]) => {
+//         this.pedidos = data;
+//         if (!this.isPrimeiraConsulta) {
+//           if (this.pedidos.items.length === 0) {
+//             this.toastr.warning('Nenhum pedido encontrado', 'Atenção')
+//           }
+//         }
+//         this.isPrimeiraConsulta = false;
+//         this.totalItensEncontrados = this.pedidos.items.length
+//         this.totalPages = Math.ceil(this.totalItensEncontrados / this.itemsPerPage);
+//         this.updatePagedPedidos();
+//         this.pages = Array.from({ length: this.totalPages }, (_, i) => i );
+//       }
+//     )
+//   }
+
+//   filtraStatusPagamento() {
+//     const statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value;
+//     if (statusPagamento === 99) {
+//       this.consultarPedidoForm.get('filtraStatusPagamento')?.setValue(false);
+//     } else {
+//       this.consultarPedidoForm.get('filtraStatusPagamento')?.setValue(true);
+//     }
+//   }
+
+//   currentPage = 0;
+//   itemsPerPage = 10;
+//   totalPages = 1;
+//   pages: number[] = [];
+//   pagedPedidos: any[] = [];
+//   totalItensEncontrados: number = 0
+
+//     onItemsPerPageChange() {
+//     this.currentPage = 0;
+//     this.consultarPedidos();
+//   }
+
+//   updatePagedPedidos() {
+//     const startIndex = this.currentPage * this.itemsPerPage;
+//     const endIndex = startIndex + this.itemsPerPage;
+//     this.pagedPedidos = this.pedidos.items.slice(startIndex, endIndex);
+//   }
+
+//   changePage(page: number) {
+//     if (page >= 1 && page <= this.totalPages) {
+//       if(page == 1){
+//         this.currentPage = page -1
+//       }else{
+//         this.currentPage = page;
+
+//       }
+//       this.updatePagedPedidos();
+//     }
+
+//     this.consultarPedidos()
+
+//   }
+// }
+
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PedidoService } from '../pedido.service';
 import { DatePipe } from '@angular/common';
-import { UntypedFormGroup, UntypedFormControl, UntypedFormArray, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TipoStatusPagamento } from 'app/util/classes/select-tipo-status-pagamento';
 import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-pedidos';
@@ -15,18 +153,16 @@ import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
 })
 export class PedidoConsultarComponent implements OnInit {
 
-
   displayedColumns: string[] = ['descricao', 'responsavel', 'actions'];
   pedidos: any = [];
-  idPedido: number = 0
-  listaTipoStatusPagamento: any
+  idPedido: number = 0;
+  listaTipoStatusPagamento: any;
   isPrimeiraConsulta: boolean = true;
 
   constructor(private router: Router,
-    private pedidoService: PedidoService,
-    private datePipe: DatePipe,
-    private toastr: ToastrService
-  ) { }
+              private pedidoService: PedidoService,
+              private datePipe: DatePipe,
+              private toastr: ToastrService) { }
 
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
@@ -36,9 +172,9 @@ export class PedidoConsultarComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido
-    this.getCurrentDate()
-    this.consultarPedidos()
+    this.listaTipoStatusPagamento = TipoStatusPedido.statusPedido;
+    this.getCurrentDate();
+    this.consultarPedidos();
   }
 
   adicionar() {
@@ -46,20 +182,12 @@ export class PedidoConsultarComponent implements OnInit {
   }
 
   verPedido(id: number) {
-    this.idPedido = id
+    this.idPedido = id;
     this.router.navigate(['/pedido/adicionar'], { state: { id: id } });
   }
 
-  // preencheListaPedidos() {
-  //   this.pedidoService.getListPedidosUsuario().subscribe(data => {
-  //     this.pedidos = data
-  //   })
-  // }
-
-
   getCurrentDate(): void {
     const dataFim = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30);
     const dataInicio = this.datePipe.transform(startDate, 'yyyy-MM-dd');
@@ -68,24 +196,28 @@ export class PedidoConsultarComponent implements OnInit {
   }
 
   consultarPedidos() {
-    const requestRelatorioPedido = new RequestRelatorioPedidos()
-    requestRelatorioPedido.dataInicio= this.consultarPedidoForm.get('dataInicio')?.value
-    requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59'
-    requestRelatorioPedido.statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value
-    requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value
+    const requestRelatorioPedido = new RequestRelatorioPedidos();
+    requestRelatorioPedido.dataInicio = this.consultarPedidoForm.get('dataInicio')?.value;
+    requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59';
+    requestRelatorioPedido.statusPagamento = this.consultarPedidoForm.get('statusPagamento')?.value;
+    requestRelatorioPedido.filtraStatusPagamento = this.consultarPedidoForm.get('filtraStatusPagamento')?.value;
     requestRelatorioPedido.terceiro = false;
 
-    this.pedidoService.getPedidosUsuarioPorData(requestRelatorioPedido).subscribe(
-      (data: any[]) => {
+    this.pedidoService.getPedidosUsuarioPorData(requestRelatorioPedido, this.currentPage, this.itemsPerPage).subscribe(
+      (data: any) => {
         this.pedidos = data;
         if (!this.isPrimeiraConsulta) {
-          if (this.pedidos.length === 0) {
-            this.toastr.warning('Nenhum pedido encontrado', 'Atenção')
+          if (this.pedidos.totalItems === 0) {
+            this.toastr.warning('Nenhum pedido encontrado', 'Atenção');
           }
         }
         this.isPrimeiraConsulta = false;
+        this.totalItensEncontrados = this.pedidos.totalItems ? this.pedidos.totalItems : 0
+        this.totalPages = Math.ceil(this.totalItensEncontrados / this.itemsPerPage);
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i);
+        this.updatePagedPedidos();
       }
-    )
+    );
   }
 
   filtraStatusPagamento() {
@@ -94,6 +226,31 @@ export class PedidoConsultarComponent implements OnInit {
       this.consultarPedidoForm.get('filtraStatusPagamento')?.setValue(false);
     } else {
       this.consultarPedidoForm.get('filtraStatusPagamento')?.setValue(true);
+    }
+  }
+
+  currentPage = 0;
+  itemsPerPage = 10;
+  totalPages = 1;
+  pages: number[] = [];
+  pagedPedidos: any[] = [];
+  totalItensEncontrados: number = 0;
+
+  onItemsPerPageChange() {
+    this.currentPage = 0;
+    this.consultarPedidos();
+  }
+
+  updatePagedPedidos() {
+    const startIndex = this.currentPage * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedPedidos = this.pedidos.items.slice(startIndex, endIndex);
+  }
+
+  changePage(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.consultarPedidos();
     }
   }
 }

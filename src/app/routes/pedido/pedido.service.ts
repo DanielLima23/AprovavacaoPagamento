@@ -20,6 +20,7 @@ export class PedidoService {
   }
 
   criarPedido(pReqPedido: UntypedFormGroup): Observable<any> {
+
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
@@ -28,9 +29,22 @@ export class PedidoService {
       tokenCliente: pTokenCliente ?? ''
     });
 
-    //return this.http.post(this.url + 'api/pedido/NovoPedido', pReqPedido, { headers })
-    return this.http.post(this.url + 'api/pedido/NovdqwdwoPedido', pReqPedido, { headers })
+    return this.http.post(this.url + 'api/pedido/NovoPedido', pReqPedido, { headers })
+    //return this.http.post(this.url + 'api/pedido/NovdqwdwoPedido', pReqPedido, { headers })
 
+  }
+
+  atualizarPedido(pReqPedido: UntypedFormGroup): Observable<any> {
+    const pTokenUsuario = this.tokenService.getToken();
+    const pTokenCliente = this.tokenService.getTokenCliente();
+
+    const headers = new HttpHeaders({
+      tokenUsuario: pTokenUsuario ?? '',
+      tokenCliente: pTokenCliente ?? ''
+    });
+
+    return this.http.post(this.url + 'api/pedido/AtualizarPedido', pReqPedido, { headers })
+    //return this.http.post(this.url + 'api/pedido/NovdqwdwoPedido', pReqPedido, { headers })
   }
 
 
@@ -160,49 +174,57 @@ export class PedidoService {
     return this.http.post(this.url + 'api/pedido/AtualizarPagamento', requestAprovarParcela,{ headers })
   }
 
-  getPedidosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
+  getPedidosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos,pPagina: number,pTamanhoPagina:number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      pPagina:pPagina,
+      pTamanhoPagina: pTamanhoPagina
     });
 
     return this.http.post(this.url + 'api/pedido/RelatorioPedidosUsuario',requestRelatorioPedido, { headers })
   }
 
-  getPedidosOutrosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
+  getPedidosOutrosUsuarioPorData(requestRelatorioPedido: RequestRelatorioPedidos,pPagina: number,pTamanhoPagina:number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      pPagina:pPagina,
+      pTamanhoPagina: pTamanhoPagina
     });
 
     return this.http.post(this.url + 'api/pedido/RelatorioPedidosOutrosUsuarios',requestRelatorioPedido, { headers })
   }
 
-  getPedidosUsuarioPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
+  getPedidosUsuarioPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos,pPagina: number,pTamanhoPagina:number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      pPagina:pPagina,
+      pTamanhoPagina: pTamanhoPagina
     });
 
     return this.http.post(this.url + 'api/pedido/RelatorioPedidosADM', requestRelatorioPedido,{ headers })
   }
 
-  getPagamentosPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos): Observable<any> {
+  getPagamentosPorDataAdm(requestRelatorioPedido: RequestRelatorioPedidos,pPagina: number,pTamanhoPagina:number): Observable<any> {
     const pTokenUsuario = this.tokenService.getToken();
     const pTokenCliente = this.tokenService.getTokenCliente();
 
     const headers = new HttpHeaders({
       tokenUsuario: pTokenUsuario ?? '',
-      tokenCliente: pTokenCliente ?? ''
+      tokenCliente: pTokenCliente ?? '',
+      pPagina:pPagina,
+      pTamanhoPagina: pTamanhoPagina
     });
 
     return this.http.post(this.url + 'api/pedido/RelatorioPagamentosADM', requestRelatorioPedido,{ headers })

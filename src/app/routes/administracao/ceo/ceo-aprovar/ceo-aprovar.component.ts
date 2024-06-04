@@ -38,7 +38,15 @@ import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observac
 export class AdministracaoCeoCeoAprovarComponent implements OnInit {
 
   recusarPedido() {
-    throw new Error('Method not implemented.');
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
+    requestAprovaPedido.ceo = 2
+
+    this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+      (data: any) => {
+        this.toastr.success("Pedido recusado com sucesso!", 'Sucesso')
+        this.router.navigate(['/administracao/ceo-aprovacao-pendente'])
+      }
+    )
   }
   aprovarPedido() {
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
@@ -243,9 +251,9 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
             this.listaContasUsuario = data
             let contaSelecionada = 0
 
-            if(pedido.formaPagamento[0].contaBancaria){
+            if (pedido.formaPagamento[0].contaBancaria) {
               contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
-            } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
+            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
               contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
             }
 
@@ -289,7 +297,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
           })
         }
         this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
-          (obs:any) => {
+          (obs: any) => {
             this.listaObservacoes = obs
           }
         )
@@ -524,7 +532,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
 
   atualizarDadosBancariosInput() {
     const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    if(idConta > 0) {
+    if (idConta > 0) {
       this.contaService.getContaPorIdUsuario(idConta).subscribe(
         (data: any) => {
           this.formaPagamentoForm.get('conta')?.setValue(data.conta);
@@ -1026,7 +1034,7 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
     });
   }
 
-  listaObservacoes: any[]=[]
+  listaObservacoes: any[] = []
   observacao: Observacao = new Observacao()
 
 }

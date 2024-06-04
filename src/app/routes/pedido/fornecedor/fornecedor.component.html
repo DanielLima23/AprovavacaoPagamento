@@ -183,10 +183,10 @@
             Rateio?
           </mat-slide-toggle>
         </div>
-        <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value || formaPagamentoForm.get('rateio')?.value"
+        <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value"
                      class="mt-2"></mat-divider>
         <div class="col-sm-12 mt-2"
-             *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value && this.idPedido <=0">
+             *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value">
           <mat-form-field style="width: 100%;">
             <mat-label>Selecione a quantidade de parcelas</mat-label>
             <mat-select name="quantidadeParcelas"
@@ -278,7 +278,7 @@
               <th class="text-center color-table align-middle">Data pagamento</th>
               <th class="text-center color-table align-middle">Valor</th>
               <th class="text-center color-table align-middle">Pagamento</th>
-              <th class="text-center color-table align-middle" *ngIf="this.idPedido <= 0">Ações</th>
+              <th class="text-center color-table align-middle" *ngIf="isPedidoRecusado || idPedido <= 0">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -292,11 +292,11 @@
                   date:'dd/MM/yyyy'}}</td>
                 <td style="width: 20%;" class="color-table align-middle">{{
                   formatarParcela(parcela.valorParcela) }}</td>
-                <td style="width: 20%;" class="color-table align-middle"[ngClass]="{
+                <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
                   'text-warning': parcela.statusPagamento === 0,
                   'text-success': parcela.statusPagamento === 1,
                   'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 && isAprovadoDiretor == 1 ? "Pendente de agendamento" : parcela.statusPagamento == 0 && isAprovadoDiretor == 0 ? "Pendente de aprovacao" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
-                <td style="width: 20%;" class="color-table align-middle" *ngIf="this.idPedido <= 0">
+                <td style="width: 20%;" class="color-table align-middle" *ngIf="isPedidoRecusado || idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">
                     <mat-icon>edit</mat-icon>
@@ -392,10 +392,11 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.idPedido <= 0" mat-flat-button extended color="warn" class="m-3 mt-2"
+      <button *ngIf="this.idPedido <= 0 || isPedidoRecusado" mat-flat-button extended color="warn" class="m-3 mt-2"
               (click)="openFileInput.click()">
         <mat-icon>attach_file</mat-icon>
-        Anexar arquivo<span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
+        Anexar arquivo
+        <!-- <span *ngIf="filesDisplay"> ({{ filesDisplay }})</span> -->
         <input #openFileInput type="file" style="display: none"
                (change)="onFileSelected($event)" />
       </button>
@@ -448,7 +449,7 @@
   <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
-        <button *ngIf="this.idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid"
+        <button *ngIf="isPedidoRecusado || idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid"
                 (click)="validationSave()"
                 mat-flat-button
                 extended

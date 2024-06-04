@@ -157,15 +157,19 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     requestRelatorioPedido.terceiro = this.consultarPedidoForm.get('terceiro')?.value
     requestRelatorioPedido.idTerceiro = this.consultarPedidoForm.get('idTerceiro')?.value
     requestRelatorioPedido.tipoTerceiro = this.consultarPedidoForm.get('tipoTerceiro')?.value
-    this.pedidoService.getPedidosUsuarioPorDataAdm(requestRelatorioPedido).subscribe(
+    this.pedidoService.getPedidosUsuarioPorDataAdm(requestRelatorioPedido, this.currentPage, this.itemsPerPage).subscribe(
       (data: any[]) => {
         this.pedidos = data;
         if (!this.isPrimeiraConsulta) {
-          if (this.pedidos.length === 0) {
+          if (this.pedidos.totalItems === 0) {
             this.toastr.warning('Nenhum pedido encontrado', 'Atenção')
           }
         }
         this.isPrimeiraConsulta = false;
+        this.totalItensEncontrados = this.pedidos.totalItems ? this.pedidos.totalItems : 0
+        this.totalPages = Math.ceil(this.totalItensEncontrados / this.itemsPerPage);
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i);
+        this.updatePagedPedidos();
       }
     )
   }
@@ -205,6 +209,31 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     } else {
       //this.consultarPedidoForm.get('centroDeCustoID')?.enable()
 
+    }
+  }
+
+  currentPage = 0;
+  itemsPerPage = 10;
+  totalPages = 1;
+  pages: number[] = [];
+  pagedPedidos: any[] = [];
+  totalItensEncontrados: number = 0;
+
+  onItemsPerPageChange() {
+    this.currentPage = 0;
+    this.consultarPedidos();
+  }
+
+  updatePagedPedidos() {
+    const startIndex = this.currentPage * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedPedidos = this.pedidos.items.slice(startIndex, endIndex);
+  }
+
+  changePage(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.consultarPedidos();
     }
   }
 

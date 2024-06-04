@@ -39,14 +39,22 @@ import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observac
 export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent implements OnInit {
 
   recusarPedido() {
-    throw new Error('Method not implemented.');
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
+    requestAprovaPedido.responsavel = 2
+
+    this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+      (data: any) => {
+        this.toastr.success("Pedido recusado com sucesso!", 'Sucesso')
+        this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
+      }
+    )
   }
   aprovarPedido() {
-    const requestAprovaPedido = new RequestAprovaPedido(this.pedido,this.formaPagamentoForm.get('idCentroDeCusto')?.value,this.formaPagamentoForm.get('Observacao')?.value)
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
     requestAprovaPedido.responsavel = 1;
     this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
-      (data:any) => {
-        this.toastr.success("Pedido aprovado com sucesso!",'Sucesso')
+      (data: any) => {
+        this.toastr.success("Pedido aprovado com sucesso!", 'Sucesso')
         this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
       }
     )
@@ -200,7 +208,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent i
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
 
-    if(!this.pedido.pedidoId){
+    if (!this.pedido.pedidoId) {
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
     }
 
@@ -241,9 +249,9 @@ export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent i
 
             let contaSelecionada = 0
 
-            if(pedido.formaPagamento[0].contaBancaria){
+            if (pedido.formaPagamento[0].contaBancaria) {
               contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
-            } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
+            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
               contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
             }
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
@@ -515,7 +523,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent i
 
   atualizarDadosBancariosInput() {
     const idConta = this.formaPagamentoForm.get('idContaBancaria')?.value;
-    if(idConta > 0){
+    if (idConta > 0) {
       this.contaService.getContaPorIdTerceiro(idConta).subscribe(
         (data: any) => {
           this.formaPagamentoForm.get('conta')?.setValue(data.conta);
@@ -655,7 +663,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent i
           dataPagamento: this.formatarData(dataPagamento),
           valorParcela: parseFloat(valorParcela.toFixed(2)),
           statusPagamento: 0,
-          quantidadeParcelas:0,
+          quantidadeParcelas: 0,
           exclusao: false,
         };
         this.parcelas.push(parcela);
@@ -1017,6 +1025,6 @@ export class AdministracaoResponsavelCentroResponsavelAprovarTerceiroComponent i
     });
   }
 
-  listaObservacoes: any[]=[]
+  listaObservacoes: any[] = []
   observacao: Observacao = new Observacao()
 }

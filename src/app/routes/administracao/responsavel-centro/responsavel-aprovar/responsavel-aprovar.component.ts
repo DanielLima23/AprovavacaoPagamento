@@ -38,7 +38,15 @@ import { Observable } from 'rxjs';
 })
 export class AdministracaoResponsavelCentroResponsavelAprovarComponent implements OnInit {
   recusarPedido() {
-    throw new Error('Method not implemented.');
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
+    requestAprovaPedido.responsavel = 2
+
+    this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+      (data: any) => {
+        this.toastr.success("Pedido recusado com sucesso!", 'Sucesso')
+        this.router.navigate(['/administracao/responsavel-aprovacao-pendente'])
+      }
+    )
   }
   aprovarPedido() {
 
@@ -1015,7 +1023,7 @@ export class AdministracaoResponsavelCentroResponsavelAprovarComponent implement
     });
   }
 
-  listaObservacoes: any[]=[]
+  listaObservacoes: any[] = []
   observacao: Observacao = new Observacao()
 
 }

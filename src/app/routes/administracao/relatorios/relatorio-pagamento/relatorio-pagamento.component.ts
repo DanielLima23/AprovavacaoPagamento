@@ -222,7 +222,7 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     requestRelatorioPedido.terceiro = this.consultarPedidoForm.get('terceiro')?.value
     requestRelatorioPedido.idTerceiro = this.consultarPedidoForm.get('idTerceiro')?.value
     requestRelatorioPedido.tipoTerceiro = this.consultarPedidoForm.get('tipoTerceiro')?.value
-    this.pedidoService.getPagamentosPorDataAdm(requestRelatorioPedido).subscribe(
+    this.pedidoService.getPagamentosPorDataAdm(requestRelatorioPedido, 0,0).subscribe(
       (data: any) => {
         this.pagamentos = data;
         if (this.pagamentos.dadosGrafico != undefined && this.pagamentos.dadosGrafico != null) {
@@ -240,11 +240,15 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
         }
 
         if (!this.isPrimeiraConsulta) {
-          if (this.pagamentos.length === 0) {
+          if (this.pagamentos.listaParcelas.length === 0) {
             this.toastr.warning('Nenhum pagamento encontrado', 'Atenção')
           }
         }
         this.isPrimeiraConsulta = false;
+        // this.totalItensEncontrados = this.pagamentos.totalItems ? this.pagamentos.totalItems : 0
+        // this.totalPages = Math.ceil(this.totalItensEncontrados / this.itemsPerPage);
+        // this.pages = Array.from({ length: this.totalPages }, (_, i) => i);
+        // this.updatePagedPedidos();
       }
     )
   }
@@ -295,5 +299,31 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
 
     }
   }
+
+
+  // currentPage = 0;
+  // itemsPerPage = 10;
+  // totalPages = 1;
+  // pages: number[] = [];
+  // pagedPedidos: any[] = [];
+  // totalItensEncontrados: number = 0;
+
+  // onItemsPerPageChange() {
+  //   this.currentPage = 0;
+  //   this.consultarPedidos();
+  // }
+
+  // updatePagedPedidos() {
+  //   const startIndex = this.currentPage * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   this.pagedPedidos = this.pagamentos.items.slice(startIndex, endIndex);
+  // }
+
+  // changePage(page: number) {
+  //   if (page >= 0 && page < this.totalPages) {
+  //     this.currentPage = page;
+  //     this.consultarPedidos();
+  //   }
+  // }
 
 }

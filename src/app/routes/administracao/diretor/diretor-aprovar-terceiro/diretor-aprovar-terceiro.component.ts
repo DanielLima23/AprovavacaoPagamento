@@ -39,8 +39,15 @@ import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observac
 export class AdministracaoDiretorDiretorAprovarTerceiroComponent implements OnInit {
 
   recusarPedido() {
-    throw new Error('Method not implemented.');
-  }
+    const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
+    requestAprovaPedido.diretor = 2
+
+    this.pedidoService.aprovarPedido(requestAprovaPedido).subscribe(
+      (data: any) => {
+        this.toastr.success("Pedido recusado com sucesso!", 'Sucesso')
+        this.router.navigate(['/administracao/diretor-aprovacao-pendente'])
+      }
+    )  }
   aprovarPedido() {
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
     // requestAprovaPedido.diretor = 1;
