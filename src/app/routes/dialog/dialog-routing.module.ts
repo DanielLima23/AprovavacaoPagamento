@@ -20,6 +20,7 @@ import { DialogPedidosPorParcelaComponent } from './pedidos-por-parcela/pedidos-
 import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { DialogObservacaoComponent } from './observacao/observacao.component';
 import { DialogPedidosPorParcelaFornecedorComponent } from './pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from './pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
 
 const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParcelaDialogComponent },
 { path: 'edit-rateio-dialog', component: DialogEditRateioDialogComponent },
@@ -40,7 +41,8 @@ const routes: Routes = [{ path: 'edit-parcela-dialog', component: DialogEditParc
 { path: 'pedidos-por-parcela', component: DialogPedidosPorParcelaComponent },
 { path: 'pedidos-por-parcela-funcionario', component: DialogPedidosPorParcelaFuncionarioComponent },
 { path: 'observacao', component: DialogObservacaoComponent },
-{ path: 'pedidos-por-parcela-fornecedor', component: DialogPedidosPorParcelaFornecedorComponent }
+{ path: 'pedidos-por-parcela-fornecedor', component: DialogPedidosPorParcelaFornecedorComponent },
+{ path: 'pedidos-por-parcela-outrosUsuarios', component: DialogPedidosPorParcelaOutrosUsuariosComponent }
 ];
 
 @NgModule({

@@ -1,5 +1,4 @@
-
- <form [formGroup]="meuPedidoForm" class="row mt-2">
+<form [formGroup]="meuPedidoForm" class="row mt-2">
   <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-header>
@@ -37,6 +36,14 @@
     </mat-card-content>
   </mat-card>
 
+  <mat-card *ngIf="quemSolicitou">
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">Solicitado por {{quemSolicitou}} em {{dataDaSolicitacao | date}}</mat-card-title>
+      </mat-card-header>
+    </mat-card-content>
+  </mat-card>
+
   <mat-card>
     <mat-card-content>
       <mat-card-header>
@@ -53,7 +60,7 @@
             <mat-label>Selecione um usuário</mat-label>
             <mat-select name="UsuarioID" (selectionChange)="popularUsuarioInput($event.value)"
                         formControlName="UsuarioID">
-              <mat-option  *ngFor="let funcionario of listaUsuario" [value]="funcionario.id">
+              <mat-option *ngFor="let funcionario of listaUsuario" [value]="funcionario.id">
                 {{ funcionario.nome }}
               </mat-option>
             </mat-select>
@@ -261,7 +268,8 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value && this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
+  <mat-card
+            *ngIf="formaPagamentoForm.get('exibirParcelas')?.value && this.formaPagamentoForm.get('tipoPagamento')?.value != 1">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">
@@ -279,7 +287,8 @@
               <th class="text-center color-table align-middle">Data pagamento</th>
               <th class="text-center color-table align-middle">Valor</th>
               <th class="text-center color-table align-middle">Pagamento</th>
-              <th class="text-center color-table align-middle" *ngIf="isPedidoRecusado || idPedido <= 0">Ações</th>
+              <th class="text-center color-table align-middle"
+                  *ngIf="isPedidoRecusado || idPedido <= 0">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -296,8 +305,12 @@
                 <td style="width: 20%;" class="color-table align-middle" [ngClass]="{
                   'text-warning': parcela.statusPagamento === 0,
                   'text-success': parcela.statusPagamento === 1,
-                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 && isAprovadoDiretor == 1 ? "Pendente de agendamento" : parcela.statusPagamento == 0 && isAprovadoDiretor == 0 ? "Pendente de aprovacao" : parcela.statusPagamento == 1 ? "Pago"  : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
-                <td style="width: 20%;" class="color-table align-middle" *ngIf="isPedidoRecusado || idPedido <= 0">
+                  'text-info': parcela.statusPagamento === 2}">{{ parcela.statusPagamento == 0 &&
+                  isAprovadoDiretor == 1 ? "Pendente de agendamento" : parcela.statusPagamento == 0
+                  && isAprovadoDiretor == 0 ? "Pendente de aprovacao" : parcela.statusPagamento == 1
+                  ? "Pago" : parcela.statusPagamento == 2 ?"Agendado" : ""}}</td>
+                <td style="width: 20%;" class="color-table align-middle"
+                    *ngIf="isPedidoRecusado || idPedido <= 0">
                   <button mat-icon-button (click)="openDialog(parcela)" matTooltip="Editar"
                           color="warn">
                     <mat-icon>edit</mat-icon>
@@ -393,7 +406,8 @@
         </mat-card-title>
       </mat-card-header>
       <mat-divider></mat-divider>
-      <button *ngIf="this.idPedido <= 0 || idPedido <= 0" mat-flat-button extended color="warn" class="m-3 mt-2"
+      <button *ngIf="this.idPedido <= 0 || idPedido <= 0" mat-flat-button extended color="warn"
+              class="m-3 mt-2"
               (click)="openFileInput.click()">
         <mat-icon>attach_file</mat-icon>
         Anexar arquivo
@@ -450,7 +464,8 @@
   <mat-card *ngIf="!isIdPedidoPorParcela">
     <mat-card-content>
       <mat-card-actions align="end" class="mt-2">
-        <button *ngIf="isPedidoRecusado || idPedido <= 0" [disabled]=" this.formaPagamentoForm.invalid"
+        <button *ngIf="isPedidoRecusado || idPedido <= 0"
+                [disabled]=" this.formaPagamentoForm.invalid"
                 (click)="validationSave()"
                 mat-flat-button
                 extended
@@ -468,4 +483,3 @@
     </mat-card-content>
   </mat-card>
 </form>
-

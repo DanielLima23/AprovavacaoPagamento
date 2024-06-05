@@ -85,10 +85,10 @@
 
     <mat-divider class="mt-2"></mat-divider>
 
-    <div class="d-flex justify-content-between mt-2">
-      <div class="form-group p-2">
-        <select class="form-control" id="itemsPerPage" [(ngModel)]="itemsPerPage"
-                (change)="onItemsPerPageChange()">
+    <div class="d-flex justify-content-between mt-2" *ngIf="pedidos.totalItems > 0 || pedidos.totalItems != undefined">
+      <div class="form-group p-2 select-container" >
+        <select class="form-control select-custom" id="itemsPerPage" [(ngModel)]="itemsPerPage" matTooltip="Pedidos por página"
+                (change)="onItemsPerPageChange()" (click)="abrirOuFecharSelectItensPorPagina()" (blur)="blurSelectItensPorPagina()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
@@ -97,9 +97,10 @@
           <option value="50">50</option>
           <option value="100">100</option>
         </select>
+        <mat-icon  class="select-icon" [ngClass]="{'open': isSelectOpen}">arrow_drop_down</mat-icon>
       </div>
       <div class="p-2 mt-3">
-        Total itens encontrados: {{totalItensEncontrados}}
+        Total pedidos encontrados: {{totalItensEncontrados}}
       </div>
     </div>
     <table #tabela *ngIf="pedidos.totalItems > 0"
@@ -183,11 +184,11 @@
     <div class="row mt-4" *ngIf="pedidos.totalItems > 0 || pedidos.totalItems != undefined">
       <div class="col-12 text-center">
         <div class="d-flex justify-content-center">
-          <ul class="pagination">
-            <li class="page-item" [ngClass]="{ 'disabled': currentPage === 0 }">
-              <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+          <ul class="pagination pagination-custom">
+            <li class="page-item" [ngClass]="{ 'disabled': currentPage === 0 }" matTooltip="Página anterior">
+              <a class="page-link" (click)="changePage(currentPage - 1)" >Anterior</a>
             </li>
-            <li class="page-item" *ngFor="let page of pages"
+            <li class="page-item" *ngFor="let page of pages" [matTooltip]="'Página ' + (page + 1)"
                 [ngClass]="{ 'active': page === currentPage }">
               <a class="page-link"
                  [ngClass]="{ 'text-white': page === currentPage }"
@@ -195,7 +196,7 @@
                 {{ page + 1 }}
               </a>
             </li>
-            <li class="page-item" [ngClass]="{ 'disabled': currentPage === totalPages - 1 }">
+            <li class="page-item" [ngClass]="{ 'disabled': currentPage === totalPages - 1 }" matTooltip="Próxima página">
               <a class="page-link" (click)="changePage(currentPage + 1)">Próximo</a>
             </li>
           </ul>

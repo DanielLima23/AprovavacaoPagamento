@@ -235,9 +235,15 @@ export class AdministracaoDiretorDiretorAprovarTerceiroComponent implements OnIn
     this.preencheListaFuncionario()
   }
 
+  quemSolicitou: string = ''
+  dataDaSolicitacao: any
+
+
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
+        this.quemSolicitou = pedido.usuarioSolicitou.nome
+        this.dataDaSolicitacao = pedido.dataCadastro
         this.terceiroService.getTerceiroById(pedido.formaPagamento[0].terceiro.id).subscribe(
           (terceiro: any) => {
             this.meuPedidoForm.get('nome')?.setValue(terceiro.nome);

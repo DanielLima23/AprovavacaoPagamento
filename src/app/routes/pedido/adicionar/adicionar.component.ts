@@ -296,12 +296,15 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   isAprovadoDiretor: any = false;
-
+  quemSolicitou: string = ''
+  dataDaSolicitacao: any
 
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.idPedido).subscribe(
       (pedido: any) => {
         this.isAprovadoDiretor = pedido.diretorAprovacao
+        this.quemSolicitou = pedido.usuarioSolicitou.nome
+        this.dataDaSolicitacao = pedido.dataCadastro
         if (this.isPedidoRecusadoMetodo(pedido)) {
           this.isPedidoRecusado = true
           this.formaPagamentoForm.enable()
@@ -1168,8 +1171,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     if (valorTotal && qtdParcelas && dataPagamentoStr) {
       const idsExistentes = this.ids || [];
       const novasParcelas: Parcelas[] = [];
-      let dataPagamento = new Date(`${dataPagamentoStr}T00:00:00Z`);
-      let dataVencimento = new Date(`${dataVencimentoStr}T00:00:00Z`);
+      let dataPagamento = new Date(`${dataPagamentoStr}T00:00:00`);
+      let dataVencimento = new Date(`${dataVencimentoStr}T00:00:00`);
 
       const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
       const centavosRestantes = valorTotal - (valorParcelaSemCentavos * qtdParcelas);
@@ -1190,7 +1193,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
           parcela = this.criarParcela(i, dataPagamento, dataVencimento, valorParcela, qtdParcelas);
         }
 
-        parcela.valorParcela = this.formatarValor(parcela.valorParcela);
+        //parcela.valorParcela = this.formatarValor(parcela.valorParcela);
         novasParcelas.push(parcela);
         this.addParcela(parcela);
 
@@ -1219,7 +1222,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       parcelaReferencia: indice + 1,
       dataVencimento: this.formatarData(dataVencimento),
       dataPagamento: this.formatarData(dataPagamento),
-      valorParcela: valorParcela.toFixed(2).toString(),
+      valorParcela: valorParcela.toFixed(2).toString().replace('.',','),
       statusPagamento: 0,
       quantidadeParcelas: qtdParcelas,
       exclusao: false,
@@ -1240,8 +1243,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
   }
 
   private gerarParcelasComValorTotalSemIdParcela(valorTotal: number, qtdParcelas: number, dataPagamentoStr: string, dataVencimentoStr: string) {
-    let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00Z');
-    let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00Z');
+    let dataPagamento = new Date(dataPagamentoStr + 'T00:00:00');
+    let dataVencimento = new Date(dataVencimentoStr + 'T00:00:00');
 
     // Calcula o valor das parcelas (sem centavos)
     const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
@@ -1291,8 +1294,8 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   private gerarParcelasComValorTotal(valorTotal: number, qtdParcelas: number, dataPagamentoStr: string, dataVencimentoStr: string) {
     const idsExistentes = this.ids || [];
-    let dataPagamento = new Date(`${dataPagamentoStr}T00:00:00Z`);
-    let dataVencimento = new Date(`${dataVencimentoStr}T00:00:00Z`);
+    let dataPagamento = new Date(`${dataPagamentoStr}T00:00:00`);
+    let dataVencimento = new Date(`${dataVencimentoStr}T00:00:00`);
 
     // Calcula o valor das parcelas (sem centavos)
     const valorParcelaSemCentavos = Math.floor(valorTotal / (qtdParcelas - 1));
@@ -1302,48 +1305,43 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       this.gerarParcelasComValorTotalSemIdParcela(valorTotal, qtdParcelas - 1, dataPagamentoStr, dataVencimentoStr)
       return
     }
-
-
     for (let i = 0; i < qtdParcelas; i++) {
       let valorParcela: number = valorParcelaSemCentavos;
       if (i === qtdParcelas - 1) {
         valorParcela += parseFloat(centavosRestantes.toFixed(2));
       }
-
-      // // Atualiza as datas no primeiro loop
-      // if (i == 1) {
-      //   dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
-      //   dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
-
-      // }
-      // else {
       let parcela: any;
       parcela = this.parcelasBackup.find(p => p.id === idsExistentes[i]);
-      if (parcela.parcelaReferencia == 2) {
-        dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
-        dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
-      }
-      if (parcela.parcelaReferencia != 1) {
-        if (i < idsExistentes.length) {
-          if (parcela) {
-            parcela = this.atualizarParcelaGeracaoComValor(parcela, dataPagamento, dataVencimento, valorParcela, parcela.quantidadeParcelas);
+      if (parcela) {
+        if (parcela.parcelaReferencia == 2) {
+          dataPagamento.setUTCMonth(dataPagamento.getUTCMonth() + 1);
+          dataVencimento.setUTCMonth(dataVencimento.getUTCMonth() + 1);
+        }
+        if (parcela.parcelaReferencia != 1) {
+          if (i < idsExistentes.length) {
+            if (parcela) {
+              parcela = this.atualizarParcelaGeracaoComValor(parcela, dataPagamento, dataVencimento, valorParcela, parcela.quantidadeParcelas);
+              dataPagamento = this.incrementarMes(dataPagamento);
+              dataVencimento = this.incrementarMes(dataVencimento);
+              this.parcelas.push(parcela);
+              this.addParcela(parcela);
+            }
+          } else {
+            parcela = this.criarParcela(i + 1, dataPagamento, dataVencimento, valorParcela, qtdParcelas);
+            this.parcelas.push(parcela);
             dataPagamento = this.incrementarMes(dataPagamento);
             dataVencimento = this.incrementarMes(dataVencimento);
-            this.parcelas.push(parcela);
             this.addParcela(parcela);
           }
-        } else {
-          parcela = this.criarParcela(i + 1, dataPagamento, dataVencimento, valorParcela, qtdParcelas);
-          this.parcelas.push(parcela);
-          dataPagamento = this.incrementarMes(dataPagamento);
-          dataVencimento = this.incrementarMes(dataVencimento);
-          this.addParcela(parcela);
         }
+      } else {
+        parcela = this.criarParcela((i - 1) + 1, dataPagamento, dataVencimento, valorParcela, qtdParcelas);
+        this.parcelas.push(parcela);
+        dataPagamento = this.incrementarMes(dataPagamento);
+        dataVencimento = this.incrementarMes(dataVencimento);
+        this.addParcela(parcela);
       }
-
-
     }
-
   }
 
 
@@ -1361,10 +1359,10 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   formatarData(data: Date): string {
     const dia = String(data.getDate()).padStart(2, '0');
-   const mes = String(data.getMonth() + 1).padStart(2, '0');
-   const ano = data.getFullYear();
-   return `${ano}-${mes}-${dia}`;
- }
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${ano}-${mes}-${dia}`;
+  }
 
 
   parcelasBackup: any[] = []

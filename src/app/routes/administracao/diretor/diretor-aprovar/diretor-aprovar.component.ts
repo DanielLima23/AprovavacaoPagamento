@@ -46,7 +46,8 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
         this.toastr.success("Pedido recusado com sucesso!", 'Sucesso')
         this.router.navigate(['/administracao/diretor-aprovacao-pendente'])
       }
-    )  }
+    )
+  }
   aprovarPedido() {
     const requestAprovaPedido = new RequestAprovaPedido(this.pedido, this.formaPagamentoForm.get('idCentroDeCusto')?.value, this.formaPagamentoForm.get('Observacao')?.value)
     // requestAprovaPedido.diretor = 1;
@@ -233,9 +234,14 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     this.preencheListaFuncionario()
   }
 
+  quemSolicitou: string = ''
+  dataDaSolicitacao: any
+
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
+        this.quemSolicitou = pedido.usuarioSolicitou.nome
+        this.dataDaSolicitacao = pedido.dataCadastro
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {
             this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
@@ -250,9 +256,9 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
             this.listaContasUsuario = data
             let contaSelecionada = 0
 
-            if(pedido.formaPagamento[0].contaBancaria){
+            if (pedido.formaPagamento[0].contaBancaria) {
               contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
-            } else if(pedido.formaPagamento[0].contaBancariaTerceiro){
+            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
               contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
             }
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
@@ -295,7 +301,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
         }
 
         this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
-          (obs:any) => {
+          (obs: any) => {
             this.listaObservacoes = obs
           }
         )
@@ -1031,7 +1037,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     });
   }
 
-  listaObservacoes: any[]=[]
+  listaObservacoes: any[] = []
   observacao: Observacao = new Observacao()
 
 }

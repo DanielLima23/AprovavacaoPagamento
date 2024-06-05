@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestStatusPagamento } from 'app/models/auxiliar/request-status-pagamento';
 import { DialogParcelasNaoAprovadasComponent } from 'app/routes/dialog/parcelas-nao-aprovadas/parcelas-nao-aprovadas.component';
+import { DialogPedidosPorParcelaFornecedorComponent } from 'app/routes/dialog/pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
 import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from 'app/routes/dialog/pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
 import { DialogPedidosPorParcelaComponent } from 'app/routes/dialog/pedidos-por-parcela/pedidos-por-parcela.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { ToastrService, Overlay } from 'ngx-toastr';
@@ -38,7 +40,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
   selectedRowIds: Set<number> = new Set<number>();
   selectedParcelaId: number | null = null;
   listaParcelasValidacao: any
-  requestStatusPagamento : RequestStatusPagamento[] =[]
+  requestStatusPagamento: RequestStatusPagamento[] = []
   constructor(
     private pedidoService: PedidoService,
     private toastr: ToastrService,
@@ -61,13 +63,19 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
 
   verPedidoDaParcela(id: any) {
     this.pedidoService.getPedidoPorParcelaId(id).subscribe(
-      (data: any) => {
-        if(data.formaPagamento[0].terceiro == null){
-          if(data.usuario.id == data.usuarioSolicitou.id ){
-            this.openDialogPedidoPorParcelaUsuario(data.id)
+      (pedido: any) => {
+        if (pedido.formaPagamento[0].terceiro == null) {
+          if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
+            this.openDialogPedidoPorParcelaUsuario(pedido.id)
+          }else{
+            this.openDialogPedidoPorParcelaOutrosUsuario(pedido.id)
           }
-        }else if(data.formaPagamento[0].terceiro){
-          this.openDialogPedidoPorParcelaFuncionario(data.id)
+        } else if (pedido.formaPagamento[0].terceiro) {
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
+            this.openDialogPedidoPorParcelaFuncionario(pedido.id)
+          } else if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
+            this.openDialogPedidoPorParcelaFornecedor(pedido.id)
+          }
         }
       }
     )
@@ -88,6 +96,23 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
     });
   }
 
+
+  openDialogPedidoPorParcelaOutrosUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaOutrosUsuariosComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+
   openDialogPedidoPorParcelaFuncionario(id: any): void {
     const dialogRef = this.dialog.open(DialogPedidosPorParcelaFuncionarioComponent, {
       data: id,
@@ -102,6 +127,22 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
       }
     });
   }
+
+  openDialogPedidoPorParcelaFornecedor(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFornecedorComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
   ngAfterViewInit() {
     // Atualiza o estado dos painéis
     this.restorePanelStates();
@@ -109,7 +150,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
 
   preencheListaParcelasPendentes() {
     this.pedidoService.getListParcelasPendentes(2).subscribe(data => {
-      const parcelasPorDia: ParcelaPorDia =  {};
+      const parcelasPorDia: ParcelaPorDia = {};
 
       // Agrupando as parcelas por dia
       data.forEach((item: any) => {
@@ -273,7 +314,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosPendentesComponent imple
       this.preencheListaParcelasPendentes();
       this.selectedRowIds.clear()
       if (data != null && data.length > 0) {
-        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
+        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.', 'Atenção')
 
         //this.openDialogParcelasNaoAprovadas(data)
       } else {

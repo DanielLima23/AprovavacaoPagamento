@@ -9,6 +9,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { RequestStatusPagamento } from 'app/models/auxiliar/request-status-pagamento';
 import { DialogPedidosPorParcelaFornecedorComponent } from 'app/routes/dialog/pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from 'app/routes/dialog/pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
 
 
 interface ParcelaPorDia {
@@ -41,7 +42,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
   selectedRowIds: Set<number> = new Set<number>();
   selectedParcelaId: number | null = null;
   listaParcelasValidacao: any
-  requestStatusPagamento : RequestStatusPagamento[] =[]
+  requestStatusPagamento: RequestStatusPagamento[] = []
   constructor(
     private pedidoService: PedidoService,
     private toastr: ToastrService,
@@ -64,23 +65,39 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
 
   verPedidoDaParcela(id: any) {
     this.pedidoService.getPedidoPorParcelaId(id).subscribe(
-      (data: any) => {
-        if(data.formaPagamento[0].terceiro == null){
-          if(data.usuario.id == data.usuarioSolicitou.id ){
-            this.openDialogPedidoPorParcelaUsuario(data.id)
+      (pedido: any) => {
+        if (pedido.formaPagamento[0].terceiro == null) {
+          if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
+            this.openDialogPedidoPorParcelaUsuario(pedido.id)
+          } else {
+            this.openDialogPedidoPorParcelaOutrosUsuario(pedido.id)
           }
-        }else if(data.formaPagamento[0].terceiro){
-          if(data.formaPagamento[0].terceiro.tipoTerceiro == 0){
-            this.openDialogPedidoPorParcelaFuncionario(data.id)
+        } else if (pedido.formaPagamento[0].terceiro) {
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
+            this.openDialogPedidoPorParcelaFuncionario(pedido.id)
           }
-          if(data.formaPagamento[0].terceiro.tipoTerceiro == 1){
-            this.openDialogPedidoPorParcelaFornecedor(data.id)
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
+            this.openDialogPedidoPorParcelaFornecedor(pedido.id)
           }
         }
       }
     )
   }
 
+  openDialogPedidoPorParcelaOutrosUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaOutrosUsuariosComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
   openDialogPedidoPorParcelaUsuario(id: any): void {
     const dialogRef = this.dialog.open(DialogPedidosPorParcelaComponent, {
       data: id,
@@ -133,7 +150,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
 
   preencheListaParcelasPendentes() {
     this.pedidoService.getListParcelasPendentes(0).subscribe(data => {
-      const parcelasPorDia: ParcelaPorDia =  {};
+      const parcelasPorDia: ParcelaPorDia = {};
 
       // Agrupando as parcelas por dia
       data.forEach((item: any) => {
@@ -285,7 +302,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
     this.pedidoService.pagarParcela(this.requestStatusPagamento).subscribe((data: any) => { // Adicione (data: any) =>
       if (data != null && data.length > 0) {
         // this.openDialogParcelasNaoAprovadas(data)
-        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
+        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.', 'Atenção')
 
       } else {
         this.preencheListaParcelasPendentes();
@@ -302,7 +319,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       this.preencheListaParcelasPendentes();
       // this.selectedRowIds.clear()
       if (data != null && data.length > 0) {
-        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.','Atenção')
+        this.toastr.warning('Essa parcela contém parcelas anteriores que não estão pagas.', 'Atenção')
         //this.openDialogParcelasNaoAprovadas(data)
       } else {
         this.toastr.success('Parcelas agendadas', 'Sucesso');

@@ -234,9 +234,14 @@ export class AdministracaoCeoCeoAprovarComponent implements OnInit {
     this.preencheListaFuncionario()
   }
 
+  quemSolicitou: string = ''
+  dataDaSolicitacao: any
+
   findPedidoByCodigo() {
     this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
       (pedido: any) => {
+        this.quemSolicitou = pedido.usuarioSolicitou.nome
+        this.dataDaSolicitacao = pedido.dataCadastro
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {
             this.meuPedidoForm.get('nome')?.setValue(usuario.nome);

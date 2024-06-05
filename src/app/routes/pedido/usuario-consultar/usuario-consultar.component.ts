@@ -117,4 +117,38 @@ export class PedidoUsuarioConsultarComponent implements OnInit {
     }
   }
 
+  isSelectOpen: boolean = false;
+
+  fecharSelectItensPorPagina() {
+    const selectElement = document.getElementById('itemsPerPage');
+    if (selectElement) {
+      selectElement.classList.remove('open');
+      this.isSelectOpen = false
+    }
+  }
+
+  abrirOuFecharSelectItensPorPagina() {
+    const selectElement = document.getElementById('itemsPerPage');
+    if (selectElement) {
+      if (selectElement.classList.contains('open')) {
+        this.fecharSelectItensPorPagina()
+      } else {
+        this.abrirSelectItensPorPagina()
+      }
+
+    }
+  }
+
+  blurSelectItensPorPagina() {
+    this.fecharSelectItensPorPagina()
+  }
+
+  abrirSelectItensPorPagina() {
+    const selectElement = document.getElementById('itemsPerPage');
+    if (selectElement) {
+      selectElement.classList.add('open');
+      this.isSelectOpen = true
+    }
+  }
+
 }

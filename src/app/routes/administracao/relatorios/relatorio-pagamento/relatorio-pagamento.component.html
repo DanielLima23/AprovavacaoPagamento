@@ -100,7 +100,7 @@
         [legendTitle]="'Intervalos'" [showYAxisLabel]="true" [xAxis]="true" [yAxis]="true" [gradient]="true">
       </ngx-charts-bar-vertical> -->
 
-    <div class="mt-4">
+    <div class="mt-4" *ngIf="pagamentos.length > 0 || pagamentos.listaParcelas">
       <mat-card-header>
         <mat-card-title>
           Gastos totais: {{this.valorTotal | currency : 'BRL'}}
@@ -125,12 +125,12 @@
     </div>
     <mat-divider class="mt-2"></mat-divider>
 
-    <mat-card-header>
+    <mat-card-header *ngIf="pagamentos.length > 0 || pagamentos.listaParcelas">
       <mat-card-title>
         Analítico
       </mat-card-title>
     </mat-card-header>
-    <mat-divider></mat-divider>
+    <mat-divider *ngIf="pagamentos.length > 0 || pagamentos.listaParcelas"></mat-divider>
     <!-- <div class="d-flex justify-content-between mt-2">
       <div class="form-group p-2">
         <select class="form-control" id="itemsPerPage" [(ngModel)]="itemsPerPage"
@@ -148,7 +148,7 @@
         Total itens encontrados: {{totalItensEncontrados}}
       </div>
     </div> -->
-    <table #tabela *ngIf="pagamentos.listaParcelas.length > 0"
+    <table #tabela *ngIf="pagamentos.length > 0 || pagamentos.listaParcelas"
            class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
       <thead>
         <tr>
@@ -217,7 +217,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="pagamentos.listaParcelas.length <= 0">
+<mat-card *ngIf="pagamentos.length <= 0">
   <mat-card-content class="text-center">
     Você não possui pedidos com esse status em andamento.
   </mat-card-content>

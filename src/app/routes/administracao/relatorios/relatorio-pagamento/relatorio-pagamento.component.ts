@@ -54,7 +54,7 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
 
 
   onSelect(event: any) {
-    console.log(event);
+    //console.log(event);
   }
 
   constructor(private router: Router,
@@ -70,10 +70,10 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
     dataFim: new UntypedFormControl(undefined),
-    statusPagamento: new UntypedFormControl(0),
+    statusPagamento: new UntypedFormControl(99),
     idCentroDeCusto: new UntypedFormControl(0),
     idUsuario: new UntypedFormControl(0),
-    filtraStatusPagamento: new UntypedFormControl(true),
+    filtraStatusPagamento: new UntypedFormControl(false),
     tipoTerceiro: new UntypedFormControl(0),
     terceiro: new UntypedFormControl(false),
     tipoRelatorio: new UntypedFormControl('usuario'),

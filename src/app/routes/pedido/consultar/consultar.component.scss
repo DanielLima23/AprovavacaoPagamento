@@ -1,9 +1,73 @@
-.table_custom { --bs-table-bg: transparent !important; }
+// .table_custom {
+//   --bs-table-bg: transparent !important;
+// }
 
-.color-table {
-  color: var(--primary-bg);
-}
+// .color-table {
+//   color: var(--primary-bg);
+// }
 
-.borda-vermelha-claro {
-  border: 1px solid #ffcccc !important;
-}
+// .borda-vermelha-claro {
+//   border: 1px solid #ffcccc !important;
+// }
+
+// .select-container {
+//   position: relative;
+//   width: 80px;
+// }
+
+// .select-custom {
+//   appearance: none;
+//   -webkit-appearance: none;
+//   -moz-appearance: none;
+//   background-color: transparent !important;
+//   border: 1px solid white;
+//   color: inherit;
+//   padding-right: 30px; /* Espaço para a seta */
+//   width: 100%;
+//   cursor: pointer;
+// }
+
+// .select-icon {
+//   position: absolute;
+//   right: 10px;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   transition: transform 0.3s;
+// }
+
+// .select-icon.open {
+//   transform: translateY(-50%) rotate(180deg); /* Seta apontando para cima */
+// }
+
+// .select-custom option {
+//   background-color: #333; /* Fundo preto claro para as opções */
+// }
+
+
+
+// .pagination-custom {
+//   background-color: transparent !important;
+//   color: inherit;
+// }
+
+// .pagination-custom .page-link {
+//   background-color: transparent !important;
+//   color: inherit;
+//   border: 1px solid white;
+// }
+
+// .pagination-custom .page-item.active .page-link {
+//   background-color: white !important;
+//   color: black !important;
+// }
+
+// .pagination-custom .page-item.disabled .page-link {
+//   background-color: transparent !important;
+//   color: inherit;
+// }
+
+// .pagination-custom .page-link {
+//   border: 1px solid white;
+// }
+
+// @import url(../../../../styles.scss);

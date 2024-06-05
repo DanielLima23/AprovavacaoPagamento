@@ -23,8 +23,9 @@ import { PedidoModule } from '../pedido/pedido.module';
 import { DialogPedidosPorParcelaFuncionarioComponent } from './pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
 import { DialogObservacaoComponent } from './observacao/observacao.component';
 import { DialogPedidosPorParcelaFornecedorComponent } from './pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from './pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
 
-const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent, DialogPedidosPorParcelaComponent, DialogPedidosPorParcelaFuncionarioComponent, DialogObservacaoComponent, DialogPedidosPorParcelaFornecedorComponent];
+const COMPONENTS: any[] = [DialogEditParcelaDialogComponent, DialogEditRateioDialogComponent, DialogEditCentroCustoDialogComponent, DialogEditFornecedorDialogComponent, DialogEditContaUsuarioDialogComponent, DialogEditContaTerceiroDialogComponent, DialogEditUsuarioRegisterContaComponent, DialogLogoutComponent, DialogConfirmarExclusaoComponent, DialogTrocaSenhaPrimeiroAcessoComponent, DialogTermosSegurancaComponent, DialogAddContaUsuarioComponent, DialogConfirmacaoComponent, DialogPedidosAgendadorsFinanceiroComponent, DialogAddContaFuncionarioComponent, DialogParcelasNaoAprovadasComponent, DialogPedidosPorParcelaComponent, DialogPedidosPorParcelaFuncionarioComponent, DialogObservacaoComponent, DialogPedidosPorParcelaFornecedorComponent, DialogPedidosPorParcelaOutrosUsuariosComponent];
 const COMPONENTS_DYNAMIC: any[] = [];
 
 @NgModule({
