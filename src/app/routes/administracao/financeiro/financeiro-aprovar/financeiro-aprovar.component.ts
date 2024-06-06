@@ -218,6 +218,7 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
 
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
+    this.preencheQtdParcelas()
 
     if (!this.pedido.pedidoId) {
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
@@ -238,7 +239,6 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
     this.listaTiposTerceiro = TipoTerceiroSelect.tiposTerceiro.map(terceiro => terceiro.descricao);
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
 
-    this.preencheQtdParcelas()
     // this.preencheListaCentros()
     this.preencheListaFuncionario()
   }
@@ -303,6 +303,7 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
         if (pedido.formaPagamento[0].parcelas.length > 1) {
           this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
           this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+          this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(pedido.formaPagamento[0].quantidadeParcelas)
 
           pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
             this.parcelas.push(parcela);
@@ -877,20 +878,21 @@ export class AdministracaoFinanceiroFinanceiroAprovarComponent implements OnInit
       this.dataSource.data = [...this.parcelas];
     }
   }
-
   calcularValorParcela(qtdParcelas: number): string {
 
-    const valorTotal = parseFloat(this.formaPagamentoForm.get('valorTotal')?.value)
+    const valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
+    if (valorInput) {
+      const valorTotal = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
 
-    // const valorTotal = parseFloat(this.userForm.get('valorTotalPagamento')?.value.replace(',', '.'));
-
-
-    if (valorTotal && qtdParcelas) {
-      const valorParcela = valorTotal / qtdParcelas;
-      return `x R$${valorParcela.toFixed(0)}`;
+      if (valorTotal && qtdParcelas) {
+        const valorParcelaSemCentavos = Math.floor(valorTotal / qtdParcelas);
+        const formattedValue = valorParcelaSemCentavos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        return `x ${formattedValue}`;
+      }
     }
     return '';
   }
+
 
   openNewWindow(arquivo: Arquivo): void {
     const fileType = arquivo.descricao.substring(arquivo.descricao.lastIndexOf('.') + 1);

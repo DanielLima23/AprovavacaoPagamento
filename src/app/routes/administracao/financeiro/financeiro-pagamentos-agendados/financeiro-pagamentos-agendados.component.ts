@@ -89,7 +89,7 @@ export class AdministracaoFinanceiroFinanceiroPagamentosAgendadosComponent imple
       data: id,
       width: '50%',
       maxHeight: '90vh',
-      //scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
 
     dialogRef.afterClosed().subscribe(result => {

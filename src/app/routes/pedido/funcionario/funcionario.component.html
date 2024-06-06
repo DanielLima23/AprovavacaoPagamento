@@ -404,7 +404,7 @@
               (click)="openFileInput.click()">
         <mat-icon>attach_file</mat-icon>
         Anexar arquivo
-        <!-- <span *ngIf="filesDisplay"> ({{ filesDisplay }})</span> -->
+        <span *ngIf="filesDisplay"> ({{ filesDisplay }})</span>
         <input #openFileInput type="file" style="display: none"
                (change)="onFileSelected($event)" />
       </button>
@@ -425,7 +425,7 @@
                 <button mat-icon-button (click)="openNewWindow(arquivo)" matTooltip="Visualizar">
                   <mat-icon>visibility</mat-icon>
                 </button>
-                <button *ngIf="this.idPedido <= 0" mat-icon-button (click)="removeFile(arquivo)"
+                <button *ngIf="this.idPedido <= 0 || this.isPedidoRecusado" mat-icon-button (click)="removeFile(arquivo)"
                         matTooltip="Deletar">
                   <mat-icon>delete</mat-icon>
                 </button>

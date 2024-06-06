@@ -30,8 +30,8 @@ export class PedidoFornecedorConsultarComponent implements OnInit {
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
     dataFim: new UntypedFormControl(undefined),
-    statusPagamento: new UntypedFormControl(0),
-    filtraStatusPagamento: new UntypedFormControl(true)
+    statusPagamento: new UntypedFormControl(99),
+    filtraStatusPagamento: new UntypedFormControl(false)
   });
 
   ngOnInit() {

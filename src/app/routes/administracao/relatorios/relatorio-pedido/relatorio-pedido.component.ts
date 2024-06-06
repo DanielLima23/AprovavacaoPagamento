@@ -12,6 +12,13 @@ import { RequestRelatorioPedidos } from 'app/models/auxiliar/request-relatorio-p
 import { Terceiro } from 'app/models/terceiro';
 import { TerceiroService } from '../../terceiros/terceiro.service';
 import { TipoStatusPedido } from 'app/util/classes/select-tipo-status-pedido';
+import { DialogPedidosPorParcelaFornecedorComponent } from 'app/routes/dialog/pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
+import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from 'app/routes/dialog/pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
+import { DialogPedidosPorParcelaComponent } from 'app/routes/dialog/pedidos-por-parcela/pedidos-por-parcela.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { Util } from 'app/util/util';
 
 @Component({
   selector: 'app-administracao-relatorios-relatorio-pedido',
@@ -33,7 +40,9 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private centroService: CentroDeCustoService,
-    private terceiroService: TerceiroService) { }
+    private terceiroService: TerceiroService,
+    private dialog: MatDialog,
+    private overlay: Overlay) { }
 
   public consultarPedidoForm: UntypedFormGroup = new UntypedFormGroup({
     dataInicio: new UntypedFormControl(undefined),
@@ -98,19 +107,97 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
   }
 
   verPedido(pedido: any) {
-    this.idPedido = pedido.pedidoId
+    // this.idPedido = pedido.pedidoId
 
-    if (pedido.terceiro) {
-      if (pedido.tipoTerceiro == 0) {
-        this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    // if (pedido.terceiro) {
+    //   if (pedido.tipoTerceiro == 0) {
+    //     this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    //   }
+    //   if (pedido.tipoTerceiro == 1) {
+    //     this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    //   }
+    // } else if (pedido.usuario) {
+    //   this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
+    // }
+    this.pedidoService.getPedidoById(pedido.pedidoId).subscribe(
+      (pedido: any) => {
+        if (pedido.formaPagamento[0].terceiro == null) {
+          if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
+            this.openDialogPedidoPorParcelaUsuario(pedido.id)
+          } else {
+            this.openDialogPedidoPorParcelaOutrosUsuario(pedido.id)
+          }
+        } else if (pedido.formaPagamento[0].terceiro) {
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
+            this.openDialogPedidoPorParcelaFuncionario(pedido.id)
+          }
+          if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
+            this.openDialogPedidoPorParcelaFornecedor(pedido.id)
+          }
+        }
       }
-      if (pedido.tipoTerceiro == 1) {
-        this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
-      }
-    } else if (pedido.usuario) {
-      this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.pedidoId, relatorio: 'relatorio' } });
-    }
+    )
   }
+
+  openDialogPedidoPorParcelaOutrosUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaOutrosUsuariosComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  openDialogPedidoPorParcelaUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+  openDialogPedidoPorParcelaFuncionario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFuncionarioComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+  openDialogPedidoPorParcelaFornecedor(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFornecedorComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
 
   preencheListaUsuarios() {
     this.centroService.getListaResponsaveis().subscribe(
@@ -146,7 +233,29 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     this.consultarPedidoForm.get('dataFim')?.setValue(dataFim);
   }
 
+  validaDate(dataInicio: string, dataFim: string): string {
+    let validatorDate: Util = new Util()
+
+    if(!validatorDate.isValidDate(dataInicio) && !validatorDate.isValidDate(dataFim)){
+      this.consultarPedidoForm.get('dataInicio')?.setErrors({ invalidDate: 'Data início inválida' });
+      this.consultarPedidoForm.get('dataFim')?.setErrors({ invalidDate: 'Data final inválida' });
+      return 'Datas início e final inválidas';
+    }
+
+    if (!validatorDate.isValidDate(dataInicio)) {
+      this.consultarPedidoForm.get('dataInicio')?.setErrors({ invalidDate: 'Data início inválida' });
+      return 'Data início inválida';
+    }
+
+    if (!validatorDate.isValidDate(dataFim)) {
+      this.consultarPedidoForm.get('dataFim')?.setErrors({ invalidDate: 'Data final inválida' });
+      return 'Data final inválida';
+    }
+    return ''
+  }
+
   consultarPedidos() {
+
     const requestRelatorioPedido = new RequestRelatorioPedidos()
     requestRelatorioPedido.dataInicio = this.consultarPedidoForm.get('dataInicio')?.value
     requestRelatorioPedido.dataFim = this.consultarPedidoForm.get('dataFim')?.value + 'T23:59:59'
@@ -157,6 +266,13 @@ export class AdministracaoRelatoriosRelatorioPedidoComponent implements OnInit {
     requestRelatorioPedido.terceiro = this.consultarPedidoForm.get('terceiro')?.value
     requestRelatorioPedido.idTerceiro = this.consultarPedidoForm.get('idTerceiro')?.value
     requestRelatorioPedido.tipoTerceiro = this.consultarPedidoForm.get('tipoTerceiro')?.value
+
+    let msg = this.validaDate(requestRelatorioPedido.dataInicio, requestRelatorioPedido.dataFim)
+    if (msg != '') {
+      this.toastr.warning(msg, 'Atenção')
+      return
+    }
+
     this.pedidoService.getPedidosUsuarioPorDataAdm(requestRelatorioPedido, this.currentPage, this.itemsPerPage).subscribe(
       (data: any[]) => {
         this.pedidos = data;

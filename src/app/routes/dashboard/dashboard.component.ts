@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   preencheListaPedidos(){
     this.pedidoService.getListPedidosUsuario().subscribe(data => {
       this.pedidos = data
-      this.pedidos = this.pedidos.filter((pedido: any) => pedido.statusPagamento === 0&& pedido.terceiro == "" );
+      // this.pedidos = this.pedidos.filter((pedido: any) => pedido.statusPagamento === 0 && pedido.terceiro == "" );
       this.cdr.detectChanges();
     })
   }

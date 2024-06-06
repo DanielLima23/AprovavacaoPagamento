@@ -12,6 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.service';
 import { TerceiroService } from '../../terceiros/terceiro.service';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { DialogPedidosPorParcelaFornecedorComponent } from 'app/routes/dialog/pedidos-por-parcela-fornecedor/pedidos-por-parcela-fornecedor.component';
+import { DialogPedidosPorParcelaFuncionarioComponent } from 'app/routes/dialog/pedidos-por-parcela-funcionario/pedidos-por-parcela-funcionario.component';
+import { DialogPedidosPorParcelaOutrosUsuariosComponent } from 'app/routes/dialog/pedidos-por-parcela-outros-usuarios/pedidos-por-parcela-outros-usuarios.component';
+import { DialogPedidosPorParcelaComponent } from 'app/routes/dialog/pedidos-por-parcela/pedidos-por-parcela.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { Util } from 'app/util/util';
 
 @Component({
   selector: 'app-administracao-relatorios-relatorio-pagamento',
@@ -62,7 +69,9 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private centroService: CentroDeCustoService,
-    private terceiroService: TerceiroService) {
+    private terceiroService: TerceiroService,
+    private dialog: MatDialog,
+    private overlay: Overlay) {
     // Object.assign(this, { single })
 
   }
@@ -84,7 +93,7 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
   ngOnInit() {
     this.setChartDimensions()
     this.isRadio = history.state.relatorio;
-    if(!this.isRadio){
+    if (!this.isRadio) {
       this.isRadio = history.state.relatorioPagamento;
     }
 
@@ -155,25 +164,105 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     }
   }
 
-  verPedidoDaParcela(parcela: any) {
-    this.pedidoService.getPedidoPorParcelaId(parcela.id).subscribe(
+  // verPedidoDaParcela(parcela: any) {
+  //   this.pedidoService.getPedidoPorParcelaId(parcela.id).subscribe(
+  //     (pedido: any) => {
+  //       if (pedido.formaPagamento[0].terceiro == null) {
+  //         if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
+  //           this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+  //         }else{
+  //           this.router.navigate(['/pedido/usuario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+  //         }
+  //       } else if (pedido.formaPagamento[0].terceiro) {
+  //         if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
+  //           this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+  //         }
+  //         if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
+  //           this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+  //         }
+  //       }
+  //     }
+  //   )
+  // }
+
+  verPedidoDaParcela(id: any) {
+    this.pedidoService.getPedidoPorParcelaId(id).subscribe(
       (pedido: any) => {
         if (pedido.formaPagamento[0].terceiro == null) {
           if (pedido.usuario.id == pedido.usuarioSolicitou.id) {
-            this.router.navigate(['/pedido/adicionar'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
-          }else{
-            this.router.navigate(['/pedido/usuario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+            this.openDialogPedidoPorParcelaUsuario(pedido.id)
+          } else {
+            this.openDialogPedidoPorParcelaOutrosUsuario(pedido.id)
           }
         } else if (pedido.formaPagamento[0].terceiro) {
           if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 0) {
-            this.router.navigate(['/pedido/funcionario'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+            this.openDialogPedidoPorParcelaFuncionario(pedido.id)
           }
           if (pedido.formaPagamento[0].terceiro.tipoTerceiro == 1) {
-            this.router.navigate(['/pedido/fornecedor'], { state: { id: pedido.id, relatorioPagamento: 'relatorio' } });
+            this.openDialogPedidoPorParcelaFornecedor(pedido.id)
           }
         }
       }
     )
+  }
+
+  openDialogPedidoPorParcelaOutrosUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaOutrosUsuariosComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  openDialogPedidoPorParcelaUsuario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+  openDialogPedidoPorParcelaFuncionario(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFuncionarioComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
+  openDialogPedidoPorParcelaFornecedor(id: any): void {
+    const dialogRef = this.dialog.open(DialogPedidosPorParcelaFornecedorComponent, {
+      data: id,
+      width: '50%',
+      maxHeight: '90vh',
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
 
 
@@ -211,6 +300,27 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     this.consultarPedidoForm.get('dataFim')?.setValue(dataFim);
   }
   valorTotal: any
+
+  validaDate(dataInicio: string, dataFim: string): string {
+    let validatorDate: Util = new Util()
+
+    if(!validatorDate.isValidDate(dataInicio) && !validatorDate.isValidDate(dataFim)){
+      this.consultarPedidoForm.get('dataInicio')?.setErrors({ invalidDate: 'Data início inválida' });
+      this.consultarPedidoForm.get('dataFim')?.setErrors({ invalidDate: 'Data final inválida' });
+      return 'Datas início e final inválidas';
+    }
+
+    if (!validatorDate.isValidDate(dataInicio)) {
+      this.consultarPedidoForm.get('dataInicio')?.setErrors({ invalidDate: 'Data início inválida' });
+      return 'Data início inválida';
+    }
+
+    if (!validatorDate.isValidDate(dataFim)) {
+      this.consultarPedidoForm.get('dataFim')?.setErrors({ invalidDate: 'Data final inválida' });
+      return 'Data final inválida';
+    }
+    return ''
+  }
   consultarPedidos() {
     const requestRelatorioPedido = new RequestRelatorioPedidos()
     requestRelatorioPedido.dataInicio = this.consultarPedidoForm.get('dataInicio')?.value
@@ -222,7 +332,13 @@ export class AdministracaoRelatoriosRelatorioPagamentoComponent implements OnIni
     requestRelatorioPedido.terceiro = this.consultarPedidoForm.get('terceiro')?.value
     requestRelatorioPedido.idTerceiro = this.consultarPedidoForm.get('idTerceiro')?.value
     requestRelatorioPedido.tipoTerceiro = this.consultarPedidoForm.get('tipoTerceiro')?.value
-    this.pedidoService.getPagamentosPorDataAdm(requestRelatorioPedido, 0,0).subscribe(
+
+    let msg = this.validaDate(requestRelatorioPedido.dataInicio, requestRelatorioPedido.dataFim)
+    if (msg != '') {
+      this.toastr.warning(msg, 'Atenção')
+      return
+    }
+    this.pedidoService.getPagamentosPorDataAdm(requestRelatorioPedido, 0, 0).subscribe(
       (data: any) => {
         this.pagamentos = data;
         if (this.pagamentos.dadosGrafico != undefined && this.pagamentos.dadosGrafico != null) {
