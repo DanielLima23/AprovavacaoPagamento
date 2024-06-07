@@ -1,36 +1,34 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaTerceiro } from 'app/models/conta-terceiro';
-import { ContaUsuario } from 'app/models/conta-usuario';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
+import { Rateio } from 'app/models/rateio';
 import { Terceiro } from 'app/models/terceiro';
 import { Usuario } from 'app/models/usuario';
 import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
-import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
 import { TerceiroService } from 'app/routes/administracao/terceiros/terceiro.service';
+import { DialogAddContaFuncionarioComponent } from 'app/routes/dialog/add-conta-funcionario/add-conta-funcionario.component';
+import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
+import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
+import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
-import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
-import { ToastrService } from 'ngx-toastr';
-import { map, Observable, of, startWith, switchMap } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormatadorData } from 'app/models/auxiliar/formatador-date';
-import { Rateio } from 'app/models/rateio';
-import { DialogAddContaFuncionarioComponent } from 'app/routes/dialog/add-conta-funcionario/add-conta-funcionario.component';
-import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
 import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
 import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
+import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 import { PedidoService } from '../pedido.service';
-import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 
 @Component({
   selector: 'app-pedido-fornecedor',
@@ -409,18 +407,7 @@ export class PedidoFornecedorComponent implements OnInit {
 
 
         this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
-        this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
-          (data: any[]) => {
-            this.arquivosBase64 = data;
-            this.arquivosBase64.map(arquivo => {
-              arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
-            })
-            this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
-          }
-        )
-        const formatador = new FormatadorData();
-        this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
-        this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+
 
         // this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
         let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
@@ -454,14 +441,35 @@ export class PedidoFornecedorComponent implements OnInit {
         }
 
         this.limparParcelas()
+        const formatador = new FormatadorData();
+
         if (!this.isUltimoPedido) {
           pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
             this.parcelas.push(parcela);
             this.addParcela(parcela)
           })
+
+          this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
+            (data: any[]) => {
+              this.arquivosBase64 = data;
+              this.arquivosBase64.map(arquivo => {
+                arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+              })
+              this.updateFilesDisplay()
+            }
+          )
+          this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
+          this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+          this.formaPagamentoForm.get('pedidoParcelado')?.disable()
+
         } else {
+          const hoje: Date = new Date();
+          const dataAtual: string = hoje.toISOString().slice(0, 10);
+          this.formaPagamentoForm.get('dataPagamento')?.setValue(dataAtual)
+          this.formaPagamentoForm.get('dataVencimento')?.setValue(dataAtual)
           this.gerarParcelas()
         }
+        this.formaPagamentoForm.get('idCentroDeCusto')?.disable()
 
         if (this.isPedidoRecusado) {
           const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;

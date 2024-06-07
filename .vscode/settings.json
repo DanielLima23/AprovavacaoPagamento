@@ -13,7 +13,8 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.fixAll.stylelint": "explicit"
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": true
   },
   "ngx-translate.lookup.resourcesType": "json",
   "ngx-translate.lookup.resourcesPath": "src/assets/i18n/zh-CN.json",

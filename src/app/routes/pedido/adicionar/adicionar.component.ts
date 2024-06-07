@@ -1,33 +1,31 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
-import { ContaTerceiro } from 'app/models/conta-terceiro';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
+import { Rateio } from 'app/models/rateio';
+import { Usuario } from 'app/models/usuario';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
+import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
+import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
+import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
-import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
-import { ToastrService } from 'ngx-toastr';
-import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
-import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { TipoRateioSelect } from 'app/util/classes/select-tipo-rateio';
-import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
-import { Usuario } from 'app/models/usuario';
-import { Rateio } from 'app/models/rateio';
-import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
+import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
+import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
+import { ToastrService } from 'ngx-toastr';
 import { PedidoService } from '../pedido.service';
-import { RequestPedido } from 'app/models/auxiliar/request-pedido';
-import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
-import { FormatadorData } from 'app/models/auxiliar/formatador-date';
-import { DialogConfirmacaoComponent } from 'app/routes/dialog/confirmacao/confirmacao.component';
 
 
 @Component({
@@ -341,18 +339,12 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         )
 
         this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
-        this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
-          (data: any[]) => {
-            this.arquivosBase64 = data;
-            this.arquivosBase64.map(arquivo => {
-              arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
-            })
-            this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
-          }
-        )
-        const formatador = new FormatadorData();
-        this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
-        this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+
+
+
+
+
+        this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
 
         let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
         const partes = valorTotal.split('.');
@@ -364,7 +356,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
         this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
         this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
-        this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
 
         // if (pedido.formaPagamento[0].parcelas.length > 1) {
         //   this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
@@ -383,15 +374,38 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
         }
 
         this.limparParcelas()
+        const formatador = new FormatadorData();
 
-        if (!this.isUltimoPedido) {
+        if (!this.isUltimoPedido || this.idPedido > 0) {
+
           pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
             this.parcelas.push(parcela);
             this.addParcela(parcela)
           })
+
+          this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
+            (data: any[]) => {
+              this.arquivosBase64 = data;
+              this.arquivosBase64.map(arquivo => {
+                arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+              })
+              this.updateFilesDisplay()
+            }
+          )
+
+          this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
+          this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+          this.formaPagamentoForm.get('pedidoParcelado')?.disable()
+
         } else {
+          const hoje: Date = new Date();
+          const dataAtual: string = hoje.toISOString().slice(0, 10);
+          this.formaPagamentoForm.get('dataPagamento')?.setValue(dataAtual)
+          this.formaPagamentoForm.get('dataVencimento')?.setValue(dataAtual)
           this.gerarParcelas()
         }
+
+        this.formaPagamentoForm.get('idCentroDeCusto')?.disable()
 
 
         if (this.isPedidoRecusado) {
@@ -1927,4 +1941,6 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     const numberValue = parseFloat(value.replace(',', '.'));
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberValue);
   }
+
+
 }

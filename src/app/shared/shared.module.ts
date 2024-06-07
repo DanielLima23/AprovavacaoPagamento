@@ -1,28 +1,29 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { MaterialModule } from '../material.module';
 import { MaterialExtensionsModule } from '../material-extensions.module';
+import { MaterialModule } from '../material.module';
 
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { NgProgressModule } from 'ngx-progressbar';
 import { NgProgressHttpModule } from 'ngx-progressbar/http';
 import { NgProgressRouterModule } from 'ngx-progressbar/router';
-import { NgxPermissionsModule } from 'ngx-permissions';
 import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { ErrorCodeComponent } from './components/error-code/error-code.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { DisableControlDirective } from './directives/disable-control.directive';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ToObservablePipe } from './pipes/to-observable.pipe';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -43,7 +44,9 @@ const MODULES: any[] = [
   TranslateModule,
   NgxMaskDirective,
   NgxMaskPipe,
-  NgxChartsModule
+  NgxChartsModule,
+  NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' }),
+  NgxSpinnerModule
 
 ];
 const COMPONENTS: any[] = [BreadcrumbComponent, PageHeaderComponent, ErrorCodeComponent];

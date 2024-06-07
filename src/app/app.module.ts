@@ -1,30 +1,27 @@
-import { LOCALE_ID, NgModule, InjectionToken } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { InjectionToken, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
 import { CoreModule } from '@core/core.module';
-import { ThemeModule } from '@theme/theme.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SharedModule } from '@shared/shared.module';
-import { RoutesModule } from './routes/routes.module';
-import { FormlyConfigModule } from './formly-config.module';
+import { ThemeModule } from '@theme/theme.module';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { FormlyConfigModule } from './formly-config.module';
+import { RoutesModule } from './routes/routes.module';
 
+import { appInitializerProviders, BASE_URL, httpInterceptorProviders } from '@core';
 import { environment } from '@env/environment';
-import { BASE_URL, httpInterceptorProviders, appInitializerProviders } from '@core';
 
+import { CurrencyPipe, registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginService } from '@core/authentication/login.service';
 import { FakeLoginService } from './fake-login.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CurrencyPipe } from '@angular/common';
-import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import localePt from '@angular/common/locales/pt';
-import { registerLocaleData } from '@angular/common';
-import ptBr from '@angular/common/locales/pt';
 
 registerLocaleData(ptBr);
 
@@ -55,6 +52,7 @@ export const DIALOG_DEFAULT_OPTIONS = new InjectionToken<any>('DIALOG_DEFAULT_OP
       },
     }),
     BrowserAnimationsModule,
+
 
   ],
   providers: [

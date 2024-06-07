@@ -70,7 +70,7 @@
           <th class="text-center color-table align-middle">Financeiro</th>
           <th class="text-center color-table align-middle">CEO</th>
           <th class="text-center color-table align-middle">Diretor</th>
-          <th class="text-center color-table align-middle">Pagamento</th>
+          <th class="text-center color-table align-middle">Status</th>
           <th class="text-center color-table align-middle">Ações</th>
         </tr>
       </thead>
@@ -83,7 +83,8 @@
             <td class="color-table align-middle">{{ pedido.terceiro
               }}
             </td>
-            <td class="color-table align-middle">{{
+            <td class="color-table align-middle"
+            [ngClass]="{ 'text-danger': pedido.solicitaAprovEstourado === true }">{{
               pedido.valorPedido | currency: 'BRL'
               }}
             </td>
@@ -122,7 +123,7 @@
             <td class="color-table align-middle" [ngClass]="{
               'text-warning': pedido.statusPagamento === 0,
               'text-success': pedido.statusPagamento === 1,
-            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Pago" }}
+            }">{{ pedido.statusPagamento == 0 ? "Pendente" : "Finalizado" }}
             </td>
             <td style="width: 16%;" class="color-table align-middle"> <button mat-icon-button
                       matTooltip="Ver detalhes do pedido"

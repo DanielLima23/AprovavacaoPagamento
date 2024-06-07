@@ -74,15 +74,15 @@
               <span [ngClass]="{'centro-destacado': usuario.reponsavelAprovacao === false}">{{
                 usuario.nomeCentroDeCusto ? usuario.nomeCentroDeCusto : "Não contém"}}</span>
             </td>
-            <td style="width: 33.33%;" class="color-table align-middle">
+            <td style="width: 5%;" class="color-table align-middle">
               <button mat-icon-button (click)="editarUsuario(usuario.id)" matTooltip="Editar"
                       color="accent">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button (click)="openDialogDelete(usuario.id)" matTooltip="Deletar"
+              <!-- <button mat-icon-button (click)="openDialogDelete(usuario.id)" matTooltip="Deletar"
                       color="warn">
                 <mat-icon>delete</mat-icon>
-              </button>
+              </button> -->
             </td>
           </tr>
         </ng-container>
