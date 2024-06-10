@@ -1,20 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit, TrackByFunction } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl, UntypedFormGroup, UntypedFormArray, UntypedFormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Banco } from 'app/models/banco';
-import { Usuario } from 'app/models/usuario';
-import { UsuarioService } from '../usuario.service';
-import { ToastrService } from 'ngx-toastr';
-import { FormatadorData } from 'app/models/auxiliar/formatador-date';
-import { ContaUsuario } from 'app/models/conta-usuario';
-import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
-import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
-import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
-import { CentroDeCusto } from 'app/models/centro-de-custo';
-import { MatSelectChange } from '@angular/material/select';
-import { ContaTerceiro } from 'app/models/conta-terceiro';
-import { DialogEditContaUsuarioDialogComponent } from 'app/routes/dialog/edit-conta-usuario-dialog/edit-conta-usuario-dialog.component';
+import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormatadorData } from 'app/models/auxiliar/formatador-date';
+import { CentroDeCusto } from 'app/models/centro-de-custo';
+import { ContaUsuario } from 'app/models/conta-usuario';
+import { Usuario } from 'app/models/usuario';
+import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
+import { DialogEditContaUsuarioDialogComponent } from 'app/routes/dialog/edit-conta-usuario-dialog/edit-conta-usuario-dialog.component';
+import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
+import { ToastrService } from 'ngx-toastr';
+import { UsuarioService } from '../usuario.service';
 
 @Component({
   selector: 'app-usuario-editar',

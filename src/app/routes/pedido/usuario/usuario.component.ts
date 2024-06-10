@@ -1061,7 +1061,7 @@ export class PedidoUsuarioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Atualize a parcela no componente que abre o diálogo com as alterações
-        this.atualizarParcela(result.id, result);
+        this.atualizarParcela(result.parcelaReferencia, result);
       }
     });
   }
@@ -1119,7 +1119,7 @@ export class PedidoUsuarioComponent implements OnInit {
   }
 
   atualizarParcela(id: any, parcela: Parcelas) {
-    const index = this.parcelas.findIndex(objeto => objeto.id === id);
+    const index = this.parcelas.findIndex(objeto => objeto.parcelaReferencia === id);
     if (parcela.exclusao && parcela.id > 0) {
       this.deletarParcela(parcela.id)
       return;
@@ -1356,7 +1356,7 @@ export class PedidoUsuarioComponent implements OnInit {
     //this.formaPagamentoForm.get('idContaBancariaTerceiro')?.setValue(0)
     this.formaPagamentoForm.get('descricao')?.setValue(undefined)
     this.formaPagamentoForm.get('pedidoParcelado')?.setValue(0)
-    this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(0)
+    this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(1)
     this.formaPagamentoForm.get('rateio')?.setValue(0)
     this.formaPagamentoForm.get('valorTotal')?.setValue(undefined)
     this.formaPagamentoForm.get('exibirParcelas')?.setValue(false)

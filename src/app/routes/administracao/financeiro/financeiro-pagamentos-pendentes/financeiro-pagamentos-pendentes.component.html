@@ -1,33 +1,49 @@
-
 <mat-card>
   <mat-card-content>
     <mat-card-header>
-      <mat-card-title>Pagamentos pendentes<button (click)="this.preencheListaParcelasPendentes()" mat-icon-button matTooltip="Atualizar lista"><mat-icon class="pt-1">refresh</mat-icon></button></mat-card-title>
+      <mat-card-title>Pagamentos pendentes<button (click)="this.preencheListaParcelasPendentes()"
+                mat-icon-button matTooltip="Atualizar lista"><mat-icon
+                    class="pt-1">refresh</mat-icon></button></mat-card-title>
     </mat-card-header>
-    <mat-divider></mat-divider>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="listaParcelasPorMes.length === 0">
+  <mat-card-content class="text-center">
+    Não há pagamentos pendentes.
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="listaParcelasPorMes.length > 0">
+  <mat-card-content>
     <mat-accordion *ngIf="listaParcelasPorMes">
-      <ng-container *ngFor="let mes of listaParcelasPorMes" >
-        <mat-expansion-panel [expanded]="isMesOpen(mes.mesAno)" class="mt-1" (expandedChange)="clearIdsParcelas()">
+      <ng-container *ngFor="let mes of listaParcelasPorMes">
+        <mat-expansion-panel [expanded]="isMesOpen(mes.mesAno)" class="mt-1"
+                             (expandedChange)="clearIdsParcelas()">
           <mat-expansion-panel-header>
             <mat-panel-title>
               {{ mes.mesAno }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <button matTooltip="Clique na linha da tabela para selecionar"[matTooltipDisabled]="false" [disabled]="getSelectedRows().length <=0" (click)="aprovarSelecionados()" mat-flat-button extended color="primary" class="mb-2">Pagar selecionados</button>
+          <button matTooltip="Clique na linha da tabela para selecionar"
+                  [matTooltipDisabled]="false" [disabled]="getSelectedRows().length <=0"
+                  (click)="aprovarSelecionados()" mat-flat-button extended color="primary"
+                  class="mb-2">Pagar selecionados</button>
 
           <ng-container *ngFor="let dia of mes.dias" class="mt-2">
             <mat-expansion-panel [expanded]="isDiaOpen(mes.mesAno, dia.dia)" class="mt-2">
-              <mat-expansion-panel-header >
+              <mat-expansion-panel-header>
                 <mat-panel-title>
                   {{ dia.dia | date }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
               <div class="table-responsive">
-                <table class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
+                <table
+                       class="table table-sm table_custom table-striped table-hover table-bordered mt-4">
                   <thead>
                     <tr>
-                      <th class="text-center color-table align-middle sticky-sm-top">Referência parcela</th>
+                      <th class="text-center color-table align-middle sticky-sm-top">Referência
+                        parcela</th>
                       <th class="text-center color-table align-middle sticky-sm-top">Valor</th>
                       <th class="text-center color-table align-middle">Data pagamento</th>
                       <th class="text-center color-table align-middle">Data vencimento</th>
@@ -36,22 +52,31 @@
                     </tr>
                   </thead>
                   <tbody *ngFor="let parcela of dia.parcelas">
-                    <tr *ngFor="let item of parcela.parcelas" class="text-center" [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id)" style="cursor: pointer;">
-                      <td class="color-table align-middle">{{ item.parcelaReferencia + '/' + item.quantidadeParcelas }}</td>
-                      <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}</td>
+                    <tr *ngFor="let item of parcela.parcelas" class="text-center"
+                        [class.bg-info]="rowIsSelected(item.id)" (click)="onRowClick(item.id)"
+                        style="cursor: pointer;">
+                      <td class="color-table align-middle">{{ item.parcelaReferencia + '/' +
+                        item.quantidadeParcelas }}</td>
+                      <td class="color-table align-middle">{{ item.valorParcela | currency: 'BRL' }}
+                      </td>
                       <td class="color-table align-middle">{{ item.dataPagamento | date }}</td>
                       <td class="color-table align-middle">{{ item.dataVencimento | date }}</td>
                       <td class="color-table align-middle" [ngClass]="{
                         'text-warning': item.statusPagamento === 0,
                         'text-success': item.statusPagamento === 1,
                         'text-info': item.statusPagamento === 2}">
-                        {{ item.statusPagamento == 0 ? "Pendente de agendamento" : item.statusPagamento == 1 ? "Pago"  : item.statusPagamento == 2 ?"Agendado" : ""}}
+                        {{ item.statusPagamento == 0 ? "Pendente de agendamento" :
+                        item.statusPagamento == 1 ? "Pago" : item.statusPagamento == 2 ?"Agendado" :
+                        ""}}
                       </td>
                       <td style="width: 16%;" class="color-table align-middle">
-                        <button mat-icon-button matTooltip="Marcar como pago" color="primary" (click)="agendarParcela(item.id)" [disabled]="getSelectedRows().length > 0">
+                        <button mat-icon-button matTooltip="Marcar como pago" color="primary"
+                                (click)="agendarParcela(item.id)"
+                                [disabled]="getSelectedRows().length > 0">
                           <mat-icon>check_circle</mat-icon>
                         </button>
-                        <button mat-icon-button matTooltip="Ver pedido dessa parcela" color="accent" (click)="verPedidoDaParcela(item.id)">
+                        <button mat-icon-button matTooltip="Ver pedido dessa parcela" color="accent"
+                                (click)="verPedidoDaParcela(item.id)">
                           <mat-icon>visibility</mat-icon>
                         </button>
                       </td>
@@ -66,4 +91,3 @@
     </mat-accordion>
   </mat-card-content>
 </mat-card>
-

@@ -219,7 +219,7 @@
   </mat-card>
 
 
-  <mat-card *ngIf="idPedido > 0">
+  <mat-card *ngIf="idPedido > 0 || this.formaPagamentoForm.get('quantidadeParcelas')?.value > 1">
     <mat-card-content class="table-responsive">
       <mat-card-header>
         <mat-card-title [ngClass]="{'text-light': isIdPedidoPorParcela }">

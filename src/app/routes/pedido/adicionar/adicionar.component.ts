@@ -1570,7 +1570,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Atualize a parcela no componente que abre o diálogo com as alterações
-        this.atualizarParcela(result.id, result);
+        this.atualizarParcela(result.parcelaReferencia, result);
       }
     });
   }
@@ -1650,7 +1650,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
 
   atualizarParcela(id: any, parcela: Parcelas) {
-    const index = this.parcelas.findIndex(objeto => objeto.id === id);
+    const index = this.parcelas.findIndex(objeto => objeto.parcelaReferencia === id);
     if (parcela.exclusao && parcela.id > 0) {
       this.deletarParcela(parcela.id)
       return;

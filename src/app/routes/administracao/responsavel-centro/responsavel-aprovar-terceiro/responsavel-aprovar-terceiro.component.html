@@ -243,7 +243,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="this.pedido.pedidoId > 0">
+  <mat-card *ngIf="this.pedido.pedidoId > 0 || this.formaPagamentoForm.get('quantidadeParcelas')?.value > 1">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title>
