@@ -166,12 +166,6 @@
             Pedido parcelado?
           </mat-slide-toggle>
         </div>
-        <div class="col-sm-2">
-          <mat-slide-toggle formControlName="rateio"
-                            (change)="toogleRateio($event)">
-            Rateio?
-          </mat-slide-toggle>
-        </div>
         <mat-divider *ngIf="formaPagamentoForm.get('pedidoParcelado')?.value"
                      class="mt-2"></mat-divider>
         <div class="col-sm-12 mt-2"
@@ -249,7 +243,7 @@
       </div>
     </mat-card-content>
   </mat-card>
-  <mat-card *ngIf="formaPagamentoForm.get('exibirParcelas')?.value">
+  <mat-card *ngIf="this.pedido.pedidoId > 0">
     <mat-card-content>
       <mat-card-header>
         <mat-card-title>

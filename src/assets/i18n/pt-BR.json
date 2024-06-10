@@ -91,9 +91,9 @@
     "Administracao.Financeiro": "Financeiro",
     "Administracao.Financeiro.PedidosDePagamento": "Pedidos",
 
-    "Administracao.Financeiro.PedidosDePagamento.AguardandoAprovacao": "Aguardando aprovação",
-    "Administracao.Financeiro.PedidosDePagamento.AguardandoAgendamento": "Aguardando agendamento",
-    "Administracao.Financeiro.PedidosDePagamento.AguardandoPagamento": "Aguardando pagamento",
+    "Administracao.Financeiro.PedidosAguardandoAprovacao": "Pedidos aguardando aprovação",
+    "Administracao.Financeiro.PedidosAguardandoAgendamento": "Pedidos aguardando agendamento",
+    "Administracao.Financeiro.PedidosAguardandoPagamento": "Pedidos aguardando pagamento",
 
     "Administracao.Usuarios.Convidar": "Convidar",
     "Administracao.CEO": "CEO",
@@ -107,9 +107,9 @@
     "Administracao.Cadastros.Funcionario": "Funcionário",
     "Administracao.Cadastros.CentroDeCusto": "Centro de custo",
 
-    "Administracao.Cadastros.Usuarios": "Usuários",
-    "Administracao.Cadastros.Usuarios.AprovarUsuarios": "Aguardando aprovação",
-    "Administracao.Cadastros.Usuarios.Lista": "Todos",
+    "Administracao.Usuarios": "Usuários",
+    "Administracao.Usuarios.AprovarUsuarios": "Aguardando aprovação",
+    "Administracao.Usuarios.Lista": "Todos",
 
     "Administracao.Relatorios": "Relatórios",
     "Administracao.Relatorios.Pedidos": "Pedidos",

@@ -1,9 +1,18 @@
 <mat-card>
-  <mat-card-header>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Usuários pendentes de aprovação</mat-card-title>
+    </mat-card-header>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card>
+  <!-- <mat-card-header>
     <mat-card-title>Usuários pendentes de aprovação</mat-card-title>
-  </mat-card-header>
+  </mat-card-header> -->
   <mat-card-content class="table-responsive">
-    <mat-divider></mat-divider>
+    <!-- <mat-divider></mat-divider> -->
 
     <ng-container *ngIf="listaUsuariosPendentes.length > 0; else usuariosPendentes">
       <table #tabela

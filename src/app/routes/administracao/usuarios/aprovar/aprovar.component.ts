@@ -1,15 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
 import { RequestAprovacaoUsuario } from 'app/models/req-aprovacao-usuario';
-import { Usuario } from 'app/models/usuario';
 import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/centro-de-custo.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
-import { FormasPagamentoSelect } from 'app/util/classes/select-formas-pagamento';
 import { TipoStatusUsuarioSelect } from 'app/util/classes/select-tipo-status-usuario';
 import { TipoUsuarioSelect } from 'app/util/classes/select-tipo-usuario';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
@@ -46,6 +44,7 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.listaStatusUsuario = TipoStatusUsuarioSelect.tiposStatus.map(status => status.descricao);
     this.listaTipoUsuario = TipoUsuarioSelect.tiposUsuario.map(tipo => tipo.descricao)
     this.idUsuario = this.activatedRoute.snapshot.params['id'];
@@ -53,6 +52,10 @@ export class AdministracaoUsuariosAprovarComponent implements OnInit {
     this.preencheListaCentros()
     //this.preencheListaCentros()
     this.desabilitarCampos()
+    // if(!this.aprovarUsuarioForm.get('idCentroCusto')?.value){
+    //   this.aprovarUsuarioForm.get('idCentroCusto')?.setErrors({ centroInvalido: 'Selecione um centro de custo' });
+
+    // }
   }
 
   desabilitarCampos(){

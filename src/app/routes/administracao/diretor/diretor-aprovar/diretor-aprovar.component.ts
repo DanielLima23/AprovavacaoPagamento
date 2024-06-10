@@ -1,15 +1,16 @@
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, UntypedFormArray, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormBuilder, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Arquivo } from 'app/models/auxiliar/arquivo';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { RequestAprovaPedido } from 'app/models/auxiliar/request-aprova-pedido';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
+import { Observacao } from 'app/models/observacao';
 import { Parcelas } from 'app/models/parcelas';
 import { PedidoPagamento } from 'app/models/pedidoPagamento';
 import { Rateio } from 'app/models/rateio';
@@ -18,6 +19,7 @@ import { Usuario } from 'app/models/usuario';
 import { DialogAddContaUsuarioComponent } from 'app/routes/dialog/add-conta-usuario/add-conta-usuario.component';
 import { DialogEditParcelaDialogComponent } from 'app/routes/dialog/edit-parcela-dialog/edit-parcela-dialog.component';
 import { DialogEditRateioDialogComponent } from 'app/routes/dialog/edit-rateio-dialog/edit-rateio-dialog.component';
+import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observacao.component';
 import { PedidoService } from 'app/routes/pedido/pedido.service';
 import { UsuarioService } from 'app/routes/usuario/usuario.service';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
@@ -27,8 +29,6 @@ import { TipoTerceiroSelect } from 'app/util/classes/select-tipo-terceiro';
 import { MapeamentoEnumService } from 'app/util/mapeamento-enum.service';
 import { ToastrService } from 'ngx-toastr';
 import { CentroDeCustoService } from '../../centro-de-custo/centro-de-custo.service';
-import { Observacao } from 'app/models/observacao';
-import { DialogObservacaoComponent } from 'app/routes/dialog/observacao/observacao.component';
 
 @Component({
   selector: 'app-administracao-diretor-diretor-aprovar',
@@ -185,21 +185,6 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     formaPagamento.get(propriedade)?.setValue(valor);
   }
 
-  adicionarParcela() {
-    const novaParcela = new UntypedFormGroup({
-      id: new UntypedFormControl(),
-      parcelaReferencia: new UntypedFormControl(),
-      valorParcela: new UntypedFormControl(),
-      dataPagamento: new UntypedFormControl(),
-      dataVencimento: new UntypedFormControl()
-    });
-
-    const listaFormaPagamento = this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray;
-    const ultimaFormaPagamento = listaFormaPagamento.at(listaFormaPagamento.length - 1) as UntypedFormGroup;
-    const listaParcelas = ultimaFormaPagamento.get('listaParcelas') as UntypedFormArray;
-    listaParcelas.push(novaParcela);
-  }
-
   removerParcela(indexFormaPagamento: number, indexParcela: number) {
     ((this.meuPedidoForm.get('listaFormaPagamento') as UntypedFormArray).at(indexFormaPagamento).get('listaParcelas') as UntypedFormArray).removeAt(indexParcela);
   }
@@ -210,6 +195,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
 
   pedido: StatusPedidoAprovacao = new StatusPedidoAprovacao()
   ngOnInit() {
+    this.preencheQtdParcelas()
 
     if (!this.pedido.pedidoId) {
       this.pedido.pedidoId = this.activatedRoute.snapshot.params['id']
@@ -218,7 +204,7 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     if (this.pedido.pedidoId > 0) {
       this.formaPagamentoForm.disable();
       this.meuPedidoForm.disable()
-      this.findPedidoByCodigo()
+      this.findPedidoByCodigo(this.pedido.pedidoId)
       return;
     }
     this.pedido.pedidoId = 0
@@ -229,56 +215,124 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
     this.listaTiposTerceiro = TipoTerceiroSelect.tiposTerceiro.map(terceiro => terceiro.descricao);
     this.listaTipoRateio = TipoRateioSelect.tipoRateio
 
-    this.preencheQtdParcelas()
     // this.preencheListaCentros()
     this.preencheListaFuncionario()
   }
 
   quemSolicitou: string = ''
   dataDaSolicitacao: any
+  isAprovadoDiretor: any = false;
 
-  findPedidoByCodigo() {
-    this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
+  findPedidoByCodigo(idPedido: number) {
+    // this.pedidoService.getPedidoById(this.pedido.pedidoId).subscribe(
+    //   (pedido: any) => {
+    //     this.quemSolicitou = pedido.usuarioSolicitou.nome
+    //     this.dataDaSolicitacao = pedido.dataCadastro
+    //     this.usuarioService.getById(pedido.usuario.id).subscribe(
+    //       (usuario: any) => {
+    //         this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
+    //         this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
+    //         this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
+    //         this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
+    //         this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+    //       }
+    //     )
+    //     this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
+    //       (data: any[]) => {
+    //         this.listaContasUsuario = data
+    //         let contaSelecionada = 0
+
+    //         if (pedido.formaPagamento[0].contaBancaria) {
+    //           contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
+    //         } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
+    //           contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
+    //         }
+    //         this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
+    //         this.atualizarDadosBancariosInput()
+    //       }
+    //     )
+    //     this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
+    //     this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
+    //       (data: any[]) => {
+    //         this.arquivosBase64 = data;
+    //         this.arquivosBase64.map(arquivo => {
+    //           arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+    //         })
+    //         this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
+    //       }
+    //     )
+    //     const formatador = new FormatadorData();
+    //     this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
+    //     this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+    //     // this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+    //     let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
+    //     const partes = valorTotal.split('.');
+    //     const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    //     let parteDecimal = partes[1] || '00';
+    //     parteDecimal = parteDecimal.padEnd(2, '0');
+    //     valorTotal = parteInteira + ',' + parteDecimal;
+    //     this.formaPagamentoForm.get('valorTotal')?.setValue(valorTotal)
+
+    //     this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
+    //     this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
+    //     this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
+
+    //     if (pedido.formaPagamento[0].parcelas.length > 1) {
+    //       this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+    //       this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+    //       this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(pedido.formaPagamento[0].quantidadeParcelas)
+
+    //       pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
+    //         this.parcelas.push(parcela);
+    //       })
+    //     }
+
+    //     this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
+    //       (obs: any) => {
+    //         this.listaObservacoes = obs
+    //       }
+    //     )
+    //   }
+    // )
+
+
+    this.pedidoService.getPedidoById(idPedido).subscribe(
       (pedido: any) => {
+        this.isAprovadoDiretor = pedido.diretorAprovacao
         this.quemSolicitou = pedido.usuarioSolicitou.nome
         this.dataDaSolicitacao = pedido.dataCadastro
+
+
+        // this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+        this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(pedido.formaPagamento[0].quantidadeParcelas)
         this.usuarioService.getById(pedido.usuario.id).subscribe(
           (usuario: any) => {
             this.meuPedidoForm.get('nome')?.setValue(usuario.nome);
             this.meuPedidoForm.get('cpf')?.setValue(usuario.cpf);
             this.meuPedidoForm.get('cnpj')?.setValue(usuario.cnpj);
             this.meuPedidoForm.get('contaCnpj')?.setValue(usuario.tipoCnpj);
-            this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+            // if (this.isUltimoPedido) {
+            //   this.meuPedidoForm.get('id')?.setValue(0);
+            //   this.formaPagamentoForm.get('idUsuario')?.setValue(0);
+            // } else {
+            this.meuPedidoForm.get('id')?.setValue(pedido.id);
+            //   this.formaPagamentoForm.get('idUsuario')?.setValue(usuario.id);
+            // }
           }
         )
         this.contaService.getListContasPorIdUsuario(pedido.usuario.id).subscribe(
           (data: any[]) => {
             this.listaContasUsuario = data
-            let contaSelecionada = 0
-
-            if (pedido.formaPagamento[0].contaBancaria) {
-              contaSelecionada = pedido.formaPagamento[0].contaBancaria.id
-            } else if (pedido.formaPagamento[0].contaBancariaTerceiro) {
-              contaSelecionada = pedido.formaPagamento[0].contaBancariaTerceiro.id
-            }
+            const contaSelecionada = this.listaContasUsuario.find(conta => conta.id === pedido.formaPagamento[0].contaBancaria.id)?.id
             this.formaPagamentoForm.get('idContaBancaria')?.setValue(contaSelecionada)
             this.atualizarDadosBancariosInput()
           }
         )
+
         this.formaPagamentoForm.get('tipoPagamento')?.setValue(pedido.formaPagamento[0].tipoPagamento)
-        this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
-          (data: any[]) => {
-            this.arquivosBase64 = data;
-            this.arquivosBase64.map(arquivo => {
-              arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
-            })
-            this.filesDisplay = `${this.arquivosBase64.length}/${this.limiteArquivos}`
-          }
-        )
-        const formatador = new FormatadorData();
-        this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
-        this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
-        // this.formaPagamentoForm.get('valorTotal')?.setValue(pedido.formaPagamento[0].valorTotal)
+
+        this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
+
         let valorTotal = pedido.formaPagamento[0].valorTotal.toString();
         const partes = valorTotal.split('.');
         const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -289,18 +343,61 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
 
         this.formaPagamentoForm.get('descricao')?.setValue(pedido.descricao)
         this.preencheListaCentros(pedido.formaPagamento[0].centroDeCusto.id)
-        this.formaPagamentoForm.get('idCentroDeCusto')?.setValue(pedido.formaPagamento[0].centroDeCusto.id)
+
+        // if (pedido.formaPagamento[0].parcelas.length > 1) {
+        //   this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
+        //   this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
+
+        //   this.limparParcelas()
+        //   pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
+        //     this.parcelas.push(parcela);
+        //     this.addParcela(parcela)
+        //   })
+        // }
 
         if (pedido.formaPagamento[0].parcelas.length > 1) {
           this.formaPagamentoForm.get('exibirParcelas')?.setValue(true)
           this.formaPagamentoForm.get('pedidoParcelado')?.setValue(true)
-          this.formaPagamentoForm.get('quantidadeParcelas')?.setValue(pedido.formaPagamento[0].quantidadeParcelas)
-
-          pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
-            this.parcelas.push(parcela);
-          })
         }
 
+        this.limparParcelas()
+        const formatador = new FormatadorData();
+
+
+        pedido.formaPagamento[0].parcelas.map((parcela: Parcelas) => {
+          this.parcelas.push(parcela);
+          this.addParcela(parcela)
+        })
+
+        this.pedidoService.getAnexoByIdPedido(pedido.id).subscribe(
+          (data: any[]) => {
+            this.arquivosBase64 = data;
+            this.arquivosBase64.map(arquivo => {
+              arquivo.arquivo = this.base64toFile(arquivo.base64, arquivo.descricao)
+            })
+            this.updateFilesDisplay()
+          }
+        )
+
+        this.formaPagamentoForm.get('dataPagamento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataPagamento))
+        this.formaPagamentoForm.get('dataVencimento')?.setValue(formatador.formatarData(pedido.formaPagamento[0].parcelas[0].dataVencimento))
+        this.formaPagamentoForm.get('pedidoParcelado')?.disable()
+
+
+
+        this.formaPagamentoForm.get('idCentroDeCusto')?.disable()
+
+
+        // if (this.isPedidoRecusado) {
+        //   const listaParcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+
+        //   listaParcelasArray.controls.forEach(control => {
+        //     const id = control.get('id')?.value;
+        //     if (id !== undefined && id !== null) {
+        //       this.ids.push(id);
+        //     }
+        //   });
+        // }
         this.pedidoService.getListObservacaoPorPedidoId(pedido.id).subscribe(
           (obs: any) => {
             this.listaObservacoes = obs
@@ -308,6 +405,25 @@ export class AdministracaoDiretorDiretorAprovarComponent implements OnInit {
         )
       }
     )
+  }
+
+  addParcela(parcela: Parcelas) {
+    const parcelasArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    const parcelaGroup = new UntypedFormGroup({
+      id: new UntypedFormControl(parcela.id),
+      parcelaReferencia: new UntypedFormControl(parcela.parcelaReferencia),
+      quantidadeParcelas: new UntypedFormControl(parcela.quantidadeParcelas),
+      valorParcela: new UntypedFormControl(parcela.valorParcela),
+      dataPagamento: new UntypedFormControl(parcela.dataPagamento),
+      dataVencimento: new UntypedFormControl(parcela.dataVencimento)
+    });
+    parcelasArray.push(parcelaGroup);
+  }
+
+  limparParcelas() {
+    const parcelaArray = this.formaPagamentoForm.get('listaParcelas') as UntypedFormArray;
+    parcelaArray.clear()
+    this.parcelas = []
   }
 
   base64toFile(base64: string, filename: string): File {
