@@ -1554,6 +1554,9 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
 
   openDialog(parcela: Parcelas): void {
     parcela.exclusao = false;
+    this.valorInput = this.formaPagamentoForm.get('valorTotal')?.value;
+    const valorTotal = parseFloat(this.valorInput.replace(/\./g, '').replace(',', '.'));
+
     if (parcela.dataPagamento.includes('T')) {
       parcela.dataPagamento = parcela.dataPagamento.slice(0, 10);
     }
@@ -1564,7 +1567,7 @@ export class PedidoAdicionarComponent implements OnInit, AfterViewInit {
       parcela.valorParcela = this.setValorParcelaString(parcela.valorParcela);
     }
     const dialogRef = this.dialog.open(DialogEditParcelaDialogComponent, {
-      data: { ...parcela },
+      data: { ...parcela, valorTotal },
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -13,10 +13,11 @@ export class DialogEditParcelaDialogComponent implements OnInit {
 
   parcela: Parcelas = new Parcelas()
   dataVencimentoBackup: string = ""
-
+  valorTotal: number = 0
   constructor(public dialogRef: MatDialogRef<DialogEditParcelaDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private toastr: ToastrService, private datePipe: DatePipe) {
     this.parcela = { ...data };
+    this.valorTotal = data.valorTotal
   }
 
   ngOnInit() {
@@ -25,7 +26,7 @@ export class DialogEditParcelaDialogComponent implements OnInit {
   cancel(): void {
     this.dialogRef.close();
   }
-  dataBackup(){
+  dataBackup() {
     this.dataVencimentoBackup = this.parcela.dataVencimento
   }
   salvar() {
@@ -58,6 +59,15 @@ export class DialogEditParcelaDialogComponent implements OnInit {
         this.toastr.warning('A data de pagamento não pode ser maior que a data de vencimento', 'Atenção');
         return;
       }
+    }
+    let valorParcela = 0
+
+    if (typeof this.parcela.valorParcela === 'string') {
+      valorParcela = parseFloat(this.parcela.valorParcela.replace(/\./g, '').replace(',', '.'));
+    }
+    if (valorParcela >= this.valorTotal) {
+      this.toastr.warning('O valor da parcela não pode ser maior ou igual que o valor total do pedido.', 'Atenção');
+      return
     }
 
 

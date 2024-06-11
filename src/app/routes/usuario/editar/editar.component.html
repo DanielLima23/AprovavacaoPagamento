@@ -7,7 +7,15 @@
     </mat-card-header>
     <mat-divider></mat-divider>
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row mt-2">
-      <div class="col-sm-6">
+      <mat-slide-toggle
+      formControlName="ausente"
+      [checked]="ausente"
+      (change)="atualizarAusencia($event.checked)"
+      *ngIf="isEditaAusencia">
+      Ausente
+    </mat-slide-toggle>
+
+      <div class="col-sm-6 mt-2">
         <mat-form-field floatLabel="always"
                         style="width: 100%;">
           <mat-label>Nome</mat-label>
@@ -16,7 +24,7 @@
           <mat-hint align="end">{{inputNome.value.length}}/50</mat-hint>
         </mat-form-field>
       </div>
-      <div class="col-sm-6 ">
+      <div class="col-sm-6 mt-2">
         <mat-form-field floatLabel="always"
                         style="width: 100%;">
           <mat-label>Data de nascimento</mat-label>

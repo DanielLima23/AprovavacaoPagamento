@@ -11,6 +11,7 @@ import { CentroDeCustoService } from 'app/routes/administracao/centro-de-custo/c
 import { DialogEditContaUsuarioDialogComponent } from 'app/routes/dialog/edit-conta-usuario-dialog/edit-conta-usuario-dialog.component';
 import { ContaBancariaService } from 'app/services-outros/conta-bancaria.service';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs';
 import { UsuarioService } from '../usuario.service';
 
 @Component({
@@ -73,7 +74,11 @@ export class UsuarioEditarComponent implements OnInit {
     dataNascimento: new UntypedFormControl(undefined, Validators.required),
     centroCusto: new UntypedFormControl(undefined, Validators.required),
     contaPadrao: new UntypedFormControl(false),
+    ausente: new UntypedFormControl(false),
+
   });
+
+  isEditaAusencia: boolean = false
 
   cpfCnpjRequiredValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -161,19 +166,52 @@ export class UsuarioEditarComponent implements OnInit {
 
 
 
+  // retornaUsuario() {
+  //   this.usuarioService.getByToken().subscribe(
+  //     (data: Usuario) => {
+  //       this.usuario = data;
+  //       const formatador = new FormatadorData();
+  //       this.usuario.dataNascimento = formatador.formatarData(this.usuario.dataNascimento);
+  //       this.userForm.get('centroCusto')?.setValue(this.usuario.idCentroCusto)
+  //       this.initScreen()
+  //     },
+  //     (error: any) => {
+  //     }
+  //   )
+  // }
+
   retornaUsuario() {
-    this.usuarioService.getByToken().subscribe(
-      (data: Usuario) => {
+    this.usuarioService.getByToken().pipe(
+      switchMap((data: any) => {
         this.usuario = data;
         const formatador = new FormatadorData();
         this.usuario.dataNascimento = formatador.formatarData(this.usuario.dataNascimento);
         this.userForm.get('centroCusto')?.setValue(this.usuario.idCentroCusto)
         this.initScreen()
-      },
-      (error: any) => {
+        return this.usuarioService.getUsuarioClienteById(data.id)
+      })
+    ).subscribe(
+      (data:any) => {
+        this.userForm.get('ausente')?.setValue(data.ausente)
+        this.ausente = data.ausente;
+        this.isEditaAusencia = (data.tipo == 3 || data.tipo == 4) ? true : false
       }
     )
   }
+  ausente: boolean = false;
+
+ atualizarAusencia(ausente: boolean) {
+  this.usuarioService.atualizarAusencia(ausente).subscribe(
+    (data: any) => {
+      this.toastrService.success('Status atualizado com sucesso!', 'Sucesso');
+      this.ausente = data.ausente;
+    },
+    (error: any) => {
+      this.toastrService.error('Erro ao atualizar status de ausência', 'Erro');
+      console.error('Erro ao atualizar status de ausência:', error);
+    }
+  );
+}
 
   initScreen() {
     if (this.usuario != null) {

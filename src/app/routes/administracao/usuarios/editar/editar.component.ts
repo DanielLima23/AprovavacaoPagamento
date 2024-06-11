@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DisableControlDirective } from '@shared/directives/disable-control.directive';
 import { FormatadorData } from 'app/models/auxiliar/formatador-date';
 import { CentroDeCusto } from 'app/models/centro-de-custo';
 import { ContaUsuario } from 'app/models/conta-usuario';
