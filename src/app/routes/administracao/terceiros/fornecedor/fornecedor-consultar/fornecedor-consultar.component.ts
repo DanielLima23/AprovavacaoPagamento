@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Terceiro } from 'app/models/terceiro';
-import { DialogEditFornecedorDialogComponent } from 'app/routes/dialog/edit-fornecedor-dialog/edit-fornecedor-dialog.component';
 import { TerceiroService } from 'app/routes/administracao/terceiros/terceiro.service';
+import { DialogEditFornecedorDialogComponent } from 'app/routes/dialog/edit-fornecedor-dialog/edit-fornecedor-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -51,6 +51,7 @@ export class AdministracaoTerceirosFornecedorFornecedorConsultarComponent implem
     this.terceiroService.getListaTerceiroPorCliente().subscribe(
       (data: Terceiro[]) => {
         this.listaFornecedores = data.filter( terceiro => terceiro.tipoTerceiro == 1)
+        this.filteredListaFornecedores = data
       }
     )
   }
@@ -76,6 +77,18 @@ export class AdministracaoTerceirosFornecedorFornecedorConsultarComponent implem
   atualizarFornecedor(id: any, parcela: Terceiro) {
 
     this.excluirFornecedor(parcela.id)
+  }
+  _filter:string=""
+  filteredListaFornecedores: Terceiro[] = []
+
+
+  set filter(value: string){
+    this._filter = value;
+    this.filteredListaFornecedores = this.listaFornecedores.filter((fornecedor: Terceiro)=> fornecedor.nome.toLocaleLowerCase().indexOf(this._filter.toLocaleLowerCase()) > -1)
+  }
+
+  get filter(): string{
+    return this._filter
   }
 
 }
